@@ -1,4 +1,4 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Repositories;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
 
 namespace HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 

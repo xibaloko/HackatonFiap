@@ -1,15 +1,18 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
+using System.Text;
 
 namespace HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 
-public sealed class Doctor : EntityBase
+public sealed class Doctor : UserIdentity
 {
-    public string Name { get; private set; }
-    public string LastName { get; private set; }
-
-    public Doctor(string name, string lastName)
+    public Doctor()
     {
-        Name = name;
-        LastName = lastName;
+            
     }
+    public Doctor(string crm)
+    {
+        CRM = crm;
+    }
+    public string CRM { get; private set; }
 }
+
