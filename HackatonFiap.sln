@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35514.174 d17.12
+VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{991B6151-0A73-4B33-A6C2-7B8D562EF79C}"
 EndProject
@@ -15,13 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{8A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ports", "Ports", "{0554196A-7B8A-486D-97D3-E2067B72731B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.HealthScheduling.Infrastructure.SqlServer", "HackatonFiap.HealthScheduling.Infrastructure.SqlServer\HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj", "{C313A047-8E0F-41E7-A5E9-13C6ED91BF47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.HealthScheduling.Infrastructure.SqlServer", "HackatonFiap.HealthScheduling.Infrastructure.SqlServer\HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj", "{C313A047-8E0F-41E7-A5E9-13C6ED91BF47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.HealthScheduling.Application", "HackatonFiap.HealthScheduling.Application\HackatonFiap.HealthScheduling.Application.csproj", "{AAA4688E-5BBD-4F79-B914-E86FAE05A19A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.HealthScheduling.Application", "HackatonFiap.HealthScheduling.Application\HackatonFiap.HealthScheduling.Application.csproj", "{AAA4688E-5BBD-4F79-B914-E86FAE05A19A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.HealthScheduling.Domain", "HackatonFiap.HealthScheduling.Domain\HackatonFiap.HealthScheduling.Domain.csproj", "{D9338E76-AB8B-4770-B109-ACF2BFCD1383}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.HealthScheduling.Domain", "HackatonFiap.HealthScheduling.Domain\HackatonFiap.HealthScheduling.Domain.csproj", "{D9338E76-AB8B-4770-B109-ACF2BFCD1383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.HealthScheduling.Api", "HackatonFiap.HealthScheduling.Api\HackatonFiap.HealthScheduling.Api.csproj", "{F212B31A-0EE7-4087-BB89-5A388CD69D59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.HealthScheduling.Api", "HackatonFiap.HealthScheduling.Api\HackatonFiap.HealthScheduling.Api.csproj", "{F212B31A-0EE7-4087-BB89-5A388CD69D59}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{11CEC904-7B0E-4C5D-92F5-6602B636E728}"
 EndProject
@@ -29,13 +29,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C1ED33E2-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ports", "Ports", "{61450BAE-86E6-4F9E-935E-38C66256B9D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.Identity.Infrastructure.SqlServer", "HackatonFiap.Identity.Infrastructure.SqlServer\HackatonFiap.Identity.Infrastructure.SqlServer.csproj", "{CF351AD0-D43D-44F0-8716-309EEF208678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.Identity.Infrastructure.SqlServer", "HackatonFiap.Identity.Infrastructure.SqlServer\HackatonFiap.Identity.Infrastructure.SqlServer.csproj", "{CF351AD0-D43D-44F0-8716-309EEF208678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.Identity.Application", "HackatonFiap.Identity.Application\HackatonFiap.Identity.Application.csproj", "{12C76255-2EF8-47A7-A17A-E5729863A276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.Identity.Application", "HackatonFiap.Identity.Application\HackatonFiap.Identity.Application.csproj", "{12C76255-2EF8-47A7-A17A-E5729863A276}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.Identity.Domain", "HackatonFiap.Identity.Domain\HackatonFiap.Identity.Domain.csproj", "{5F0EDB39-5532-410E-BA21-117326ECC7AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.Identity.Domain", "HackatonFiap.Identity.Domain\HackatonFiap.Identity.Domain.csproj", "{5F0EDB39-5532-410E-BA21-117326ECC7AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.Identity.Api", "HackatonFiap.Identity.Api\HackatonFiap.Identity.Api.csproj", "{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HackatonFiap.Identity.Api", "HackatonFiap.Identity.Api\HackatonFiap.Identity.Api.csproj", "{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackatonFiap.EmailProvider.Worker", "HackatonFiap.EmailProvider.Worker\HackatonFiap.EmailProvider.Worker.csproj", "{44A29A6B-7243-41E5-9463-59268A444173}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmailWorker", "EmailWorker", "{47B089B1-5E3A-47FF-936F-63DB1C4EFCD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,10 @@ Global
 		{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A29A6B-7243-41E5-9463-59268A444173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A29A6B-7243-41E5-9463-59268A444173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A29A6B-7243-41E5-9463-59268A444173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A29A6B-7243-41E5-9463-59268A444173}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,5 +104,10 @@ Global
 		{12C76255-2EF8-47A7-A17A-E5729863A276} = {C1ED33E2-D550-45A7-8195-51FACD9C14DE}
 		{5F0EDB39-5532-410E-BA21-117326ECC7AC} = {C1ED33E2-D550-45A7-8195-51FACD9C14DE}
 		{E2F11D6A-0D7C-4028-8CBB-932D4FEF24E8} = {61450BAE-86E6-4F9E-935E-38C66256B9D5}
+		{44A29A6B-7243-41E5-9463-59268A444173} = {47B089B1-5E3A-47FF-936F-63DB1C4EFCD5}
+		{47B089B1-5E3A-47FF-936F-63DB1C4EFCD5} = {991B6151-0A73-4B33-A6C2-7B8D562EF79C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A908798-E3CE-4F5C-8820-FB40F69974CE}
 	EndGlobalSection
 EndGlobal
