@@ -89,7 +89,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : EntityBase
             query = query.Where(filter);
 
         if (includeProperties != null)
-            foreach (var includeProp in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
+            foreach (var includeProp in includeProperties.Split([","], StringSplitOptions.RemoveEmptyEntries))
                 query = query.Include(includeProp);
 
         if (orderBy != null)

@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentValidation;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.AddDoctor;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
-public sealed class AddDoctorRequestValidator : RequestValidator<AddDoctorRequest>
+public sealed class AddPatientRequestValidator : RequestValidator<AddPatientRequest>
 {
     protected override void Validate()
     {
@@ -23,8 +24,8 @@ public sealed class AddDoctorRequestValidator : RequestValidator<AddDoctorReques
             .NotEmpty()
             .WithMessage("CPF is required.");
 
-        RuleFor(request => request.CRM)
+        RuleFor(request => request.RG)
             .NotEmpty()
-            .WithMessage("CRM is required.");
+            .WithMessage("RG is required.");
     }
 }

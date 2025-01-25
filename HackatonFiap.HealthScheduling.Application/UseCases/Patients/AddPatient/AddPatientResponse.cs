@@ -1,6 +1,6 @@
-﻿namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.AddDoctor;
+﻿namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
-public sealed class AddDoctorResponse
+public sealed class AddPatientResponse
 {
     public int Id { get; init; }
     public Guid Uuid { get; init; }
@@ -8,6 +8,6 @@ public sealed class AddDoctorResponse
     public required string LastName { get; init; }
     public required string Email { get; init; }
     public required string CPF { get; init; }
-    public required string CRM { get; init; }
+    public required string RG { get; init; }
 
 }
