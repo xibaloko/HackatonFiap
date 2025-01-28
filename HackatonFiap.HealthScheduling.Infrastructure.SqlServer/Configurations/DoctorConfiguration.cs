@@ -10,12 +10,24 @@ public sealed class DoctorConfiguration : BaseEntityTypeConfiguration<Doctor>
     {
         base.Configure(builder);
 
-        builder.Property(customer => customer.Name)
+        builder.Property(doctor => doctor.Name)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(255);
 
-        builder.Property(customer => customer.LastName)
+        builder.Property(doctor => doctor.LastName)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(255);
+
+        builder.Property(doctor => doctor.CPF)
+            .IsRequired()
+            .HasMaxLength(11);
+
+        builder.Property(doctor => doctor.CRM)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(doctor => doctor.Email)
+            .IsRequired()
+            .HasMaxLength(255);
     }
 }
