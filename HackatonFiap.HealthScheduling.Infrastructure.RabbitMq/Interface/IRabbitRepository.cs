@@ -1,4 +1,3 @@
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Entities;
 
 namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 

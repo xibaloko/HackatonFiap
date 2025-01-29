@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using HackatonFiap.HealthScheduling.Application;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
@@ -24,6 +25,8 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        //TODO: Adicionar ao IoC
+        services.Configure<RabbitMqSettings>(_configuration.GetSection("RabbitMQ"));
 
         services.AddApplicationModule(_configuration);
 
