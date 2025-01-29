@@ -39,6 +39,7 @@ public static class DependencyInjectionResolver
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepositories, Repositories>();
+
         return services;
     }
 }
