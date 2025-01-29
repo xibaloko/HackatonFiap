@@ -1,4 +1,5 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Agendas.Interfaces;
+using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Data;
@@ -11,12 +12,13 @@ public class Repositories : IRepositories
     private readonly AppDbContext _db;
     public IDoctorRepository DoctorRepository { get; private set; }
     public IPatientRepository PatientRepository { get; private set; }
-
+    public IScheduleRepository ScheduleRepository { get; private set; }
     public Repositories(AppDbContext db)
     {
         _db = db;
         DoctorRepository = new DoctorRepository(_db);
         PatientRepository = new PatientRepository(_db);
+        ScheduleRepository = new ScheduleRepository(_db);
     }
 
     public void Save()

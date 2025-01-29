@@ -114,6 +114,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : EntityBase
     public void AddBulk(IEnumerable<T> entityes)
     {
         _dbSet.AddRange(entityes);
+    } 
+    
+    public async Task AddBulkAssync(IEnumerable<T> entityes)
+    {
+        await _dbSet.AddRangeAsync(entityes);
     }
 
     public void Update(T entity)
