@@ -15,7 +15,6 @@ public sealed class AddScheduleRequestHandler : IRequestHandler<AddScheduleReque
     public AddScheduleRequestHandler(IRepositories repositories)
     {
         _repositories = repositories;
-
     }
 
     public async Task<Result> Handle(AddScheduleRequest request, CancellationToken cancellationToken)

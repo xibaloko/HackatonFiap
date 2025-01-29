@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HackatonFiap.HealthScheduling.Application\HackatonFiap.HealthScheduling.Application.csproj" />
+    <ProjectReference Include="..\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.csproj" />
   </ItemGroup>
 
 </Project>

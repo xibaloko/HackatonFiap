@@ -5,28 +5,30 @@ using SendGrid;
 using System.Text.Json;
 using RabbitMQ.Client.Events;
 using System.Text;
+using HackatonFiap.EmailProvider.Worker.Configurations;
 
 namespace HackatonFiap.EmailProvider.Worker
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly string _rabbitMqQueue = "filaEmailHackaton";
         private readonly IServiceProvider _serviceProvider;
+        private readonly RabbitMqSettings _rabbitMqQueue;
 
-        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider)
+        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IOptions<RabbitMqSettings> rabbitMqOptions)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _rabbitMqQueue = rabbitMqOptions.Value;
         }
 
         protected override async Task<Task> ExecuteAsync(CancellationToken stoppingToken)
         {
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            var factory = new ConnectionFactory { HostName = _rabbitMqQueue.HostName };
             var connection = await factory.CreateConnectionAsync(stoppingToken);
             var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
-            await channel.QueueDeclareAsync(queue: _rabbitMqQueue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: stoppingToken);
+            await channel.QueueDeclareAsync(queue: _rabbitMqQueue.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: stoppingToken);
 
             var consumer = new AsyncEventingBasicConsumer(channel);
 
@@ -44,7 +46,7 @@ namespace HackatonFiap.EmailProvider.Worker
                 return Task.CompletedTask;
             };
 
-            await channel.BasicConsumeAsync(queue: _rabbitMqQueue,
+            await channel.BasicConsumeAsync(queue: _rabbitMqQueue.QueueName,
                 autoAck: true,
                 consumer: consumer,
                 cancellationToken: stoppingToken);
@@ -56,7 +58,7 @@ namespace HackatonFiap.EmailProvider.Worker
         {
             try
             {
-                var consultaMessage = JsonSerializer.Deserialize<ConsultaMessage>(message);
+                var consultaMessage = JsonSerializer.Deserialize<ConsultaMessageDto>(message);
 
                 var sendGridOptions = _serviceProvider.GetService<IOptions<SendGridOptions>>()?.Value;
                 if (sendGridOptions != null)

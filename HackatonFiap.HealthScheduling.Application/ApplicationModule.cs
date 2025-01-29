@@ -4,6 +4,7 @@ using HackatonFiap.HealthScheduling.Application.Configurations.MediatR;
 using HackatonFiap.HealthScheduling.Domain;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.IoC;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -41,6 +42,8 @@ public static class ApplicationModule
 
     private static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddSqlServerAdapter(configuration);
+        services.AddRabbitAdapter(configuration);
+        services.AddSqlServerAdapter(configuration);
+        return services;
     }
 }
