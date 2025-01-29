@@ -1,12 +1,6 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using HackatonFiap.HealthScheduling.Application;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient;
-using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
-using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence.EntitiesRepositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
@@ -27,19 +21,9 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-
-        // Registra o repositório no DI
-        services.AddScoped<IPatientRepository, PatientRepository>();
-
-        // Registra o MediatR
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetPatientRequestHandler).Assembly));
-
-
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        //TODO: Adicionar ao IoC
-        services.Configure<RabbitMqSettings>(_configuration.GetSection("RabbitMQ"));
 
         services.AddApplicationModule(_configuration);
 
