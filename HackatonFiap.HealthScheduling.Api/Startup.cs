@@ -6,6 +6,7 @@ using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence.EntitiesRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
@@ -37,6 +38,8 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        //TODO: Adicionar ao IoC
+        services.Configure<RabbitMqSettings>(_configuration.GetSection("RabbitMQ"));
 
         services.AddApplicationModule(_configuration);
 

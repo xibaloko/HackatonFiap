@@ -13,6 +13,7 @@ public interface IBaseRepository<T> where T : EntityBase
     void Add(T entity);
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
     void AddBulk(IEnumerable<T> entityes);
+    Task AddBulkAsync(IEnumerable<T> entityes, CancellationToken cancellationToken = default);
     public void Update(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entity);

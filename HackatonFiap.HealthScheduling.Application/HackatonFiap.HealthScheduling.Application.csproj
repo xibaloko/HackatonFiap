@@ -16,6 +16,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Domain\HackatonFiap.HealthScheduling.Domain.csproj" />
+		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.csproj" />
 		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Infrastructure.SqlServer\HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj" />
 	</ItemGroup>
 	<ItemGroup>
