@@ -42,7 +42,7 @@ public static class ApplicationModule
 
     private static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitAdapter();
+        services.AddRabbitAdapter(configuration);
         services.AddSqlServerAdapter(configuration);
         return services;
     }
