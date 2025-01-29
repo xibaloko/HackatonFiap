@@ -56,7 +56,7 @@ namespace HackatonFiap.EmailProvider.Worker
         {
             try
             {
-                var consultaMessage = JsonSerializer.Deserialize<ConsultaMessage>(message);
+                var consultaMessage = JsonSerializer.Deserialize<ConsultaMessageDto>(message);
 
                 var sendGridOptions = _serviceProvider.GetService<IOptions<SendGridOptions>>()?.Value;
                 if (sendGridOptions != null)
