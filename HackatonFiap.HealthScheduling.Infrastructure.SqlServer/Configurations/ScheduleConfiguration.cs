@@ -16,7 +16,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Configurations
         {
             base.Configure(builder);
 
-            builder.HasIndex(patient => patient.DateHour)
+            builder.HasIndex(patient => new { patient.DateHour, patient.DoctorId })
              .IsUnique();
 
             builder.Property(patient => patient.DateHour)
