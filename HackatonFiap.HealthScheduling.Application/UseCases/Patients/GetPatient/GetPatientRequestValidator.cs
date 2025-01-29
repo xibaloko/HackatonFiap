@@ -11,9 +11,9 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
     {
         public GetPatientRequestValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("O ID do paciente é obrigatório.")
-                .NotEqual(Guid.Empty).WithMessage("O ID do paciente não pode ser vazio.");
+            //RuleFor(x => x.Id)
+                //.NotEmpty().WithMessage("O ID do paciente é obrigatório.")
+                //.NotEqual(Guid.Empty).WithMessage("O ID do paciente não pode ser vazio.");
         }
     }
 }

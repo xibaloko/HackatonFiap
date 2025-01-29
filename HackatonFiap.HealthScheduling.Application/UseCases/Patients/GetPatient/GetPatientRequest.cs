@@ -9,6 +9,6 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
 {
     public class GetPatientRequest : IRequest<GetPatientResponse>
     {
-        public Guid Uuid { get; set; }
+        public int Id { get; set; }
     }
 }

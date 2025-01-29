@@ -4,5 +4,5 @@ namespace HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
 
 public interface IPatientRepository : IBaseRepository<Patient>
 {
-    Task<Patient?> GetByIdAsync(Guid id);
+    Task<Patient?> GetByIdAsync(int id);
 }

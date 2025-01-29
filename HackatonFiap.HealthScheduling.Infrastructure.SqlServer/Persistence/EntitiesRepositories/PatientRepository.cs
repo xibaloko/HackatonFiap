@@ -14,7 +14,7 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         _context = db;
     }
 
-    public async Task<Patient?> GetByIdAsync(Guid id)
+    public async Task<Patient?> GetByIdAsync(int id)
     {
         return await _context.Patients.FindAsync(id);
     }

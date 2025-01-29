@@ -23,7 +23,7 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
 
         public async Task<GetPatientResponse> Handle(GetPatientRequest request, CancellationToken cancellationToken)
         {
-            var patient = await _patientRepository.GetByIdAsync(request.Uuid);
+            var patient = await _patientRepository.GetByIdAsync(request.Id);
 
             if (patient == null)
                 throw new KeyNotFoundException("Paciente não encontrado.");

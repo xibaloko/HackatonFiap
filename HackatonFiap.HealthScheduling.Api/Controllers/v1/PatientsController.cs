@@ -25,9 +25,9 @@ public class PatientsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPatient(Guid id)
+    public async Task<IActionResult> GetPatient(int id)
     {
-        var request = new GetPatientRequest { Uuid = id };
+        var request = new GetPatientRequest { Id = id };
         var response = await _mediator.Send(request);
         return Ok(response);
     }
