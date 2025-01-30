@@ -24,10 +24,25 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpPost("add-doctor")]
-    public async Task<IActionResult> AddDoctorAsync([FromBody] AddDoctorRequest request, CancellationToken cancellationToken)
+public async Task<IActionResult> AddDoctorAsync([FromBody] AddDoctorRequest request, CancellationToken cancellationToken)
+{
+    try
     {
         Result<AddDoctorResponse> response = await _mediator.Send(request, cancellationToken);
-
         return this.ProcessResponse(response, cancellationToken);
     }
+    catch (Exception ex)
+    {
+        var problemDetails = new ValidationProblemDetails
+        {
+            Title = "Internal Server Error",
+            Detail = ex.Message,
+            Status = StatusCodes.Status500InternalServerError,
+            Instance = HttpContext.Request.Path
+        };
+
+        return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+    }
+}
+
 }
