@@ -29,7 +29,7 @@ public class Startup
 
         // Registra a implementação do repositório
         services.AddScoped<IPatientRepository, PatientRepository>();
-
+        
         services.AddApplicationModule(_configuration);
 
         services.AddHttpClient();
