@@ -21,8 +21,7 @@ public sealed class Schedule : EntityBase
     }
 
     public int DoctorId { get; private set; }
-    public  Doctor Doctor { get; private set; }
-    
+    public  Doctor Doctor { get; private set; }    
     public DateTime DateHour { get; private set; }
     public int Duration { get; private set; }
     public bool Avaliable { get; private set; }
