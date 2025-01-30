@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
+using HackatonFiap.HealthScheduling.Application.Configurations.AutoMapper;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
+
+public sealed class GetAllPatientsMappingProfile : ApplicationMappingProfile
 {
-    public class GetAllPatientsMappingProfile : Profile
+    protected override void RegisterMappings()
     {
-        public GetAllPatientsMappingProfile()
-        {
-            CreateMap<Patient, GetAllPatientsResponse>();
-        }
+        CreateMap<Patient, GetAllPatientsResponse>();
     }
 }
+
