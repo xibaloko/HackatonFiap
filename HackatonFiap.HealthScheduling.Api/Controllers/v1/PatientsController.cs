@@ -2,7 +2,7 @@
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,9 +25,9 @@ public class PatientsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPatient(int id)
+    public async Task<IActionResult> GetPatientById(int id)
     {
-        var request = new GetPatientRequest { Id = id };
+        var request = new GetPatientByIdRequest { Id = id };
         var response = await _mediator.Send(request);
         return Ok(response);
     }

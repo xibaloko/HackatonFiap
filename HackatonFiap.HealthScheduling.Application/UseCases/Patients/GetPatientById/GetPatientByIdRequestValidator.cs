@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientById
 {
-    public class GetPatientRequestValidator : AbstractValidator<GetPatientRequest>
+    public class GetPatientByIdRequestValidator : AbstractValidator<GetPatientByIdRequest>
     {
-        public GetPatientRequestValidator()
+        public GetPatientByIdRequestValidator()
         {
             //RuleFor(x => x.Id)
                 //.NotEmpty().WithMessage("O ID do paciente é obrigatório.")

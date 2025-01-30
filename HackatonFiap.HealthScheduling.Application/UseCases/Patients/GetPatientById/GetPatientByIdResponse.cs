@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientById
 {
-    public class GetPatientResponse
+    public class GetPatientByIdResponse
     {
         public int Id { get; init; }
         public Guid Uuid { get; init; }
