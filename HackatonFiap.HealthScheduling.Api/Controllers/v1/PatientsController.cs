@@ -19,9 +19,23 @@ public class PatientsController : ControllerBase
     [HttpPost("add-patient")]
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
     {
-        Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);
+        try
+        {
+            Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            var problemDetails = new ValidationProblemDetails
+            {
+                Title = "Internal Server Error",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = HttpContext.Request.Path
+            };
 
-        return this.ProcessResponse(response, cancellationToken);
+            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+        }
     }
 
     [HttpGet("{id}")]

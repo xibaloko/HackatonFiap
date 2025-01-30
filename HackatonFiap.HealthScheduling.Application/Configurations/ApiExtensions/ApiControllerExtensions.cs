@@ -43,14 +43,13 @@ public static class ApiControllerExtensions
         return controller.StatusCode(problemDetails!.Status!.Value, problemDetails);
     }
 
-    private static ValidationProblemDetails? CreateProblemDetails(this ControllerBase controller, IError error)
+    private static ValidationProblemDetails CreateProblemDetails(this ControllerBase controller, IError error)
     {
         IError? reason = error.Reasons.SingleOrDefault();
-
-        if (reason is null) return default;
-
-        int statusCode = int.Parse(reason.Message);
-
+        
+        int statusCode = reason != null && int.TryParse(reason.Message, out int parsedCode) 
+            ? parsedCode 
+            : StatusCodes.Status400BadRequest;
         string title = ReasonPhrases.GetReasonPhrase(statusCode);
 
         var problemDetails = new ValidationProblemDetails
@@ -58,14 +57,20 @@ public static class ApiControllerExtensions
             Title = title,
             Detail = error.Message,
             Instance = controller.HttpContext.Request.Path,
-            Status = statusCode,
+            Status = statusCode
         };
 
         foreach (KeyValuePair<string, object> errorMetadata in error.Metadata)
-            problemDetails.Errors.TryAdd(errorMetadata.Key, (string[])errorMetadata.Value);
+        {
+            if (errorMetadata.Value is string[] values)
+            {
+                problemDetails.Errors.TryAdd(errorMetadata.Key, values);
+            }
+        }
 
         return problemDetails;
     }
+
 
     private static void TryAddCustomResponseHeaders(this ControllerBase controller, Result result)
     {
