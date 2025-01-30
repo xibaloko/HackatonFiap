@@ -47,7 +47,7 @@ public class PatientsController : ControllerBase
         return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpGet]
+    [HttpPost("getAll-patients")]
     public async Task<IActionResult> GetAll()
     {
         var response = await _mediator.Send(new GetAllPatientsRequest());
