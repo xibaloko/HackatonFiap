@@ -1,17 +1,10 @@
-﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HackatonFiap.HealthScheduling.Application.Configurations.FluentValidation;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
+
+public class GetAllPatientsValidator : RequestValidator<GetAllPatientsRequest>
 {
-    public class GetAllPatientsValidator : AbstractValidator<GetAllPatientsRequest>
+    protected override void Validate()
     {
-        public GetAllPatientsValidator()
-        {
-            // Como não temos parâmetros, não há validações obrigatórias
-        }
     }
 }

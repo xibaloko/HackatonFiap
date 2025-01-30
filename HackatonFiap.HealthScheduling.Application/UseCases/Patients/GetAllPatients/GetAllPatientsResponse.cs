@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
+﻿namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
 {
     public class GetAllPatientsResponse
+    {
+        public IEnumerable<PatientResponse> Patients { get; init; } = [];
+    }
+
+    public class PatientResponse
     {
         public Guid Uuid { get; init; }
         public required string Name { get; init; }

@@ -1,8 +1,6 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using HackatonFiap.HealthScheduling.Application;
-using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
-using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence.EntitiesRepositories;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
@@ -26,9 +24,6 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-
-        // Registra a implementação do repositório
-        services.AddScoped<IPatientRepository, PatientRepository>();
         
         services.AddApplicationModule(_configuration);
 
