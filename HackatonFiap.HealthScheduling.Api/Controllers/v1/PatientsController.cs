@@ -1,8 +1,9 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
+using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetDoctorByUuid;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientById;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,15 +39,15 @@ public class PatientsController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetPatientById(int id)
+    [HttpGet("{uuid:Guid}")]
+    public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        var request = new GetPatientByIdRequest { Id = id };
-        var response = await _mediator.Send(request);
-        return Ok(response);
+        Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+
+        return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpGet]
+    [HttpPost("getAll-patients")]
     public async Task<IActionResult> GetAll()
     {
         var response = await _mediator.Send(new GetAllPatientsRequest());
