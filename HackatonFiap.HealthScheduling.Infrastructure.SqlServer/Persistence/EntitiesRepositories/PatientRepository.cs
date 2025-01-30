@@ -7,15 +7,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence.Ent
 
 public class PatientRepository : BaseRepository<Patient>, IPatientRepository
 {
-    private readonly AppDbContext _context;
-
     public PatientRepository(AppDbContext db) : base(db)
     {
-        _context = db;
-    }
-
-    public async Task<Patient?> GetByIdAsync(int id)
-    {
-        return await _context.Patients.FindAsync(id);
     }
 }

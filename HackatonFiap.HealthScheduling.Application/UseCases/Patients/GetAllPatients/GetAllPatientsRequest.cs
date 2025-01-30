@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
 {
-    public class GetAllPatientsRequest : IRequest<List<GetAllPatientsResponse>>
+    public sealed record GetAllPatientsRequest : IRequest<List<GetAllPatientsResponse>>
     {
     }
 }

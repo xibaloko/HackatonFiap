@@ -21,17 +21,11 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPati
             _mapper = mapper;
         }
 
-        //public GetAllPatientsRequestHandler(IPatientRepository patientRepository)
-        //{
-        //    _patientRepository = patientRepository;
-        //}
-
         public async Task<List<GetAllPatientsResponse>> Handle(GetAllPatientsRequest request, CancellationToken cancellationToken)
         {
             var patients = await _patientRepository.GetAllAsync();
 
             return _mapper.Map<List<GetAllPatientsResponse>>(patients);
-            //return patients.Adapt<List<GetAllPatientsResponse>>(); // Converte entidades para response
         }
     }
 }
