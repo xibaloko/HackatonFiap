@@ -1,46 +1,46 @@
-#name: .NET Core Desktop
-#
-#on:
-#  push:
-#    branches: [ "release" ]
-#  pull_request:
-#    branches: [ "release" ]
-#  workflow_dispatch:
-#
-#jobs:
-#  build:
-#    strategy:
-#      matrix:
-#        configuration: [Release]
-#
-#    runs-on: ubuntu-latest  # Mudança para um runner Linux
-#
-#    env:
-#      Solution_Name: HackatonFiap/HackatonFiap.sln
-#      Test_Project_Path: HackatonFiap/HackatonFiap.Tests/HackatonFiap.Tests.csproj
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      
-#      # Instalar .NET Core
-#      - name: Instalar .NET Core
-#        uses: actions/setup-dotnet@v4
-#        with:
-#          dotnet-version: 8.0.x
-#      
-#      # Executar todos os testes unitários na solução
-#      - name: Executar testes unitários
-#        run: dotnet test ${{ env.Test_Project_Path }}
-#      
-#      # Restaurar a aplicação para popular a pasta obj com RuntimeIdentifiers
-#      - name: Restaurar a aplicação
-#        run: dotnet restore ${{ env.Solution_Name }}
-#      
-#      # Compile a solução
-#      - name: Compilar a solução
-#        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }}
-#        env:
-#          Configuration: ${{ matrix.configuration }}
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: ubuntu-latest
+
+    env:
+      Solution_Name: HackatonFiap.sln
+      Test_Project_Path: HackatonFiap.Tests/HackatonFiap.Tests.csproj
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Instalar .NET Core
+      - name: Instalar .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Executar todos os testes unitários na solução
+      - name: Executar testes unitários
+        run: dotnet test ${{ env.Test_Project_Path }}
+
+      # Restaurar a aplicação para popular a pasta obj com RuntimeIdentifiers
+      - name: Restaurar a aplicação
+        run: dotnet restore ${{ env.Solution_Name }}
+
+      # Compile a solução
+      - name: Compilar a solução
+        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} /p:TreatWarningsAsErrors=false /p:NoWarn=CS8618
+        env:
+          Configuration: ${{ matrix.configuration }}

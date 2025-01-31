@@ -19,17 +19,44 @@ public class PatientsController : ControllerBase
     [HttpGet("getAll-patients")]
     public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
     {
-        Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
-
-        return this.ProcessResponse(response, cancellationToken);
+        try
+        {
+            Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            var problemDetails = new ValidationProblemDetails
+            {
+                Title = "Internal Server Error",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = HttpContext.Request.Path
+            };
+            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+        }
     }
 
     [HttpGet("{uuid:Guid}")]
     public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+        try
+        {
+            Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            var problemDetails = new ValidationProblemDetails
+            {
+                Title = "Internal Server Error",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = HttpContext.Request.Path
+            };
 
-        return this.ProcessResponse(response, cancellationToken);
+            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+        }
     }
 
     [HttpPost("add-patient")]

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace HackatonFiap.Tests.Tests.Doctors
+namespace HackatonFiap.Tests.Tests.Doctors.AddDoctor
 {
     public class AddDoctorRequestHandlerTests
     {

@@ -1,34 +1,32 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Agendas;
-using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Configurations
+namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Configurations;
+
+public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
 {
-    public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
+    public override void Configure(EntityTypeBuilder<Schedule> builder)
     {
-        public override void Configure(EntityTypeBuilder<Schedule> builder)
-        {
-            base.Configure(builder);
+        base.Configure(builder);
 
-            builder.HasIndex(patient => new { patient.DateHour, patient.DoctorId })
-             .IsUnique();
+        builder.Property(schedule => schedule.DateHour)
+            .IsRequired()
+            .HasColumnOrder(3);
 
-            builder.Property(patient => patient.DateHour)
-             .IsRequired();
+        builder.HasIndex(schedule => new { schedule.DateHour, schedule.DoctorId })
+            .IsUnique();
 
+        builder.Property(schedule => schedule.Duration)
+            .IsRequired()
+            .HasColumnOrder(4);
 
-            builder.Property(patient => patient.Duration)
-                .IsRequired();
-            
-            builder.Property(patient => patient.Avaliable)
-                .IsRequired()
-                .HasDefaultValue(true);
-        }
+        builder.Property(schedule => schedule.Avaliable)
+            .IsRequired()
+            .HasDefaultValue(true)
+            .HasColumnOrder(5);
+
+        builder.Property(schedule => schedule.DoctorId)
+            .HasColumnOrder(6);
     }
 }

@@ -6,11 +6,11 @@ public sealed class Doctor : UserIdentity
 {
     public string CRM { get; private set; }
 
+    #nullable disable
     public Doctor()
     {
-        
     }
-
+    #nullable enable
     public Doctor(string crm)
     {
         CRM = crm;
