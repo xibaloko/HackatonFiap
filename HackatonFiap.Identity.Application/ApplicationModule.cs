@@ -1,7 +1,9 @@
 ﻿using HackatonFiap.Identity.Application.Configurations.AutoMapper;
 using HackatonFiap.Identity.Application.Configurations.FluentValidation;
 using HackatonFiap.Identity.Application.Configurations.MediatR;
+using HackatonFiap.Identity.Application.Services;
 using HackatonFiap.Identity.Domain;
+using HackatonFiap.Identity.Domain.Services;
 using HackatonFiap.Identity.Infrastructure.SqlServer;
 using HackatonFiap.Identity.Infrastructure.SqlServer.IoC;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,7 @@ public static class ApplicationModule
     public static IServiceCollection AddApplicationModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExternalDependencies();
+        services.AddInternalDependencies();
         services.AddAdapters(configuration);
 
         return services;
@@ -36,6 +39,12 @@ public static class ApplicationModule
         services.AddFluentValidationValidators();
         services.AddAutoMapperServices(SolutionAssemblies);
 
+        return services;
+    }
+
+    private static IServiceCollection AddInternalDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         return services;
     }
 

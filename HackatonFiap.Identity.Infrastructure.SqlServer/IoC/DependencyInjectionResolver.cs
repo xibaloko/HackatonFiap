@@ -1,6 +1,7 @@
 ﻿using HackatonFiap.Identity.Domain.Entities;
 using HackatonFiap.Identity.Infrastructure.SqlServer.Data;
 using HackatonFiap.Identity.Infrastructure.SqlServer.Options;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,10 +21,6 @@ public static class DependencyInjectionResolver
 
     private static IServiceCollection AddEntityFrameworkCore(this IServiceCollection services, IConfiguration configuration)
     {
-        //const string ConnectionString = "DefaultConnection";
-
-        //services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(ConnectionString)));
-
         services.AddDbContext<AppDbContext>((provider, builder) =>
         {
             MsSqlServerOptions sqlServerOptions = provider.GetRequiredService<IOptions<MsSqlServerOptions>>().Value;
@@ -41,7 +38,7 @@ public static class DependencyInjectionResolver
 
     private static IServiceCollection AddIdentity(this IServiceCollection services)
     {
-        services.AddIdentityCore<ApplicationUser>(options =>
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;
             options.Password.RequiredLength = 8;
@@ -51,7 +48,8 @@ public static class DependencyInjectionResolver
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.User.RequireUniqueEmail = true;
-        }).AddEntityFrameworkStores<AppDbContext>();
+        }).AddEntityFrameworkStores<AppDbContext>()
+          .AddDefaultTokenProviders();
 
         return services;
     }
