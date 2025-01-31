@@ -1,31 +1,27 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
-using MediatR;
+﻿using MediatR;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
+using FluentResults;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
+
+public class GetAllPatientsRequestHandler : IRequestHandler<GetAllPatientsRequest, Result<GetAllPatientsResponse>>
 {
-    public class GetAllPatientsRequestHandler : IRequestHandler<GetAllPatientsRequest, List<GetAllPatientsResponse>>
+    private readonly IRepositories _repositories;
+    private readonly IMapper _mapper;
+
+    public GetAllPatientsRequestHandler(IRepositories repositories, IMapper mapper)
     {
-        private readonly IPatientRepository _patientRepository;
-        private readonly IMapper _mapper;
+        _repositories = repositories;
+        _mapper = mapper;
+    }
 
-        // No construtor
-        public GetAllPatientsRequestHandler(IPatientRepository patientRepository, IMapper mapper)
-        {
-            _patientRepository = patientRepository;
-            _mapper = mapper;
-        }
+    public async Task<Result<GetAllPatientsResponse>> Handle(GetAllPatientsRequest request, CancellationToken cancellationToken)
+    {
+        var patients = await _repositories.PatientRepository.GetAllAsync(cancellationToken: cancellationToken);
 
-        public async Task<List<GetAllPatientsResponse>> Handle(GetAllPatientsRequest request, CancellationToken cancellationToken)
-        {
-            var patients = await _patientRepository.GetAllAsync();
-
-            return _mapper.Map<List<GetAllPatientsResponse>>(patients);
-        }
+        var response = _mapper.Map<GetAllPatientsResponse>(patients);
+        
+        return Result.Ok(response);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
-using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetDoctorByUuid;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
@@ -16,6 +15,22 @@ public class PatientsController : ControllerBase
     private readonly IMediator _mediator;
 
     public PatientsController(IMediator mediator) => _mediator = mediator;
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
+    {
+        Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
+
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
+    [HttpGet("{uuid:Guid}")]
+    public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    {
+        Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+
+        return this.ProcessResponse(response, cancellationToken);
+    }
 
     [HttpPost("add-patient")]
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
@@ -39,18 +54,7 @@ public class PatientsController : ControllerBase
         }
     }
 
-    [HttpGet("{uuid:Guid}")]
-    public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
-    {
-        Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+    
 
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
-    [HttpPost("getAll-patients")]
-    public async Task<IActionResult> GetAll()
-    {
-        var response = await _mediator.Send(new GetAllPatientsRequest());
-        return Ok(response);
-    }
+    
 }

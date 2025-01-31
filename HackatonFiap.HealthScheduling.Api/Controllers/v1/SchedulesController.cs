@@ -10,11 +10,11 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class ScheduleController : ControllerBase
+    public class SchedulesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ScheduleController(IMediator mediator) => _mediator = mediator;
+        public SchedulesController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost("add-schedule")]
         public async Task<IActionResult> AddSchedule([FromBody] AddScheduleRequest request, CancellationToken cancellationToken)
