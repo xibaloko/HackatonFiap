@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      Solution_Name: HackatonFiap/HackatonFiap.sln
-      Test_Project_Path: HackatonFiap/HackatonFiap.Tests/HackatonFiap.Tests.csproj
+      Solution_Name: HackatonFiap.sln
+      Test_Project_Path: HackatonFiap.Tests/HackatonFiap.Tests.csproj
 
     steps:
       - name: Checkout
