@@ -2,18 +2,20 @@
 
 public sealed class Scheduled
 {
-    public Scheduled()
-    {
-        
-    }
-    public Scheduled(int idAgenda, string pacienteId, bool confirmed)
-    {
-        ScheduleId = idAgenda;
-        PatientId = pacienteId;
-        Confirmed = confirmed;
-    }
-    public int ScheduleId { get; set; }
+    public int ScheduleId { get; private set; }
     public string PatientId { get; private set; }
     public bool Confirmed { get; private set; }
 
+    #nullable disable
+    public Scheduled()
+    {
+    }
+    #nullable enable
+
+    public Scheduled(int scheduleId, string pacientId, bool confirmed)
+    {
+        ScheduleId = scheduleId;
+        PatientId = pacientId;
+        Confirmed = confirmed;
+    }
 }
