@@ -1,30 +1,27 @@
-﻿using AutoMapper;
-using FluentResults;
-using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
-using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDoctors;
-using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
-using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
+﻿using MediatR;
+using AutoMapper;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
-using MediatR;
+using FluentResults;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDoctors;
 
-public class GetAllDoctorsRequestHandler : IRequestHandler<GetAllDoctorsRequest, List<GetAllDoctorsResponse>>
+public class GetAllDoctorsRequestHandler : IRequestHandler<GetAllDoctorsRequest, Result<GetAllDoctorsResponse>>
 {
-    private readonly IDoctorRepository _DoctorRepository;
+    private readonly IRepositories _repositories;
     private readonly IMapper _mapper;
 
-    // No construtor
-    public GetAllDoctorsRequestHandler(IDoctorRepository DoctorRepository, IMapper mapper)
+    public GetAllDoctorsRequestHandler(IRepositories repositories, IMapper mapper)
     {
-        _DoctorRepository = DoctorRepository;
+        _repositories = repositories;
         _mapper = mapper;
     }
 
-    public async Task<List<GetAllDoctorsResponse>> Handle(GetAllDoctorsRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllDoctorsResponse>> Handle(GetAllDoctorsRequest request, CancellationToken cancellationToken)
     {
-        var Doctors = await _DoctorRepository.GetAllAsync();
+        var doctors = await _repositories.DoctorRepository.GetAllAsync(cancellationToken: cancellationToken);
 
-        return _mapper.Map<List<GetAllDoctorsResponse>>(Doctors);
+        var response = _mapper.Map<GetAllDoctorsResponse>(doctors);
+
+        return Result.Ok(response);
     }
 }

@@ -1,6 +1,11 @@
 ﻿namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDoctors;
 
-public sealed class GetAllDoctorsResponse
+public class GetAllDoctorsResponse
+{
+    public IEnumerable<DoctorResponse> Doctors { get; init; } = [];
+}
+
+public class DoctorResponse
 {
     public Guid Uuid { get; init; }
     public required string Name { get; init; }
