@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace HackatonFiap.Tests.Tests.Patients
+namespace HackatonFiap.Tests.Tests.Patients.AddPatient
 {
     public class AddPatientRequestHandlerTests
     {
