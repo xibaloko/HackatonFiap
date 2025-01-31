@@ -2,7 +2,7 @@
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 
-public class GetAllPatientsValidator : RequestValidator<GetAllPatientsRequest>
+public class UpdatePatientValidator : RequestValidator<UpdatePatientRequest>
 {
     protected override void Validate()
     {

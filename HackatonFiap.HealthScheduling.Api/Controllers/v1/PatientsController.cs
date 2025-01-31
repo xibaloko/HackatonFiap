@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
 using MediatR;
@@ -21,7 +22,7 @@ public class PatientsController : ControllerBase
     {
         try
         {
-            Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
+            Result<UpdatePatientResponse> response = await _mediator.Send(new UpdatePatientRequest(), cancellationToken);
             return this.ProcessResponse(response, cancellationToken);
         }
         catch (Exception ex)
@@ -81,7 +82,69 @@ public class PatientsController : ControllerBase
         }
     }
 
-    
 
-    
+    /// <summary>
+    /// Atualiza um paciente pelo UUID.
+    /// </summary>
+    [HttpPut("{uuid}")]
+    public async Task<IActionResult> UpdatePatient(Guid Uuid, [FromBody] UpdatePatientRequest request)
+    {
+        try
+        {
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Value);
+
+        }
+        catch (Exception ex)
+        {
+            var problemDetails = new ValidationProblemDetails
+            {
+                Title = "Internal Server Error",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = HttpContext.Request.Path
+            };
+
+            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+        }
+    }
+
+    /// <summary>
+    /// Deleta um paciente pelo UUID.
+    /// </summary>
+    [HttpDelete("{uuid}")]
+    public async Task<IActionResult> DeletePatient(Guid Uuid)
+    {
+        try 
+        { 
+            var result = await _mediator.Send(new DeletePatientRequest(Uuid));
+
+            if (result.IsFailed)
+            {
+                return NotFound(result.Errors);
+            }
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            var problemDetails = new ValidationProblemDetails
+            {
+                Title = "Internal Server Error",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = HttpContext.Request.Path
+            };
+
+            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
+        }
+    }
+
+
 }
