@@ -8,17 +8,26 @@ public abstract class BaseEntityTypeConfiguration<T> : IEntityTypeConfiguration<
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {
+        builder.Property(entity => entity.Id)
+            .HasColumnOrder(1);
+
         builder.Property(entity => entity.Uuid)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnOrder(2);
 
         builder.HasIndex(entity => entity.Uuid)
             .IsUnique();
 
         builder.Property(entity => entity.CreatedAt)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnOrder(97);
+
+        builder.Property(entity => entity.UpdatedAt)
+            .HasColumnOrder(98);
 
         builder.Property(entity => entity.IsDeleted)
             .HasDefaultValue(false)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnOrder(99);
     }
 }
