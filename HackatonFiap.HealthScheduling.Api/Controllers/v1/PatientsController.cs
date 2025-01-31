@@ -16,7 +16,7 @@ public class PatientsController : ControllerBase
 
     public PatientsController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet]
+    [HttpGet("getAll-patients")]
     public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
     {
         try
