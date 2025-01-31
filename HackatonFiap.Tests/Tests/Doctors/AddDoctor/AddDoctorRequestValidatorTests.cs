@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
 using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.AddDoctor;
 
-namespace HackatonFiap.Tests.Tests.Doctor
+namespace HackatonFiap.Tests.Tests.Doctors.AddDoctor
 {
     public class AddDoctorRequestValidatorTests
     {
