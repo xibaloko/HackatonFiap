@@ -55,46 +55,43 @@ namespace HackatonFiap.EmailProvider.Worker
         }
 
         private async Task ProcessMessage(string message)
+{
+    try
+    {
+        var consultaMessage = JsonSerializer.Deserialize<ConsultaMessageDto>(message);
+        if (consultaMessage == null)
         {
-            try
-            {
-                var consultaMessage = JsonSerializer.Deserialize<ConsultaMessageDto>(message);
-
-                var sendGridOptions = _serviceProvider.GetService<IOptions<SendGridOptions>>()?.Value;
-                if (sendGridOptions != null)
-                {
-                    var client = new SendGridClient(sendGridOptions.ApiKey);
-
-                    var from = new EmailAddress("heiterpm@gmail.com", "Robo 52");
-                    if (consultaMessage != null)
-                    {
-                        var to = new EmailAddress(consultaMessage.EmailMedico, consultaMessage.EmailMedico);
-                        
-                        const string subject = "Health&Med - Nova consulta agendada";
-                        var plainTextContent = $"Olá, Dr. {consultaMessage.NomeMedico}!\nVocê tem uma nova consulta marcada!\nPaciente: {consultaMessage.NomePaciente}.\nData e horário: {consultaMessage.DataConsulta} às {consultaMessage.HoraConsulta}.";
-                        var htmlContent = $"<p>Olá, Dr. {consultaMessage.NomeMedico}!</p><p>Você tem uma nova consulta marcada!</p><p><b>Paciente:</b> {consultaMessage.NomePaciente}</p><p><b>Data e horário:</b> {consultaMessage.DataConsulta} às {consultaMessage.HoraConsulta}.</p>";
-
-                        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-
-
-                        var response = await client.SendEmailAsync(msg);
-
-                        if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
-                        {
-                            _logger.LogInformation("E-mail enviado com sucesso para {to}", consultaMessage.EmailMedico);
-                        }
-                        else
-                        {
-                            _logger.LogError("Falha ao enviar e-mail: {status}", response.StatusCode);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro ao processar a mensagem.");
-            }
+            return;
         }
+
+        var sendGridOptions = _serviceProvider.GetService<IOptions<SendGridOptions>>()?.Value;
+        if (sendGridOptions == null)
+        {
+            return;
+        }
+
+        var client = _serviceProvider.GetService<ISendGridClient>();
+        if (client == null)
+        {
+            return;
+        }
+
+        var from = new EmailAddress("heiterpm@gmail.com", "Robo 52");
+        var to = new EmailAddress(consultaMessage.EmailMedico, consultaMessage.EmailMedico);
+
+        const string subject = "Health&Med - Nova consulta agendada";
+        var plainTextContent = $"Olá, Dr. {consultaMessage.NomeMedico}!\nVocê tem uma nova consulta marcada!\nPaciente: {consultaMessage.NomePaciente}.\nData e horário: {consultaMessage.DataConsulta} às {consultaMessage.HoraConsulta}.";
+        var htmlContent = $"<p>Olá, Dr. {consultaMessage.NomeMedico}!</p><p>Você tem uma nova consulta marcada!</p><p><b>Paciente:</b> {consultaMessage.NomePaciente}</p><p><b>Data e horário:</b> {consultaMessage.DataConsulta} às {consultaMessage.HoraConsulta}.</p>";
+
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        await client.SendEmailAsync(msg);
+    }
+    catch(Exception ex)
+    {
+        _logger.LogError(ex, "Erro ao processar a mensagem.");
+    }
+}
+
     }
 
 }

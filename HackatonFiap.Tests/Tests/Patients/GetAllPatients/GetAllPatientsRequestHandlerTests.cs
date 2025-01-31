@@ -11,7 +11,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
     {
         private readonly Mock<IRepositories> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly GetAllPatientsRequestHandler _handler;
+        private readonly UpdatePatientRequestHandler _handler;
 
         public GetAllPatientsRequestHandlerTests()
         {
@@ -42,7 +42,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
                 }
             };
 
-            var response = new GetAllPatientsResponse
+            var response = new UpdatePatientResponse
             {
                 Patients = new List<PatientResponse> 
                 {
@@ -80,11 +80,11 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
 
 
             _mapperMock
-                .Setup(mapper => mapper.Map<GetAllPatientsResponse>(patients))
+                .Setup(mapper => mapper.Map<UpdatePatientResponse>(patients))
                 .Returns(response);
             
             // Act
-            var result = await _handler.Handle(new GetAllPatientsRequest(), CancellationToken.None);
+            var result = await _handler.Handle(new UpdatePatientRequest(), CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
@@ -112,11 +112,11 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
                 .ReturnsAsync(new List<Patient>());
 
             _mapperMock
-                .Setup(mapper => mapper.Map<GetAllPatientsResponse>(It.IsAny<List<Patient>>()))
-                .Returns(new GetAllPatientsResponse { Patients = Enumerable.Empty<PatientResponse>() });
+                .Setup(mapper => mapper.Map<UpdatePatientResponse>(It.IsAny<List<Patient>>()))
+                .Returns(new UpdatePatientResponse { Patients = Enumerable.Empty<PatientResponse>() });
 
             // Act
-            var result = await _handler.Handle(new GetAllPatientsRequest(), CancellationToken.None);
+            var result = await _handler.Handle(new UpdatePatientRequest(), CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
@@ -141,7 +141,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
 
             // Act & Assert
             await Assert.ThrowsAsync<Exception>(async () =>
-                await _handler.Handle(new GetAllPatientsRequest(), CancellationToken.None));
+                await _handler.Handle(new UpdatePatientRequest(), CancellationToken.None));
         }
     }
 }
