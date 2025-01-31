@@ -41,6 +41,6 @@ jobs:
 
       # Compile a solução
       - name: Compilar a solução
-        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }}
+        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} -warnaserror- CS8618
         env:
           Configuration: ${{ matrix.configuration }}
