@@ -17,7 +17,7 @@ public class AccountsController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateAccountRequest request, CancellationToken cancellationToken)
     {
-        Result response = await _mediator.Send(request, cancellationToken);
+        Result<CreateAccountResponse> response = await _mediator.Send(request, cancellationToken);
 
         return this.ProcessResponse(response, cancellationToken);
     }

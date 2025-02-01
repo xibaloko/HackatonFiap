@@ -12,6 +12,8 @@ using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HackatonFiap.HealthScheduling.Domain.IdentityService;
+using HackatonFiap.HealthScheduling.Application.IdentityService;
 
 namespace HackatonFiap.HealthScheduling.Application;
 
@@ -42,6 +44,7 @@ public static class ApplicationModule
 
         services.AddFluentValidationValidators();
         services.AddAutoMapperServices(SolutionAssemblies);
+        services.AddScoped<IApiIdentityService, ApiIdentityService>();
 
         return services;
     }

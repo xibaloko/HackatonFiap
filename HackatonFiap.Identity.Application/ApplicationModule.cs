@@ -5,6 +5,7 @@ using HackatonFiap.Identity.Application.Services;
 using HackatonFiap.Identity.Domain;
 using HackatonFiap.Identity.Domain.Services;
 using HackatonFiap.Identity.Infrastructure.SqlServer;
+using HackatonFiap.Identity.Infrastructure.SqlServer.Initializer;
 using HackatonFiap.Identity.Infrastructure.SqlServer.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,8 @@ public static class ApplicationModule
     public static IServiceCollection AddApplicationModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExternalDependencies();
-        services.AddInternalDependencies();
         services.AddAdapters(configuration);
+        services.AddInternalDependencies();
 
         return services;
     }
@@ -45,9 +46,10 @@ public static class ApplicationModule
     private static IServiceCollection AddInternalDependencies(this IServiceCollection services)
     {
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        
         return services;
     }
-
+    
     private static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
         return services.AddSqlServerAdapter(configuration);

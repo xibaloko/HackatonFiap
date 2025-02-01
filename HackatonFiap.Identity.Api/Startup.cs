@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using HackatonFiap.Identity.Application;
+using HackatonFiap.Identity.Domain.Services;
 
 namespace HackatonFiap.Identity.Api;
 
@@ -55,7 +56,12 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
-
         app.MapControllers();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            dbInitializer.Initialize();
+        }
     }
 }
