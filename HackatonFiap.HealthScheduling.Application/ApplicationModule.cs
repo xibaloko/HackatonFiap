@@ -14,11 +14,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using HackatonFiap.HealthScheduling.Domain.IdentityService;
 using HackatonFiap.HealthScheduling.Application.IdentityService;
+using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
+using Asp.Versioning.Conventions;
+using Asp.Versioning;
 
 namespace HackatonFiap.HealthScheduling.Application;
 
 public static class ApplicationModule
 {
+    private const int ApiDefaultMajorVersion = 1;
+    private const string ApiVersionHeader = "x-api-version";
+    private const string ApiVersionGroupNameFormat = "'v'V";
+
     private static readonly Assembly[] SolutionAssemblies =
     [
         ApplicationAssemblyReference.Assembly,
@@ -32,6 +39,7 @@ public static class ApplicationModule
         services.AddExternalDependencies();
         services.AddInternalDependencies(configuration);
         services.AddAdapters(configuration);
+        
 
         return services;
     }
@@ -44,7 +52,7 @@ public static class ApplicationModule
 
         services.AddFluentValidationValidators();
         services.AddAutoMapperServices(SolutionAssemblies);
-        services.AddScoped<IApiIdentityService, ApiIdentityService>();
+        services.AddApiVersioning();
 
         return services;
     }
@@ -68,6 +76,10 @@ public static class ApplicationModule
             };
         });
 
+        services.AddScoped<IApiIdentityService, ApiIdentityService>();
+        services.AddProblemDetails();
+        services.AddDefaultExceptionHandlers();
+
         return services;
     }
 
@@ -75,6 +87,31 @@ public static class ApplicationModule
     {
         services.AddRabbitAdapter(configuration);
         services.AddSqlServerAdapter(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddDefaultExceptionHandlers(this IServiceCollection services)
+    {
+        return services.AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
+    }
+
+    private static IServiceCollection AddApiVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(configuration =>
+        {
+            configuration.DefaultApiVersion = new ApiVersion(ApiDefaultMajorVersion);
+            configuration.AssumeDefaultVersionWhenUnspecified = true;
+            configuration.ReportApiVersions = true;
+            configuration.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(), new HeaderApiVersionReader(ApiVersionHeader), new MediaTypeApiVersionReader(ApiVersionHeader));
+        }).AddMvc(configuration =>
+        {
+            configuration.Conventions.Add(new VersionByNamespaceConvention());
+        }).AddApiExplorer(configuration =>
+        {
+            configuration.GroupNameFormat = ApiVersionGroupNameFormat;
+            configuration.SubstituteApiVersionInUrl = true;
+        });
 
         return services;
     }
