@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using FluentResults;
+﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
@@ -8,6 +7,7 @@ using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.UpdatePatient;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -15,6 +15,7 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize]
 public class PatientsController : ControllerBase
 {
     private readonly IMediator _mediator;
