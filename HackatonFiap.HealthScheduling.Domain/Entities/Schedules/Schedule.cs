@@ -8,8 +8,6 @@ public sealed class Schedule : EntityBase
 {
     public int DoctorId { get; private set; }
     public Doctor Doctor { get; private set; }
-    public int? PatientId { get; private set; }
-    public Patient? Patient { get; private set; }
     public DateTime DateHour { get; private set; }
     public int Duration { get; private set; }
     public bool Avaliable { get; private set; }
@@ -29,9 +27,8 @@ public sealed class Schedule : EntityBase
         Avaliable = true;
     }
 
-    public void ScheduleAppointment(Patient patient)
+    public void SetAppointment()
     {
-        Patient = patient;
         Avaliable = false;
     }
 
