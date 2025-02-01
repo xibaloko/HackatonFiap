@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,6 +66,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     Duration = table.Column<int>(type: "int", nullable: false),
                     Avaliable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
+                    PatientId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
@@ -79,6 +80,11 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         principalTable: "Doctors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Schedules_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -105,6 +111,11 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Schedules_PatientId",
+                table: "Schedules",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Schedules_Uuid",
                 table: "Schedules",
                 column: "Uuid",
@@ -115,13 +126,13 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Patients");
-
-            migrationBuilder.DropTable(
                 name: "Schedules");
 
             migrationBuilder.DropTable(
                 name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "Patients");
         }
     }
 }

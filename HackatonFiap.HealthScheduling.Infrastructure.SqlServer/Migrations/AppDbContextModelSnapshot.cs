@@ -60,6 +60,10 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .HasDefaultValue(false)
                         .HasColumnOrder(99);
 
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(7);
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(98);
@@ -72,6 +76,8 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
 
                     b.HasIndex("Uuid")
                         .IsUnique();
@@ -232,7 +238,13 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Patients.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
                     b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Agendas.Interfaces;
-using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
+using HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Interfaces;
 
 namespace HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 

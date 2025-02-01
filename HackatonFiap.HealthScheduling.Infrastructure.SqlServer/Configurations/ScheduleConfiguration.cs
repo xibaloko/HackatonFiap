@@ -1,4 +1,4 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Agendas;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,5 +28,8 @@ public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
 
         builder.Property(schedule => schedule.DoctorId)
             .HasColumnOrder(6);
+
+        builder.Property(schedule => schedule.PatientId)
+            .HasColumnOrder(7);
     }
 }

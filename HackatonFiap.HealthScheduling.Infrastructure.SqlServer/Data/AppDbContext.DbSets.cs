@@ -1,6 +1,6 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Agendas;
-using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
+using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using Microsoft.EntityFrameworkCore;
 
 namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Data;

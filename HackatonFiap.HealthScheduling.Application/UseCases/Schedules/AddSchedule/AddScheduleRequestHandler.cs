@@ -1,8 +1,8 @@
 ﻿using Azure;
 using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
-using HackatonFiap.HealthScheduling.Domain.Entities.Agendas;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
+using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using MediatR;
 

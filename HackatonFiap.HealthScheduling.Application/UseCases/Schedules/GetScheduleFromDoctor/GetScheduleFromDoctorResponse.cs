@@ -10,6 +10,12 @@ public class GetScheduleFromDoctorResponse
 public class DoctorAvailableSchedule
 {
     public DateOnly DateSchedule { get; set; }
-    public List<TimeOnly> Hours { get; set; } = [];
+    public List<Appointment> Appointments { get; set; } = [];
+}
+
+public class Appointment
+{
+    public TimeOnly Hour { get; set; }
     public Guid ScheduleUuid { get; set; }
+
 }

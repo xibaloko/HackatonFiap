@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
-using HackatonFiap.HealthScheduling.Domain.Entities.Agendas;
+using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using MediatR;
 
@@ -35,20 +35,31 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
 
     private static GetScheduleFromDoctorResponse CreateResponse(GetScheduleFromDoctorRequest request, IEnumerable<Schedule> schedules)
     {
+        var schedulesGrouped = schedules.GroupBy(x => x.DateHour.Date).ToList();
 
         GetScheduleFromDoctorResponse getScheduleFromDoctorResponse = new GetScheduleFromDoctorResponse
         {
             DoctorUuid = request.DoctorUuId
         };
         List<DoctorAvailableSchedule> doctorAvailableSchedules = new List<DoctorAvailableSchedule>();
-        foreach (var schedule in schedules)
+
+        foreach (var schedule in schedulesGrouped)
         {
             var doctorAvailableSchedule = new DoctorAvailableSchedule
             {
-                DateSchedule = DateOnly.Parse(schedule.DateHour.Date.ToShortDateString()),
-                Hours = new List<TimeOnly> { TimeOnly.Parse(schedule.DateHour.TimeOfDay.ToString()) },
-                ScheduleUuid = schedule.Uuid
+                DateSchedule = DateOnly.Parse(schedule.Key.Date.ToShortDateString())
             };
+            doctorAvailableSchedule.Appointments = new List<Appointment>();
+            
+            foreach (var hour in schedule)
+            {
+                var appointment = new Appointment
+                {
+                    Hour = TimeOnly.Parse(hour.DateHour.TimeOfDay.ToString()),
+                    ScheduleUuid = hour.Uuid
+                };
+                doctorAvailableSchedule.Appointments.Add(appointment);
+            }           
             doctorAvailableSchedules.Add(doctorAvailableSchedule);
         }
         getScheduleFromDoctorResponse.FreeSchedules = doctorAvailableSchedules;
