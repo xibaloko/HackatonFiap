@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250201155306_FirstMigration")]
+    [Migration("20250201194942_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -46,10 +46,12 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .HasColumnOrder(99);
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
 
                     b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(4);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
