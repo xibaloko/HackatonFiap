@@ -11,8 +11,19 @@ public sealed class Doctor : UserIdentity
     {
     }
     #nullable enable
-    public Doctor(string crm)
+
+    public Doctor(Guid identityId, string name, string lastName, string email, string cpf, string crm)
+        : base(identityId, name, lastName, email, cpf)
     {
+        CRM = crm;
+    }
+
+    public void UpdateBasicInformations(string name, string lastName, string email, string cpf, string crm)
+    {
+        Name = name;
+        LastName = lastName;
+        Email = email;
+        CPF = cpf;
         CRM = crm;
     }
 }
