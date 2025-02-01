@@ -3,8 +3,24 @@
 public abstract class UserIdentity : EntityBase
 {
     public Guid? IdentityId { get; init; }
-    public required string Name { get; init; }
-    public required string LastName { get; init; }
-    public required string Email { get; init; }
-    public required string CPF { get; init; }
+    public string Name { get; protected set; }
+    public string LastName { get; protected set; }
+    public string Email { get; protected set; }
+    public string CPF { get; protected set; }
+
+    #nullable disable
+    protected UserIdentity()
+    {
+        
+    }
+    #nullable enable
+
+    protected UserIdentity(Guid? identityId, string name, string lastName, string email, string cPF)
+    {
+        IdentityId = identityId;
+        Name = name;
+        LastName = lastName;
+        Email = email;
+        CPF = cPF;
+    }
 }

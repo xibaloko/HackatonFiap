@@ -5,22 +5,23 @@ using FluentResults;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 
-public class UpdatePatientRequestHandler : IRequestHandler<UpdatePatientRequest, Result<UpdatePatientResponse>>
+public class GetAllPatientsRequestHandler : IRequestHandler<GetAllPatientsRequest, Result<GetAllPatientsResponse>>
 {
     private readonly IRepositories _repositories;
     private readonly IMapper _mapper;
 
-    public UpdatePatientRequestHandler(IRepositories repositories, IMapper mapper)
+    public GetAllPatientsRequestHandler(IRepositories repositories, IMapper mapper)
     {
         _repositories = repositories;
         _mapper = mapper;
     }
 
-    public async Task<Result<UpdatePatientResponse>> Handle(UpdatePatientRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllPatientsResponse>> Handle(GetAllPatientsRequest request, CancellationToken cancellationToken)
     {
-        var patients = await _repositories.PatientRepository.GetAllAsync(cancellationToken: cancellationToken);
+        var patients = await _repositories.PatientRepository.GetAllAsync(patient =>
+            patient.IsDeleted == false, cancellationToken: cancellationToken);
 
-        var response = _mapper.Map<UpdatePatientResponse>(patients);
+        var response = _mapper.Map<GetAllPatientsResponse>(patients);
         
         return Result.Ok(response);
     }

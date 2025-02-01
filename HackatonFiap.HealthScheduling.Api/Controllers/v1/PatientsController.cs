@@ -1,9 +1,11 @@
-﻿using FluentResults;
+﻿using Azure.Core;
+using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.UpdatePatient;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +19,12 @@ public class PatientsController : ControllerBase
 
     public PatientsController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet("getAll-patients")]
+    [HttpGet]
     public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
     {
         try
         {
-            Result<UpdatePatientResponse> response = await _mediator.Send(new UpdatePatientRequest(), cancellationToken);
+            Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
             return this.ProcessResponse(response, cancellationToken);
         }
         catch (Exception ex)
@@ -60,7 +62,7 @@ public class PatientsController : ControllerBase
         }
     }
 
-    [HttpPost("add-patient")]
+    [HttpPost]
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
     {
         try
@@ -82,24 +84,13 @@ public class PatientsController : ControllerBase
         }
     }
 
-
-    /// <summary>
-    /// Atualiza um paciente pelo UUID.
-    /// </summary>
-    [HttpPut("{uuid}")]
-    public async Task<IActionResult> UpdatePatient(Guid Uuid, [FromBody] UpdatePatientRequest request)
+    [HttpPut]
+    public async Task<IActionResult> UpdatePatientAsync([FromBody] UpdatePatientRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _mediator.Send(request);
-
-            if (result.IsFailed)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok(result.Value);
-
+            Result response = await _mediator.Send(request, cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -115,22 +106,13 @@ public class PatientsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Deleta um paciente pelo UUID.
-    /// </summary>
-    [HttpDelete("{uuid}")]
-    public async Task<IActionResult> DeletePatient(Guid Uuid)
+    [HttpDelete("{uuid:Guid}")]
+    public async Task<IActionResult> DeletePatientAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        try 
-        { 
-            var result = await _mediator.Send(new DeletePatientRequest(Uuid));
-
-            if (result.IsFailed)
-            {
-                return NotFound(result.Errors);
-            }
-
-            return NoContent();
+        try
+        {
+            Result response = await _mediator.Send(new DeletePatientRequest(uuid), cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
         }
         catch (Exception ex)
         {

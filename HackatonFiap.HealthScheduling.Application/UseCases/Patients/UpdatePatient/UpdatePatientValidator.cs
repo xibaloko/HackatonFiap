@@ -7,11 +7,30 @@ public class UpdatePatientValidator : RequestValidator<UpdatePatientRequest>
 {
     protected override void Validate()
     {
-        RuleFor(request => request.Uuid).NotEmpty().WithMessage("O UUID do paciente é obrigatório.");
-        RuleFor(request => request.Name).NotEmpty().WithMessage("O nome é obrigatório.");
-        RuleFor(request => request.LastName).NotEmpty().WithMessage("O sobrenome é obrigatório.");
-        RuleFor(request => request.Email).EmailAddress().WithMessage("E-mail inválido.");
-        RuleFor(request => request.CPF).NotEmpty().Length(11).WithMessage("CPF inválido.");
-        RuleFor(request => request.RG).NotEmpty().WithMessage("RG é obrigatório.");
+        RuleFor(request => request.Uuid)
+            .NotEmpty()
+            .WithMessage("Uuid is required.");
+
+        RuleFor(request => request.Name)
+            .NotEmpty()
+            .WithMessage("Name is required.");
+
+        RuleFor(request => request.LastName)
+            .NotEmpty()
+            .WithMessage("Last name is required");
+
+        RuleFor(request => request.Email)
+            .EmailAddress()
+            .WithMessage("E-mail is required.");
+
+        RuleFor(request => request.CPF)
+            .NotEmpty()
+            .WithMessage("CPF is required.")
+            .Length(11)
+            .WithMessage("Invalid CPF.");
+
+        RuleFor(request => request.RG)
+            .NotEmpty()
+            .WithMessage("RG is required.");
     }
 }

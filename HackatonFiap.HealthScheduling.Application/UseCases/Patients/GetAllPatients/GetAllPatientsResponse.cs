@@ -1,6 +1,6 @@
 ﻿namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients
 {
-    public class UpdatePatientResponse
+    public class GetAllPatientsResponse
     {
         public IEnumerable<PatientResponse> Patients { get; init; } = [];
     }

@@ -11,8 +11,19 @@ public sealed class Patient : UserIdentity
     {
     }
     #nullable enable
-    public Patient(string rG)
+
+    public Patient(Guid identityId, string name, string lastName, string email, string cpf, string rg)
+        : base(identityId, name, lastName, email, cpf)
     {
-        RG = rG;
+        RG = rg;
+    }
+
+    public void UpdateBasicInformations(string name, string lastName, string email, string cpf, string rg)
+    {
+        Name = name;
+        LastName = lastName;
+        Email = email;
+        CPF = cpf;
+        RG = rg;
     }
 }

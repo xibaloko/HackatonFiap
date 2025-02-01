@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using HackatonFiap.HealthScheduling.Application.Configurations.AutoMapper;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 
-public class UpdatePatientMappingProfile : Profile
+public class GetAllPatientsMappingProfile : Profile
 {
-    public UpdatePatientMappingProfile()
+    public GetAllPatientsMappingProfile()
     {
-        CreateMap<IEnumerable<Patient>, UpdatePatientResponse>()
+        CreateMap<IEnumerable<Patient>, GetAllPatientsResponse>()
             .ForPath(destination => destination.Patients, opts => opts.MapFrom(source => source));
 
         CreateMap<Patient, PatientResponse>();
