@@ -7,11 +7,13 @@ using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.UpdateDoctor;
 using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.DeleteDoctor;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(Roles = "Admin,Doctor")]
 public class DoctorsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -33,6 +35,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> AddDoctorAsync([FromBody] AddDoctorRequest request, CancellationToken cancellationToken)
     {
         Result<AddDoctorResponse> response = await _mediator.Send(request, cancellationToken);

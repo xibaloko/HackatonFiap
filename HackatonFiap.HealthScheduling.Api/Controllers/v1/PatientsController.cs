@@ -14,7 +14,7 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Admin,Patient")]
 public class PatientsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -36,6 +36,7 @@ public class PatientsController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
     {
         Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);

@@ -3,12 +3,14 @@ using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetScheduleFromDoctor;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize]
 public class SchedulesController : ControllerBase
 {
     private readonly IMediator _mediator;
