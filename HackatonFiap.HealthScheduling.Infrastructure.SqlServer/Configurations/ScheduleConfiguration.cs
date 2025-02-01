@@ -27,9 +27,6 @@ public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
             .HasColumnOrder(5);
 
         builder.Property(schedule => schedule.DoctorId)
-            .HasColumnOrder(6);
-
-        builder.Property(schedule => schedule.PatientId)
-            .HasColumnOrder(7);
+            .HasColumnOrder(6);       
     }
 }

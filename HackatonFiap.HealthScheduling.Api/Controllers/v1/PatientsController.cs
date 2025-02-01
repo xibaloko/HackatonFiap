@@ -2,12 +2,14 @@
 using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.UpdatePatient;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
@@ -128,5 +130,10 @@ public class PatientsController : ControllerBase
         }
     }
 
-
+    [HttpPost("appointment")]
+    public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
 }

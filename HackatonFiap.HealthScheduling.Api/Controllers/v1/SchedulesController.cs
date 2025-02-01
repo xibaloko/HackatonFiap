@@ -28,7 +28,7 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1
         public async Task<IActionResult> GetScheduleFromDoctor([FromRoute] Guid uuid, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(new GetScheduleFromDoctorRequest(uuid), cancellationToken: cancellationToken);
-            return Ok(response);
+            return this.ProcessResponse(response, cancellationToken);
         }
 
     }

@@ -22,7 +22,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Agendas.Schedule", b =>
+            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Appointments.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,28 +31,10 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Avaliable")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true)
-                        .HasColumnOrder(5);
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(97);
-
-                    b.Property<DateTime>("DateHour")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(6);
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int")
-                        .HasColumnOrder(4);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -60,9 +42,11 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .HasDefaultValue(false)
                         .HasColumnOrder(99);
 
-                    b.Property<int?>("PatientId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(7);
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -75,17 +59,15 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
-
                     b.HasIndex("PatientId");
+
+                    b.HasIndex("ScheduleId")
+                        .IsUnique();
 
                     b.HasIndex("Uuid")
                         .IsUnique();
 
-                    b.HasIndex("DateHour", "DoctorId")
-                        .IsUnique();
-
-                    b.ToTable("Schedules");
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Doctor", b =>
@@ -230,7 +212,86 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Agendas.Schedule", b =>
+            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Avaliable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnOrder(5);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(97);
+
+                    b.Property<DateTime>("DateHour")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3);
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(6);
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int")
+                        .HasColumnOrder(4);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnOrder(99);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(98);
+
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("Uuid")
+                        .IsUnique();
+
+                    b.HasIndex("DateHour", "DoctorId")
+                        .IsUnique();
+
+                    b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Appointments.Appointment", b =>
+                {
+                    b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Patients.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Schedule", "Schedule")
+                        .WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Schedule", b =>
                 {
                     b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Doctor", "Doctor")
                         .WithMany()
@@ -238,13 +299,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Patients.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId");
-
                     b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }
