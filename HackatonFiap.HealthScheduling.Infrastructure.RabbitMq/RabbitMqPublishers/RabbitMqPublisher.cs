@@ -25,7 +25,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Repository
             try
             {
                 var dto = new ConsultaMessageDto(nomeMedico, emailMedico, nomePaciente, dataConsulta, horaConsulta);
-                var factory = new ConnectionFactory { HostName = "localhost" };
+                var factory = new ConnectionFactory { HostName = _rabbitMqQueue.HostName };
                 var connection = await factory.CreateConnectionAsync();
                 var channel = await connection.CreateChannelAsync();
                 
@@ -34,7 +34,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Repository
                 var mensagemJson = JsonSerializer.Serialize(dto);
                 var body = Encoding.UTF8.GetBytes(mensagemJson);
                 
-                await channel.BasicPublishAsync("", _rabbitMqQueue.HostName, body);
+                await channel.BasicPublishAsync("", _rabbitMqQueue.QueueName, body);
                     
                 
                 Console.WriteLine($"[Producer] Mensagem enviada: {mensagemJson}");
