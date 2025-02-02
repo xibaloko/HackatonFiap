@@ -13,13 +13,17 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
+builder.Services.Configure<SendGridOptions>(builder.Configuration.GetSection("SendGridOptions"));
+
 builder.Services.AddSingleton<ISendGridClient>(sp =>
 {
     var options = sp.GetRequiredService<IOptions<SendGridOptions>>().Value;
+    if (string.IsNullOrEmpty(options.ApiKey))
+    {
+        throw new Exception("SendGrid API Key não configurada corretamente.");
+    }
     return new SendGridClient(options.ApiKey);
 });
-
-builder.Services.AddHostedService<Worker>();
 
 builder.Services.AddHostedService<Worker>();
 
