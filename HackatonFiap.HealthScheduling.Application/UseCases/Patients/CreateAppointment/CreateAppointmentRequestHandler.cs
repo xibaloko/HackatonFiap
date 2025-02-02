@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentResults;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
@@ -8,21 +7,18 @@ using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 using MediatR;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 
 public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppointmentRequest, Result>
 {
     private readonly IRepositories _repositories;
     private readonly IMapper _mapper;
-    public readonly IRabbitMqPublisher _raabitRepository;
-    public CreateAppointmentRequestHandler(IRepositories repositories
-        , IMapper mapper
-        , IRabbitMqPublisher rabbitRepository)
-
+    public readonly IRabbitMqPublisher _rabbitRepository;
+    public CreateAppointmentRequestHandler(IRepositories repositories, IMapper mapper, IRabbitMqPublisher rabbitRepository)
     {
         _repositories = repositories;
         _mapper = mapper;
-        _raabitRepository = rabbitRepository;
+        _rabbitRepository = rabbitRepository;
     }
 
     public async Task<Result> Handle(CreateAppointmentRequest request, CancellationToken cancellationToken)
@@ -55,7 +51,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         var doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
         if (!(doctor is null))
         {
-            await _raabitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.DateHour.ToString("dd/MM/yyyy"), schedule.DateHour.ToString("HH:mm"));
+           await _rabbitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.DateHour.ToString("dd/MM/yyyy"), schedule.DateHour.ToString("HH:mm"));
         }
         return Result.Ok();
     }
