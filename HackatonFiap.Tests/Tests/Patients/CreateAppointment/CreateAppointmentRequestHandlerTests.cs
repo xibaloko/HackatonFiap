@@ -186,7 +186,7 @@ namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
                     It.IsAny<string?>(),
                     It.IsAny<bool>(),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Expression<Func<Patient, bool>> predicate) =>
+                .ReturnsAsync((Expression<Func<Patient, bool>> predicate, string? _, bool _, CancellationToken _) =>
                 {
                     return predicate.Compile().Invoke(patient1) ? patient1 : patient2;
                 });
