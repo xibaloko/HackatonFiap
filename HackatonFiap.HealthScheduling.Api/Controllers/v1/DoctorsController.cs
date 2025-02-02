@@ -13,7 +13,7 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin,Doctor")]
+//[Authorize(Roles = "Admin,Doctor")]
 public class DoctorsController : ControllerBase
 {
     private readonly IMediator _mediator;

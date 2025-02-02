@@ -13,7 +13,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 {
     private readonly IRepositories _repositories;
     private readonly IMapper _mapper;
-    public readonly IRabbitMqPublisher _rabbitRepository;
+    private readonly IRabbitMqPublisher _rabbitRepository;
     public CreateAppointmentRequestHandler(IRepositories repositories, IMapper mapper, IRabbitMqPublisher rabbitRepository)
     {
         _repositories = repositories;
