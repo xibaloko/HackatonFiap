@@ -3,6 +3,7 @@ using System.Text.Json;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Entities;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.RabbitMqPublishers;
@@ -11,9 +12,9 @@ public class RabbitMqPublisher : IRabbitMqPublisher
 {
     private readonly RabbitMqSettings _rabbitMqQueue;
 
-    public RabbitMqPublisher(RabbitMqSettings rabbitMqQueue)
+    public RabbitMqPublisher(IOptions<RabbitMqSettings> options)
     {
-        _rabbitMqQueue = rabbitMqQueue;
+        _rabbitMqQueue = options.Value;
     }
 
     public async Task EnviarMensagem(string nomeMedico,
