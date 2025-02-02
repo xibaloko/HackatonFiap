@@ -6,22 +6,20 @@ namespace HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 
 public class Appointment : EntityBase
 {
-    public Appointment(Patient patient, Schedule schedule)
-    {
-        Patient = patient;
-        Schedule = schedule;
-    }
-#nullable disable
-    public Appointment()
-    {
-
-    }
-#nullable enable
-
     public int ScheduleId { get; init; }
     public int PatientId { get; init; }
     public Patient Patient { get; init; }
     public Schedule Schedule { get; init; }
 
+    #nullable disable
+    public Appointment()
+    {
+    }
+    #nullable enable
 
+    public Appointment(Patient patient, Schedule schedule)
+    {
+        Patient = patient;
+        Schedule = schedule;
+    }
 }

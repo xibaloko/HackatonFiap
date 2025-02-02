@@ -9,13 +9,12 @@ using HackatonFiap.HealthScheduling.Application.UseCases.Patients.UpdatePatient;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize(Roles = "Admin,Patient")]
 public class PatientsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -25,110 +24,37 @@ public class PatientsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
-            return this.ProcessResponse(response, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "Internal Server Error",
-                Detail = ex.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Instance = HttpContext.Request.Path
-            };
-            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
-        }
+        Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpGet("{uuid:Guid}")]
     public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        try
-        {
-            Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
-            return this.ProcessResponse(response, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "Internal Server Error",
-                Detail = ex.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Instance = HttpContext.Request.Path
-            };
-
-            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
-        }
+        Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
     {
-        try
-        {
-            Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);
-            return this.ProcessResponse(response, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "Internal Server Error",
-                Detail = ex.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Instance = HttpContext.Request.Path
-            };
-
-            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
-        }
+        Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdatePatientAsync([FromBody] UpdatePatientRequest request, CancellationToken cancellationToken)
     {
-        try
-        {
-            Result response = await _mediator.Send(request, cancellationToken);
-            return this.ProcessResponse(response, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "Internal Server Error",
-                Detail = ex.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Instance = HttpContext.Request.Path
-            };
-
-            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
-        }
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpDelete("{uuid:Guid}")]
     public async Task<IActionResult> DeletePatientAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        try
-        {
-            Result response = await _mediator.Send(new DeletePatientRequest(uuid), cancellationToken);
-            return this.ProcessResponse(response, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            var problemDetails = new ValidationProblemDetails
-            {
-                Title = "Internal Server Error",
-                Detail = ex.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Instance = HttpContext.Request.Path
-            };
-
-            return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
-        }
+        Result response = await _mediator.Send(new DeletePatientRequest(uuid), cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpPost("appointment")]

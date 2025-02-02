@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentValidation;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
@@ -17,8 +16,10 @@ public sealed class AddPatientRequestValidator : RequestValidator<AddPatientRequ
             .WithMessage("Last name is required.");
 
         RuleFor(request => request.Email)
-            .NotEmpty()
-            .WithMessage("Email is required.");
+          .NotEmpty()
+          .WithMessage("E-mail is required.")
+          .EmailAddress()
+          .WithMessage("Inform a valid e-mail address");
 
         RuleFor(request => request.CPF)
             .NotEmpty()
@@ -27,5 +28,19 @@ public sealed class AddPatientRequestValidator : RequestValidator<AddPatientRequ
         RuleFor(request => request.RG)
             .NotEmpty()
             .WithMessage("RG is required.");
+
+        RuleFor(request => request.Username)
+            .NotEmpty()
+            .WithMessage("Username is required.");
+
+        RuleFor(request => request.Password)
+            .NotEmpty()
+            .WithMessage("Password is required.");
+
+        RuleFor(request => request.Role)
+            .NotEmpty()
+            .WithMessage("Role is required.")
+            .Must(value => new[] { "Admin", "Doctor", "Patient" }.Contains(value))
+            .WithMessage("Role is invalid. Allowed roles are Admin, Doctor, or Patient.");
     }
 }

@@ -26,6 +26,8 @@
     <ItemGroup>
       <ProjectReference Include="..\HackatonFiap.EmailProvider.Worker\HackatonFiap.EmailProvider.Worker.csproj" />
       <ProjectReference Include="..\HackatonFiap.HealthScheduling.Api\HackatonFiap.HealthScheduling.Api.csproj" />
+      <ProjectReference Include="..\HackatonFiap.Identity.Application\HackatonFiap.Identity.Application.csproj" />
+      <ProjectReference Include="..\HackatonFiap.Identity.Domain\HackatonFiap.Identity.Domain.csproj" />
     </ItemGroup>
 
 </Project>

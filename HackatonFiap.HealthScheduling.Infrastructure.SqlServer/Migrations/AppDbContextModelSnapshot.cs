@@ -43,10 +43,12 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .HasColumnOrder(99);
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
 
                     b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(4);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")

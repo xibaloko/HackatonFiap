@@ -1,15 +1,9 @@
-﻿using Asp.Versioning;
-using Asp.Versioning.Conventions;
-using HackatonFiap.HealthScheduling.Application;
+﻿using HackatonFiap.HealthScheduling.Application;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
 public class Startup
 {
-    private const int ApiDefaultMajorVersion = 1;
-    private const string ApiVersionHeader = "x-api-version";
-    private const string ApiVersionGroupNameFormat = "'v'V";
-
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _environment;
 
@@ -23,26 +17,37 @@ public class Startup
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        
-        services.AddApplicationModule(_configuration);
 
-        services.AddHttpClient();
+        services.AddSwaggerGen(c =>
+        {
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Description = "Inform the JWT Token"
+            });
 
-        services.AddApiVersioning(configuration =>
-        {
-            configuration.DefaultApiVersion = new ApiVersion(ApiDefaultMajorVersion);
-            configuration.AssumeDefaultVersionWhenUnspecified = true;
-            configuration.ReportApiVersions = true;
-            configuration.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(), new HeaderApiVersionReader(ApiVersionHeader), new MediaTypeApiVersionReader(ApiVersionHeader));
-        }).AddMvc(configuration =>
-        {
-            configuration.Conventions.Add(new VersionByNamespaceConvention());
-        }).AddApiExplorer(configuration =>
-        {
-            configuration.GroupNameFormat = ApiVersionGroupNameFormat;
-            configuration.SubstituteApiVersionInUrl = true;
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
+
+        services.AddApplicationModule(_configuration);
+        services.AddHttpClient();
     }
 
     public void Configure(WebApplication app)
@@ -54,8 +59,9 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
-
         app.MapControllers();
+        app.UseExceptionHandler();
     }
 }
