@@ -13,8 +13,8 @@ public static class DependencyInjectionResolver
         IConfiguration configuration)
     {
         services.AddRabbitMqOptions(configuration);
-        services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
-        services.AddScoped<IRabbitRepository, RabbitRepository>();
+
+        services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
         return services;
     }
 

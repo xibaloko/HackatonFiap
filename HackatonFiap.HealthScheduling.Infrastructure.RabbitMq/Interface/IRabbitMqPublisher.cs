@@ -1,7 +1,7 @@
 
 namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 
-public interface IRabbitRepository
+public interface IRabbitMqPublisher
 {
     Task EnviarMensagem(
         string nomeMedico,

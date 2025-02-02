@@ -7,11 +7,11 @@ using RabbitMQ.Client;
 
 namespace HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Repository
 {
-    public class RabbitRepository : IRabbitRepository
+    public class RabbitMqPublisher : IRabbitMqPublisher
     {
         private readonly RabbitMqSettings _rabbitMqQueue;
 
-        public RabbitRepository(RabbitMqSettings rabbitMqQueue)
+        public RabbitMqPublisher(RabbitMqSettings rabbitMqQueue)
         {
             _rabbitMqQueue = rabbitMqQueue;
         }
