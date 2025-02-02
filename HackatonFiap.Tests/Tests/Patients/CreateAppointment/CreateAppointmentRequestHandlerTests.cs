@@ -174,5 +174,83 @@ namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
             result.IsFailed.Should().BeTrue();
             result.Errors.Should().Contain(e => e.Message == "Schedule not avaliable!");
         }
+        
+        [Fact]
+        public async Task Handle_ShouldAllowFirstRequest_AndRejectSecond_WhenBothTryBookingSameSchedule()
+        {
+            // Arrange
+            var patient1Uuid = Guid.NewGuid();
+            var patient2Uuid = Guid.NewGuid();
+            var scheduleUuid = Guid.NewGuid();
+
+            var doctor = new Doctor(Guid.NewGuid(), "Dr. Smith", "Doe", "dr.smith@example.com", "09876543211", "CRM654321");
+            var patient1 = new Patient(patient1Uuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
+            var patient2 = new Patient(patient2Uuid, "Jane", "Doe", "jane.doe@example.com", "09876543211", "RG654321");
+            var schedule = new Schedule(new DateTime(2024, 6, 1, 8, 0, 0), 30, doctor);
+
+            var request1 = new CreateAppointmentRequest(patient1Uuid, scheduleUuid);
+            var request2 = new CreateAppointmentRequest(patient2Uuid, scheduleUuid);
+
+            _repositoriesMock
+                .Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Patient, bool>>>(),
+                    It.IsAny<string?>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Expression<Func<Patient, bool>> predicate, string? _, bool _, CancellationToken _) =>
+                {
+                    return predicate.Compile().Invoke(patient1) ? patient1 : patient2;
+                });
+
+
+            _repositoriesMock
+                .Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Schedule, bool>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(schedule);
+
+            _repositoriesMock
+                .Setup(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            _repositoriesMock
+                .Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            
+            _repositoriesMock
+                .Setup(repo => repo.DoctorRepository.FirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Doctor, bool>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(doctor);
+
+            _rabbitMqPublisherMock
+                .Setup(rabbit => rabbit.EnviarMensagem(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+
+
+            async Task<Result> TryBookAppointment(CreateAppointmentRequest request)
+            {
+                return await _handler.Handle(request, CancellationToken.None);
+            }
+
+            // Act
+            var results = await Task.WhenAll(TryBookAppointment(request1), TryBookAppointment(request2));
+            var result1 = results[0];
+            var result2 = results[1];
+
+            // Assert
+            Assert.True(result1.IsSuccess);
+            Assert.True(result2.IsFailed);
+            Assert.Contains("Schedule not avaliable!", result2.Errors.Select(e => e.Message));
+        }
     }
 }
