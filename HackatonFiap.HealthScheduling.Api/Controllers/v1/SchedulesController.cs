@@ -31,5 +31,13 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1
             return this.ProcessResponse(response, cancellationToken);
         }
 
+        [HttpDelete("{uuid:Guid}")]
+        public async Task<IActionResult> DeleteSchedule([FromRoute] Guid uuid, CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(new DeleteScheduleRequest(uuid), cancellationToken: cancellationToken);
+            return this.ProcessResponse(response, cancellationToken);
+        }
+
+
     }
 }

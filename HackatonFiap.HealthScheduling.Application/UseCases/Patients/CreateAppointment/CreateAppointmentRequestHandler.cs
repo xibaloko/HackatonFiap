@@ -46,6 +46,9 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         schedule.SetAppointment();
         _repositories.ScheduleRepository.Update(schedule);
         await _repositories.SaveAsync(cancellationToken);
+        
+
+        
         return Result.Ok();
     }
 }
