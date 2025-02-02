@@ -1,5 +1,7 @@
 using HackatonFiap.EmailProvider.Worker;
 using HackatonFiap.EmailProvider.Worker.Configurations;
+using Microsoft.Extensions.Options;
+using SendGrid;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -10,15 +12,14 @@ builder.Configuration
     .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-builder.Services.Configure<SendGridOptions>(builder.Configuration.GetSection("SendGridOptions"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
-
+builder.Services.AddSingleton<ISendGridClient>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<SendGridOptions>>().Value;
+    return new SendGridClient(options.ApiKey);
+});
 
 builder.Services.AddHostedService<Worker>();
-builder.Services.Configure<SendGridOptions>(options =>
-{
-    options.ApiKey = "chavedosite";
-});
 
 builder.Services.AddHostedService<Worker>();
 
