@@ -1,6 +1,6 @@
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Repository;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.RabbitMqPublishers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

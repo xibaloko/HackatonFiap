@@ -21,7 +21,7 @@ namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
         {
             _repositoriesMock = new Mock<IRepositories>();
             Mock<IMapper> mapperMock = new();
-            _handler = new CreateAppointmentRequestHandler(_repositoriesMock.Object, mapperMock.Object);
+            //_handler = new CreateAppointmentRequestHandler(_repositoriesMock.Object, mapperMock.Object);
         }
 
         [Fact]

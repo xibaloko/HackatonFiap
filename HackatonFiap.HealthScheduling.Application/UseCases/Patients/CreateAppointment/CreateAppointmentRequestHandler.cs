@@ -5,6 +5,7 @@ using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 using MediatR;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
@@ -13,11 +14,12 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 {
     private readonly IRepositories _repositories;
     private readonly IMapper _mapper;
-
-    public CreateAppointmentRequestHandler(IRepositories repositories, IMapper mapper)
+    public readonly IRabbitMqPublisher _raabitRepository;
+    public CreateAppointmentRequestHandler(IRepositories repositories, IMapper mapper, IRabbitMqPublisher rabbitRepository)
     {
         _repositories = repositories;
         _mapper = mapper;
+      //  _raabitRepository = rabbitRepository;
     }
 
     public async Task<Result> Handle(CreateAppointmentRequest request, CancellationToken cancellationToken)
@@ -42,13 +44,16 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 
 
         Appointment appointment = new Appointment(patient, schedule);
-        await _repositories.AppointmentRepository.AddAsync(appointment,cancellationToken);
+        await _repositories.AppointmentRepository.AddAsync(appointment, cancellationToken);
         schedule.SetAppointment();
         _repositories.ScheduleRepository.Update(schedule);
         await _repositories.SaveAsync(cancellationToken);
-        
 
-        
+        var doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
+        if (!(doctor is null))
+        {
+           // await _raabitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.DateHour.ToString("dd/MM/yyyy"), schedule.DateHour.ToString("HH:mm"));
+        }
         return Result.Ok();
     }
 }

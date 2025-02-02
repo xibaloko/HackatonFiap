@@ -18,6 +18,8 @@ using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using Asp.Versioning.Conventions;
 using Asp.Versioning;
 
+
+
 namespace HackatonFiap.HealthScheduling.Application;
 
 public static class ApplicationModule
@@ -39,7 +41,7 @@ public static class ApplicationModule
         services.AddExternalDependencies();
         services.AddInternalDependencies(configuration);
         services.AddAdapters(configuration);
-        
+
 
         return services;
     }
@@ -53,7 +55,6 @@ public static class ApplicationModule
         services.AddFluentValidationValidators();
         services.AddAutoMapperServices(SolutionAssemblies);
         services.AddApiVersioning();
-
         return services;
     }
 
