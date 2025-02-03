@@ -21,6 +21,7 @@
 		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Domain\HackatonFiap.HealthScheduling.Domain.csproj" />
 		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq\HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.csproj" />
 		<ProjectReference Include="..\HackatonFiap.HealthScheduling.Infrastructure.SqlServer\HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj" />
+		<ProjectReference Include="..\HackatonFiap.Identity.Domain\HackatonFiap.Identity.Domain.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="UseCases\Patients\AddPatient\" />

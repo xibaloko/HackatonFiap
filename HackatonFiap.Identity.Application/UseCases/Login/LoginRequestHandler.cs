@@ -38,19 +38,20 @@ public sealed class LoginRequestHandler : IRequestHandler<LoginRequest, Result<L
         if (!result.Succeeded)
             return Result.Fail(ErrorHandler.HandleBadRequest(invalidCredentialsMessage));
 
-        LoginResponse response = GenerateResponse(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        LoginResponse response = GenerateResponse(user.Id, roles);
 
         return Result.Ok(response);
     }
 
-    private LoginResponse GenerateResponse(ApplicationUser user)
+    private LoginResponse GenerateResponse(string identityId, IEnumerable<string> roles)
     {
-        Guid identityId = Guid.Parse(user.Id);
-        string accessToken = _authenticationTokenService.GenerateAccessToken(user.UserName!);
+        string accessToken = _authenticationTokenService.GenerateAccessToken(identityId, roles);
         int accessTokenExpiratesIn = (int)(_authenticationTokenService.GetAccessTokenExpiration() - DateTime.UtcNow).TotalSeconds;
-        string refreshToken = _authenticationTokenService.GenerateRefreshToken(user.UserName!);
+        string refreshToken = _authenticationTokenService.GenerateRefreshToken(identityId, roles);
         int refreshTokenExpiratesIn = (int)(_authenticationTokenService.GetRefreshTokenExpiration() - DateTime.UtcNow).TotalSeconds;
 
-        return new LoginResponse(identityId, accessToken, accessTokenExpiratesIn, refreshToken, refreshTokenExpiratesIn);
+        return new LoginResponse(Guid.Parse(identityId), accessToken, accessTokenExpiratesIn, refreshToken, refreshTokenExpiratesIn);
     }
 }
