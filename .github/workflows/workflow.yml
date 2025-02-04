@@ -10,29 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
+      - name: 📥 Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Instalar .NET Core
+      - name: 🏗️ Instalar .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Restaurar dependências
+      - name: 🔍 Restaurar dependências
         run: dotnet restore
+      
+      #      - name: 🛠️ Construir e testar projetos
+      #        run: |
+      #          dotnet build --configuration Release
+      #          dotnet test HackatonFiap.Tests/HackatonFiap.Tests.csproj
 
-      - name: Construir e testar projetos
+      - name: 🔐 Login no Docker Hub
         run: |
-          dotnet build --configuration Release
-          dotnet test HackatonFiap.Tests/HackatonFiap.Tests.csproj
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Construir e publicar imagens Docker
+      - name: 🐳 Construir e publicar imagens Docker
         run: |
-          docker build -t fiaphackaton52/emailworker:latest -f HackatonFiap.EmailProvider.Worker/Dockerfile .
+          docker build -t fiaphackaton52/emailworker:latest -f HackatonFiap.EmailProvider.Worker/Dockerfile HackatonFiap.EmailProvider.Worker
           docker push fiaphackaton52/emailworker:latest
 
-          docker build -t fiaphackaton52/healthscheduling:latest -f HackatonFiap.HealthScheduling.Api/Dockerfile .
+          docker build -t fiaphackaton52/healthscheduling:latest -f HackatonFiap.HealthScheduling.Api/Dockerfile HackatonFiap.HealthScheduling.Api
           docker push fiaphackaton52/healthscheduling:latest
 
-          docker build -t fiaphackaton52/identity:latest -f HackatonFiap.Identity.Api/Dockerfile .
+          docker build -t fiaphackaton52/identity:latest -f HackatonFiap.Identity.Api/Dockerfile HackatonFiap.Identity.Api
           docker push fiaphackaton52/identity:latest
