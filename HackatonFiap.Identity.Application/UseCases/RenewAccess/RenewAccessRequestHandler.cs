@@ -33,16 +33,18 @@ public sealed class RenewAccessRequestHandler : IRequestHandler<RenewAccessReque
         if (!IsValid)
             return Result.Fail(ErrorHandler.HandleUnauthorized("Invalid token."));
 
-        RenewAccessResponse response = GenerateResponse(user, Token!);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        RenewAccessResponse response = GenerateResponse(user, roles, Token!);
 
         return Result.Ok(response);
     }
 
-    private RenewAccessResponse GenerateResponse(ApplicationUser user, string newAccessToken)
+    private RenewAccessResponse GenerateResponse(ApplicationUser user, IEnumerable<string> roles, string newAccessToken)
     {
         Guid identityId = Guid.Parse(user.Id);
         int accessTokenExpiratesIn = (int)(_authenticationTokenService.GetAccessTokenExpiration() - DateTime.UtcNow).TotalSeconds;
-        string newRefreshToken = _authenticationTokenService.GenerateRefreshToken(user.UserName!);
+        string newRefreshToken = _authenticationTokenService.GenerateRefreshToken(user.Id, roles);
         int refreshTokenExpiratesIn = (int)(_authenticationTokenService.GetRefreshTokenExpiration() - DateTime.UtcNow).TotalSeconds;
 
         return new RenewAccessResponse(identityId, newAccessToken, accessTokenExpiratesIn, newRefreshToken, refreshTokenExpiratesIn);

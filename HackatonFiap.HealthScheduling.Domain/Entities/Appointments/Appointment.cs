@@ -10,6 +10,8 @@ public class Appointment : EntityBase
     public int PatientId { get; init; }
     public Patient Patient { get; init; }
     public Schedule Schedule { get; init; }
+    public bool IsCanceledByPatient { get; private set; }
+    public string? CancellationReason { get; private set; }
 
     #nullable disable
     public Appointment()
@@ -21,5 +23,12 @@ public class Appointment : EntityBase
     {
         Patient = patient;
         Schedule = schedule;
+        IsCanceledByPatient = false;
+    }
+
+    public void SetCancellation(string reason) 
+    {
+        IsCanceledByPatient = true;
+        CancellationReason = reason;
     }
 }

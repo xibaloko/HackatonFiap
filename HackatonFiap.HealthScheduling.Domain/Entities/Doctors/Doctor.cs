@@ -1,12 +1,15 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
+using HackatonFiap.HealthScheduling.Domain.Entities.MedicalSpecialties;
 
 namespace HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 
 public sealed class Doctor : UserIdentity
 {
     public string CRM { get; private set; }
+    public int? MedicalSpecialtyId { get; private set; }
+    public MedicalSpecialty? MedicalSpecialty { get; private set; }
 
-    #nullable disable
+#nullable disable
     public Doctor()
     {
     }
