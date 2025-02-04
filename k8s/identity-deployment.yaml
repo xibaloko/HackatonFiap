@@ -13,6 +13,20 @@ spec:
       labels:
         app: identity
     spec:
+      initContainers:
+        - name: wait-for-sqlserver
+          image: busybox
+          command: [ "sh", "-c", "until nc -z sqlserver-service 1433; do echo 'Aguardando SQL Server...'; sleep 2; done" ]
+
+        - name: db-migration
+          image: fiaphackaton52/identity:latest
+          command: [ "sh", "-c", "dotnet ef database update" ]
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: MicrosoftSQLServer__ConnectionString
+              value: "Server=sqlserver-service;Database=HackatonFiapIdentity;User Id=sa;Password=SqlServer2019!;TrustServerCertificate=True;"
+      
       containers:
         - name: identity
           image: fiaphackaton52/identity:latest

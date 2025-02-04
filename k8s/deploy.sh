@@ -8,21 +8,39 @@ kubectl get namespace $NAMESPACE >/dev/null 2>&1 || kubectl create namespace $NA
 echo "📦 Aplicando Persistent Volumes e Persistent Volume Claims..."
 kubectl apply -f pvc-rabbitmq-sql.yaml
 
-echo "📦 Aplicando todos os deployments no Kubernetes..."
-kubectl apply -f rabbitmq-deployment.yaml
+echo "📡 Aplicando Services..."
+kubectl apply -f sqlserver-service.yaml
+kubectl apply -f rabbitmq-service.yaml
+kubectl apply -f emailworker-service.yaml
+kubectl apply -f healthscheduling-service.yaml
+kubectl apply -f identity-service.yaml
+
+echo "📦 Aplicando deployment do SQL Server..."
 kubectl apply -f sqlserver-deployment.yaml
-kubectl apply -f emailworker-deployment.yaml
-kubectl apply -f healthscheduling-deployment.yaml
-kubectl apply -f identity-deployment.yaml
 
-echo "🔄 Reiniciando todos os pods para garantir que as novas imagens sejam usadas..."
-kubectl rollout restart deployment -n $NAMESPACE
-
-echo "⏳ Aguardando os pods entrarem no status 'Running'..."
-while [[ $(kubectl get pods -n $NAMESPACE --no-headers | grep -c 'Running') -lt 5 ]]; do
-  echo "⏳ Aguardando os pods subirem..."
+echo "⏳ Aguardando SQL Server iniciar e aceitar conexões..."
+until kubectl get pod -n $NAMESPACE -l app=sql-server -o jsonpath='{.items[0].status.phase}' | grep -q "Running"; do
+  echo "⏳ SQL Server ainda não está pronto..."
   sleep 5
 done
 
-echo "✅ Todos os pods estão rodando!"
+echo "✅ SQL Server está rodando!"
+
+kubectl apply -f rabbitmq-deployment.yaml
+kubectl apply -f emailworker-deployment.yaml
+kubectl apply -f healthscheduling-deployment.yaml
+
+echo "⏳ Aguardando HealthScheduling concluir a migração..."
+until kubectl get pod -n $NAMESPACE -l app=healthscheduling -o jsonpath='{.items[0].status.phase}' | grep -q "Running"; do
+  echo "⏳ HealthScheduling ainda não está pronto..."
+  sleep 5
+done
+
+echo "✅ HealthScheduling pronto! Aplicando Identity..."
+kubectl apply -f identity-deployment.yaml
+
+echo "🔄 Reiniciando todos os pods..."
+kubectl rollout restart deployment -n $NAMESPACE
+
+echo "✅ Todos os pods foram iniciados!"
 kubectl get pods -n $NAMESPACE

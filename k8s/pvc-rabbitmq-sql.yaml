@@ -32,7 +32,7 @@ metadata:
   namespace: fiaptechchallenge
 spec:
   capacity:
-    storage: 20Mi
+    storage: 100Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -49,4 +49,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Mi
+      storage: 100Mi
