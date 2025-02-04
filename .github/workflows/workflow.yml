@@ -1,46 +1,38 @@
-name: .NET Core Desktop
+name: Build and Push Docker Images
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "infra" ]
   workflow_dispatch:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        configuration: [Release]
-
     runs-on: ubuntu-latest
 
-    env:
-      Solution_Name: HackatonFiap.sln
-      Test_Project_Path: HackatonFiap.Tests/HackatonFiap.Tests.csproj
-
     steps:
-      - name: Checkout
+      - name: Checkout do repositório
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # Instalar .NET Core
       - name: Instalar .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      # Executar todos os testes unitários na solução
-      - name: Executar testes unitários
-        run: dotnet test ${{ env.Test_Project_Path }}
+      - name: Restaurar dependências
+        run: dotnet restore
 
-      # Restaurar a aplicação para popular a pasta obj com RuntimeIdentifiers
-      - name: Restaurar a aplicação
-        run: dotnet restore ${{ env.Solution_Name }}
+      - name: Construir e testar projetos
+        run: |
+          dotnet build --configuration Release
+          dotnet test HackatonFiap.Tests/HackatonFiap.Tests.csproj
 
-      # Compile a solução
-      - name: Compilar a solução
-        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} /p:TreatWarningsAsErrors=false /p:NoWarn=CS8618
-        env:
-          Configuration: ${{ matrix.configuration }}
+      - name: Construir e publicar imagens Docker
+        run: |
+          docker build -t fiaphackaton52/emailworker:latest -f HackatonFiap.EmailProvider.Worker/Dockerfile .
+          docker push fiaphackaton52/emailworker:latest
+
+          docker build -t fiaphackaton52/healthscheduling:latest -f HackatonFiap.HealthScheduling.Api/Dockerfile .
+          docker push fiaphackaton52/healthscheduling:latest
+
+          docker build -t fiaphackaton52/identity:latest -f HackatonFiap.Identity.Api/Dockerfile .
+          docker push fiaphackaton52/identity:latest

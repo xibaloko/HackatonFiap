@@ -7,6 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,12 @@
       <ProjectReference Include="..\HackatonFiap.HealthScheduling.Api\HackatonFiap.HealthScheduling.Api.csproj" />
       <ProjectReference Include="..\HackatonFiap.Identity.Application\HackatonFiap.Identity.Application.csproj" />
       <ProjectReference Include="..\HackatonFiap.Identity.Domain\HackatonFiap.Identity.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
