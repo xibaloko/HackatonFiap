@@ -46,7 +46,7 @@ public sealed class AddScheduleRequestHandler : IRequestHandler<AddScheduleReque
         var scheduleEntitys = new List<Schedule>();
         for (int i = 1; i <= quantitySchedules; i++)
         {
-            scheduleEntitys.Add(new Schedule(dtini, request.Duration, doctor));
+            scheduleEntitys.Add(new Schedule(dtini, request.Duration, doctor, request.Price));
             dtini = dtini.AddMinutes(request.Duration);
         }
 

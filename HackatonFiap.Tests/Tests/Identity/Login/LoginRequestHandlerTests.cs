@@ -51,17 +51,17 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
                 .Setup(m => m.PasswordSignInAsync(user.UserName!, request.Password, false, false))
                 .ReturnsAsync(SignInResult.Success);
 
-            _authenticationTokenServiceMock
-                .Setup(m => m.GenerateAccessToken(user.UserName!))
-                .Returns("valid_access_token");
+            //_authenticationTokenServiceMock
+            //    .Setup(m => m.GenerateAccessToken(user.UserName!))
+            //    .Returns("valid_access_token");
 
             _authenticationTokenServiceMock
                 .Setup(m => m.GetAccessTokenExpiration())
                 .Returns(DateTime.UtcNow.AddMinutes(30));
 
-            _authenticationTokenServiceMock
-                .Setup(m => m.GenerateRefreshToken(user.UserName!))
-                .Returns("valid_refresh_token");
+            //_authenticationTokenServiceMock
+            //    .Setup(m => m.GenerateRefreshToken(user.UserName!))
+            //    .Returns("valid_refresh_token");
 
             _authenticationTokenServiceMock
                 .Setup(m => m.GetRefreshTokenExpiration())

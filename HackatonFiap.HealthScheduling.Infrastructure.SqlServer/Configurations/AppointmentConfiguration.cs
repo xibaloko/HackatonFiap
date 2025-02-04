@@ -10,15 +10,17 @@ public sealed class AppointmentConfiguration : BaseEntityTypeConfiguration<Appoi
     {
         base.Configure(builder);
 
-        builder.HasIndex(appointment => appointment.ScheduleId)
-            .IsUnique();
-
         builder.Property(appointment => appointment.PatientId)
-            .IsRequired()
             .HasColumnOrder(3);
 
         builder.Property(appointment => appointment.ScheduleId)
-            .IsRequired()
             .HasColumnOrder(4);
+
+        builder.Property(appointment => appointment.IsCanceledByPatient)
+            .HasColumnOrder(5);
+
+        builder.Property(appointment => appointment.CancellationReason)
+            .HasMaxLength(255)
+            .HasColumnOrder(6);
     }
 }

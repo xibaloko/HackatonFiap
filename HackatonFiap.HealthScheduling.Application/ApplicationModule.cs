@@ -17,8 +17,7 @@ using HackatonFiap.HealthScheduling.Application.IdentityService;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using Asp.Versioning.Conventions;
 using Asp.Versioning;
-
-
+using Microsoft.AspNetCore.Http;
 
 namespace HackatonFiap.HealthScheduling.Application;
 
@@ -78,6 +77,7 @@ public static class ApplicationModule
         });
 
         services.AddScoped<IApiIdentityService, ApiIdentityService>();
+        //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
         services.AddProblemDetails();
         services.AddDefaultExceptionHandlers();
 

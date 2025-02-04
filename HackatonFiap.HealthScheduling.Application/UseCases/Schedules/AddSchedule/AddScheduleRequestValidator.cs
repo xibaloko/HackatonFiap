@@ -19,5 +19,9 @@ public sealed class AddScheduleRequestValidator : RequestValidator<AddScheduleRe
            .NotEmpty()
            .WithMessage("Duration is required.");
 
+        RuleFor(request => request.Price)
+           .NotEmpty()
+           .WithMessage("Price is required.");
+
     }
 }
