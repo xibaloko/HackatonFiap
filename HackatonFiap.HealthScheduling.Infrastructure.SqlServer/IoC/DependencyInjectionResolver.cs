@@ -1,5 +1,6 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Data;
+using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Interfaces;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Options;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ public static class DependencyInjectionResolver
     {
         services.AddEntityFrameworkCore(configuration);
         services.AddRepositories();
+        services.AddDbInitializer();
 
         return services;
     }
@@ -39,6 +41,13 @@ public static class DependencyInjectionResolver
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepositories, Repositories>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDbInitializer(this IServiceCollection services)
+    {
+        services.AddTransient<IDbInitializer, DbInitializer>();
 
         return services;
     }
