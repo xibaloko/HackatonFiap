@@ -12,5 +12,6 @@ public sealed class AddScheduleRequest : IRequest<Result>
     public TimeOnly FinalHour { get; init; }
     public int Duration { get; init; }
     public bool Avaliable { get; init; }
+    public decimal Price { get; init; }
 }
 

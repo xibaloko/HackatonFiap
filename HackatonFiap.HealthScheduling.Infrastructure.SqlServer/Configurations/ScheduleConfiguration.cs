@@ -11,22 +11,20 @@ public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
         base.Configure(builder);
 
         builder.Property(schedule => schedule.DateHour)
-            .IsRequired()
             .HasColumnOrder(3);
 
-        builder.HasIndex(schedule => new { schedule.DateHour, schedule.DoctorId })
-            .IsUnique();
-
         builder.Property(schedule => schedule.Duration)
-            .IsRequired()
             .HasColumnOrder(4);
 
-        builder.Property(schedule => schedule.Avaliable)
-            .IsRequired()
-            .HasDefaultValue(true)
+        builder.Property(schedule => schedule.MedicalAppointmentPrice)
+            .HasPrecision(28,2)
             .HasColumnOrder(5);
 
+        builder.Property(schedule => schedule.Avaliable)
+            .HasDefaultValue(true)
+            .HasColumnOrder(6);
+
         builder.Property(schedule => schedule.DoctorId)
-            .HasColumnOrder(6);       
+            .HasColumnOrder(7);       
     }
 }

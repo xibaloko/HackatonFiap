@@ -12,25 +12,20 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Doctors",
+                name: "MedicalSpecialties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    CRM = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.PrimaryKey("PK_MedicalSpecialties", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,6 +51,34 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Doctors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    CRM = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    MedicalSpecialtyId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doctors_MedicalSpecialties_MedicalSpecialtyId",
+                        column: x => x.MedicalSpecialtyId,
+                        principalTable: "MedicalSpecialties",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Schedules",
                 columns: table => new
                 {
@@ -64,6 +87,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateHour = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
+                    MedicalAppointmentPrice = table.Column<decimal>(type: "decimal(28,2)", precision: 28, scale: 2, nullable: false),
                     Avaliable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -90,6 +114,8 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    IsCanceledByPatient = table.Column<bool>(type: "bit", nullable: false),
+                    CancellationReason = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
@@ -119,8 +145,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_ScheduleId",
                 table: "Appointments",
-                column: "ScheduleId",
-                unique: true);
+                column: "ScheduleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_Uuid",
@@ -129,8 +154,19 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doctors_MedicalSpecialtyId",
+                table: "Doctors",
+                column: "MedicalSpecialtyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doctors_Uuid",
                 table: "Doctors",
+                column: "Uuid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalSpecialties_Uuid",
+                table: "MedicalSpecialties",
                 column: "Uuid",
                 unique: true);
 
@@ -138,12 +174,6 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                 name: "IX_Patients_Uuid",
                 table: "Patients",
                 column: "Uuid",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Schedules_DateHour_DoctorId",
-                table: "Schedules",
-                columns: new[] { "DateHour", "DoctorId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -172,6 +202,9 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "MedicalSpecialties");
         }
     }
 }
