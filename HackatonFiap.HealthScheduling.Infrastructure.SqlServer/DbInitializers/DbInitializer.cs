@@ -23,6 +23,11 @@ public class DbInitializer : IDbInitializer
         using (var context = new AppDbContext(_serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
         {
             context.Database.EnsureCreated();
+            
+            var migrations = context.Database.GetPendingMigrations();
+
+            if (migrations.Any())
+               context.Database.Migrate();
 
             if (context.MedicalSpecialties.Any())
             {

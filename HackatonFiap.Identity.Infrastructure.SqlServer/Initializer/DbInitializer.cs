@@ -23,6 +23,8 @@ public sealed class DbInitializer : IDbInitializer
 
     public void Initialize()
     {
+        _db.Database.EnsureCreated();
+        
         var migrations = _db.Database.GetPendingMigrations();
 
         if (migrations.Any())
