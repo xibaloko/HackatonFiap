@@ -24,10 +24,11 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "HackatonFiap.HealthScheduling.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM build AS migration
-WORKDIR /src/HackatonFiap.HealthScheduling.Api
+WORKDIR /src
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
-ENTRYPOINT ["dotnet", "ef", "database", "update"]
+
+ENTRYPOINT ["dotnet", "ef", "database", "update", "--project", "HackatonFiap.HealthScheduling.Infrastructure.SqlServer", "--startup-project", "HackatonFiap.HealthScheduling.Api"]
 
 FROM base AS final
 WORKDIR /app
