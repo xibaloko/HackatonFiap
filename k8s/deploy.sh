@@ -24,19 +24,10 @@ until kubectl get pod -n $NAMESPACE -l app=sql-server -o jsonpath='{.items[0].st
   sleep 5
 done
 
-echo "✅ SQL Server está rodando!"
-
+echo "✅ Migração concluída! Aplicando deployments..."
 kubectl apply -f rabbitmq-deployment.yaml
 kubectl apply -f emailworker-deployment.yaml
 kubectl apply -f healthscheduling-deployment.yaml
-
-echo "⏳ Aguardando HealthScheduling concluir a migração..."
-until kubectl get pod -n $NAMESPACE -l app=healthscheduling -o jsonpath='{.items[0].status.phase}' | grep -q "Running"; do
-  echo "⏳ HealthScheduling ainda não está pronto..."
-  sleep 5
-done
-
-echo "✅ HealthScheduling pronto! Aplicando Identity..."
 kubectl apply -f identity-deployment.yaml
 
 echo "🔄 Reiniciando todos os pods..."

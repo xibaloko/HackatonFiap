@@ -20,7 +20,7 @@ spec:
 
         - name: db-migration
           image: fiaphackaton52/healthscheduling:latest
-          command: [ "sh", "-c", "dotnet ef database update" ]
+          command: [ "dotnet", "ef", "database", "update" ]
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
