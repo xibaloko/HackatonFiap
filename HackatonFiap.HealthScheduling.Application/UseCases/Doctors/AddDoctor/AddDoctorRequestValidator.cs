@@ -26,5 +26,10 @@ public sealed class AddDoctorRequestValidator : RequestValidator<AddDoctorReques
         RuleFor(request => request.CRM)
             .NotEmpty()
             .WithMessage("CRM is required.");
+
+        RuleFor(request => request.MedicalSpecialtyUuid)
+            .NotEmpty()
+            .WithMessage("MedicalSpecialty is required.");
     }
 }
+

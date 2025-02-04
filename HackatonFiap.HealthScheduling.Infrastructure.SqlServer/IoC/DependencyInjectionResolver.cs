@@ -1,5 +1,6 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Data;
+using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.DbInitializers;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Interfaces;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Options;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Persistence;

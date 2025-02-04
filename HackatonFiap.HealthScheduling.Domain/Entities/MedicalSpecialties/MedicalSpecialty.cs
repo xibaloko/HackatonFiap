@@ -4,13 +4,13 @@ namespace HackatonFiap.HealthScheduling.Domain.Entities.MedicalSpecialties;
 
 public sealed class MedicalSpecialty : EntityBase
 {
-    public required string Description { get; init; }
+    public string Description { get; private set; }
 
-    #nullable disable
+#nullable disable
     public MedicalSpecialty()
     {
     }
-    #nullable enable
+#nullable enable
 
     public MedicalSpecialty(string description)
     {

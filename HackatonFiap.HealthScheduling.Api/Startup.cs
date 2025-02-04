@@ -1,4 +1,5 @@
 ﻿using HackatonFiap.HealthScheduling.Application;
+using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Interfaces;
 
 namespace HackatonFiap.HealthScheduling.Api;
 
@@ -63,5 +64,12 @@ public class Startup
         app.UseAuthorization();
         app.MapControllers();
         app.UseExceptionHandler();
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            dbInitializer.Initialize();
+        }
     }
+
+
 }

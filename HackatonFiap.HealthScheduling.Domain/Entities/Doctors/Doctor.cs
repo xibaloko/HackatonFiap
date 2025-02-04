@@ -21,6 +21,11 @@ public sealed class Doctor : UserIdentity
         CRM = crm;
     }
 
+    public void SetMedicalSpecialty(MedicalSpecialty medicalSpecialty)
+    {
+        MedicalSpecialty = medicalSpecialty;        
+    }
+
     public void UpdateBasicInformations(string name, string lastName, string email, string cpf, string crm)
     {
         Name = name;

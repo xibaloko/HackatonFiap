@@ -1,5 +1,6 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Appointments.Repositories;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors.Interfaces;
+using HackatonFiap.HealthScheduling.Domain.Entities.MedicalSpecialties.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Interfaces;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
@@ -14,7 +15,9 @@ public class Repositories : IRepositories
     public IDoctorRepository DoctorRepository { get; private set; }
     public IPatientRepository PatientRepository { get; private set; }
     public IScheduleRepository ScheduleRepository { get; private set; }
-    public IAppointmentRepository AppointmentRepository{ get; set; }
+    public IAppointmentRepository AppointmentRepository { get; private set; }
+    public IMedicalSpecialtyRepository MedicalSpecialtyRepository { get; private set; }
+
     public Repositories(AppDbContext db)
     {
         _db = db;
@@ -22,6 +25,7 @@ public class Repositories : IRepositories
         PatientRepository = new PatientRepository(_db);
         ScheduleRepository = new ScheduleRepository(_db);
         AppointmentRepository = new AppointmentRepository(_db);
+        MedicalSpecialtyRepository = new MedicalSpecialtyRepository(_db);
     }
 
     public void Save()
