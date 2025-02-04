@@ -17,15 +17,6 @@ spec:
         - name: wait-for-sqlserver
           image: busybox
           command: [ "sh", "-c", "until nc -z sqlserver-service 1433; do echo 'Aguardando SQL Server...'; sleep 2; done" ]
-
-        - name: db-migration
-          image: fiaphackaton52/healthscheduling:latest
-          command: [ "dotnet", "ef", "database", "update" ]
-          env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: "Production"
-            - name: MicrosoftSQLServer__ConnectionString
-              value: "Server=sqlserver-service;Database=HackatonFiap;User Id=sa;Password=SqlServer2019!;TrustServerCertificate=True;"
       
       containers:
         - name: healthscheduling

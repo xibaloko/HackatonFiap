@@ -24,11 +24,31 @@ until kubectl get pod -n $NAMESPACE -l app=sql-server -o jsonpath='{.items[0].st
   sleep 5
 done
 
-echo "✅ Migração concluída! Aplicando deployments..."
+echo "🚀 Aplicando deployment do HealthScheduling e aguardando migração..."
+kubectl apply -f healthscheduling-deployment.yaml
+
+# Aguarda o pod do HealthScheduling terminar a migração antes de continuar
+until kubectl logs -n $NAMESPACE -l app=healthscheduling -c db-migration | grep -q "Done"; do
+  echo "⏳ Aguardando migração do HealthScheduling..."
+  sleep 5
+done
+
+echo "✅ Migração do HealthScheduling concluída!"
+
+echo "🚀 Aplicando deployment do Identity e aguardando migração..."
+kubectl apply -f identity-deployment.yaml
+
+# Aguarda o pod do Identity terminar a migração antes de continuar
+until kubectl logs -n $NAMESPACE -l app=identity -c db-migration | grep -q "Done"; do
+  echo "⏳ Aguardando migração do Identity..."
+  sleep 5
+done
+
+echo "✅ Migração do Identity concluída!"
+
+echo "🚀 Aplicando demais deployments..."
 kubectl apply -f rabbitmq-deployment.yaml
 kubectl apply -f emailworker-deployment.yaml
-kubectl apply -f healthscheduling-deployment.yaml
-kubectl apply -f identity-deployment.yaml
 
 echo "🔄 Reiniciando todos os pods..."
 kubectl rollout restart deployment -n $NAMESPACE
