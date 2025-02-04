@@ -30,7 +30,7 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
 
         var response = CreateResponse(request, schedules);
 
-        return response;
+        return Result.Ok(response);
     }
 
     private static GetScheduleFromDoctorResponse CreateResponse(GetScheduleFromDoctorRequest request, IEnumerable<Schedule> schedules)
@@ -50,7 +50,7 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
                 DateSchedule = DateOnly.Parse(schedule.Key.Date.ToShortDateString())
             };
             doctorAvailableSchedule.Appointments = new List<Appointment>();
-            
+
             foreach (var hour in schedule)
             {
                 var appointment = new Appointment
@@ -59,7 +59,7 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
                     ScheduleUuid = hour.Uuid
                 };
                 doctorAvailableSchedule.Appointments.Add(appointment);
-            }           
+            }
             doctorAvailableSchedules.Add(doctorAvailableSchedule);
         }
         getScheduleFromDoctorResponse.FreeSchedules = doctorAvailableSchedules;

@@ -1,6 +1,6 @@
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Configurations;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Repository;
+using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.RabbitMqPublishers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +14,7 @@ public static class DependencyInjectionResolver
     {
         services.AddRabbitMqOptions(configuration);
 
-        services.AddScoped<IRabbitRepository, RabbitRepository>();
+        services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
         return services;
     }
 

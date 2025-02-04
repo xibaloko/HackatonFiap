@@ -2,8 +2,8 @@
 
 public interface IAuthenticationTokenService
 {
-    string GenerateAccessToken(string userId);
-    string GenerateRefreshToken(string userId);
+    string GenerateAccessToken(string userId, IEnumerable<string> roles);
+    string GenerateRefreshToken(string userId, IEnumerable<string> roles);
     (bool IsValid, string? Token) RenewAccessToken(string refreshToken);
     DateTime GetAccessTokenExpiration();
     DateTime GetRefreshTokenExpiration();

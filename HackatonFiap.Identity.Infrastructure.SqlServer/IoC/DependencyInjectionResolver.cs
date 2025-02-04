@@ -1,5 +1,7 @@
 ﻿using HackatonFiap.Identity.Domain.Entities;
+using HackatonFiap.Identity.Domain.Services;
 using HackatonFiap.Identity.Infrastructure.SqlServer.Data;
+using HackatonFiap.Identity.Infrastructure.SqlServer.Initializer;
 using HackatonFiap.Identity.Infrastructure.SqlServer.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ public static class DependencyInjectionResolver
     {
         services.AddEntityFrameworkCore(configuration);
         services.AddIdentity();
+        services.AddDbInitializer();
 
         return services;
     }
@@ -53,4 +56,12 @@ public static class DependencyInjectionResolver
 
         return services;
     }
+
+    private static IServiceCollection AddDbInitializer(this IServiceCollection services)
+    {
+        services.AddTransient<IDbInitializer, DbInitializer>();
+
+        return services;
+    }
+
 }

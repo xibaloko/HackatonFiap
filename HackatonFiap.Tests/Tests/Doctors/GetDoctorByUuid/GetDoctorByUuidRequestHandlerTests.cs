@@ -25,14 +25,8 @@ namespace HackatonFiap.Tests.Tests.Doctors.GetDoctorByUuid
         {
             // Arrange
             var uuid = Guid.NewGuid();
-            var doctor = new Doctor("CRM123456")
-            {
-                Name = "Dr. John",
-                LastName = "Doe",
-                Email = "john.doe@example.com",
-                CPF = "12345678900"
-            };
-            
+            var doctor = new Doctor(uuid, "Dr. John", "Doe", "john.doe@example.com", "12345678900", "CRM123456");
+
             var propertyInfo = typeof(Doctor).BaseType?.GetProperty("Uuid", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             propertyInfo?.SetValue(doctor, uuid);
 

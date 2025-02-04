@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using HackatonFiap.Identity.Domain.Services;
+using System.Data;
 
 namespace HackatonFiap.Identity.Application.Services;
 
@@ -20,16 +21,18 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         _refreshTokenExpirationMinutes = double.Parse(_configuration["Jwt:RefreshTokenExpirationMinutes"]!);
     }
 
-    public string GenerateAccessToken(string username)
+    public string GenerateAccessToken(string userId, IEnumerable<string> roles)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:AccessTokenKey"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim("TokenType", "access-token")
         };
+        
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
@@ -42,16 +45,18 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateRefreshToken(string username)
+    public string GenerateRefreshToken(string userId, IEnumerable<string> roles)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:RefreshTokenKey"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim("TokenType", "refresh-token")
         };
+
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var refreshToken = new JwtSecurityToken(
             _configuration["Jwt:Issuer"],
@@ -82,12 +87,15 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         try
         {
             var principal = handler.ValidateToken(refreshToken, validationParameters, out _);
-            var username = principal.FindFirst(ClaimTypes.Name)?.Value;
+            
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value);
 
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(userId))
                 return (false, null);
 
-            var newAccessToken = GenerateAccessToken(username);
+            var newAccessToken = GenerateAccessToken(userId, roles);
+
             return (true, newAccessToken);
         }
         catch (Exception)

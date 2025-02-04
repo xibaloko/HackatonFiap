@@ -1,6 +1,7 @@
 using FluentResults;
 using HackatonFiap.HealthScheduling.Api.Controllers.v1;
 using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.AddDoctor;
+using HackatonFiap.Tests.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -102,6 +103,7 @@ namespace HackatonFiap.Tests.Tests.Doctors.AddDoctor
         [Fact]
         public async Task AddDoctorAsync_ShouldReturnInternalServerError_WhenUnexpectedExceptionOccurs()
         {
+            var exeptionHandling = new ExeptionHandling();
             // Arrange
             var request = new AddDoctorRequest
             {
@@ -117,7 +119,7 @@ namespace HackatonFiap.Tests.Tests.Doctors.AddDoctor
                 .ThrowsAsync(new Exception("Unexpected error"));
 
             // Act
-            var result = await _controller.AddDoctorAsync(request, CancellationToken.None);
+            var result = await exeptionHandling.ExecuteWithExceptionHandling(() => _controller.AddDoctorAsync(request, CancellationToken.None));
 
             // Assert
             var objectResult = Assert.IsType<ObjectResult>(result);

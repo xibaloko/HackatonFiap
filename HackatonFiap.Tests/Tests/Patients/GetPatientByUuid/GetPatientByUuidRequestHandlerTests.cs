@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using AutoMapper;
-using FluentResults;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
+using HackatonFiap.Tests.Helpers;
 using Moq;
 
 namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
@@ -26,17 +26,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
         {
             // Arrange
             var uuid = Guid.NewGuid();
-            var patient = new Patient("RG123456")
-            {
-                Name = "John",
-                LastName = "Doe",
-                Email = "john.doe@example.com",
-                CPF = "12345678900"
-            };
-            
-            var propertyInfo = typeof(Patient).BaseType?.GetProperty("Uuid", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            propertyInfo?.SetValue(patient, uuid);
-
+            var patient = new Patient(uuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
 
             var response = new GetPatientByUuidResponse
             {
@@ -69,7 +59,6 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
             Assert.Equal(uuid, result.Value.Uuid);
         }
 
-
         [Fact]
         public async Task Handle_ShouldReturnError_WhenPatientNotFound()
         {
@@ -91,10 +80,11 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
             Assert.Contains("Patient not found.", result.Errors.Select(e => e.Message));
         }
 
-
         [Fact]
-        public async Task Handle_ShouldThrowException_WhenRepositoryThrowsException()
+        public async Task Handle_ShouldReturnFailure_WhenRepositoryThrowsException()
         {
+            var exeptionHandling = new ExeptionHandling();
+            
             // Arrange
             _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Patient, bool>>>(),
@@ -103,12 +93,16 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
                     It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Database error"));
 
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(async () =>
-                await _handler.Handle(new GetPatientByUuidRequest(Guid.NewGuid()), CancellationToken.None));
+            // Act
+            var request = new GetPatientByUuidRequest(Guid.NewGuid());
+            
+            var result = await exeptionHandling.ExecuteWithExceptionHandling(() => _handler.Handle(request, CancellationToken.None));
 
-            Assert.Equal("Database error", exception.Message);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+            Assert.Contains("Database error", result.Errors.Select(e => e.Message));
         }
-
     }
 }

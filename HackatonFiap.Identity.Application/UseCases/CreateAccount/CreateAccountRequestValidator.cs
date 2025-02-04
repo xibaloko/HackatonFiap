@@ -21,11 +21,10 @@ public sealed class CreateAccountRequestValidator : RequestValidator<CreateAccou
             .NotEmpty()
             .WithMessage("Password is required.");
 
-        RuleFor(request => request.ConfirmationPassword)
-           .NotEmpty()
-           .WithMessage("Confirmation Password is required.")
-           .Equal(request => request.Password)
-           .WithMessage("Confirmation Password must match Password.");
-
+        RuleFor(request => request.Role)
+            .NotEmpty()
+            .WithMessage("Role is required.")
+            .Must(value => new[] { "Admin", "Doctor", "Patient" }.Contains(value))
+            .WithMessage("Role is invalid. Allowed roles are Admin, Doctor, or Patient.");
     }
 }
