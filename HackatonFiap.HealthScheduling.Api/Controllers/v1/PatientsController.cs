@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.RefuseAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePatient;
@@ -59,6 +60,13 @@ public class PatientsController : ControllerBase
 
     [HttpPost("appointment")]
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
+    [HttpPost("RefuseAppointment")]
+    public async Task<IActionResult> RefuseAppointmentAsync([FromBody] RefuseAppointmentRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
