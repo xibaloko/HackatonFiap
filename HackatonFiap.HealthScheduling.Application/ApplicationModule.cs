@@ -77,7 +77,7 @@ public static class ApplicationModule
         });
 
         services.AddScoped<IApiIdentityService, ApiIdentityService>();
-        //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddHttpContextAccessor();
         services.AddProblemDetails();
         services.AddDefaultExceptionHandlers();
 
