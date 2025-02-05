@@ -13,11 +13,6 @@ spec:
       labels:
         app: healthscheduling
     spec:
-      initContainers:
-        - name: wait-for-sqlserver
-          image: busybox
-          command: [ "sh", "-c", "until nc -z sqlserver-service 1433; do echo 'Aguardando SQL Server...'; sleep 2; done" ]
-      
       containers:
         - name: healthscheduling
           image: fiaphackaton52/healthscheduling:latest
