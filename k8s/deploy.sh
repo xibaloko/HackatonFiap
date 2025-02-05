@@ -26,31 +26,15 @@ done
 
 echo "Aplicando deployment do HealthScheduling e aguardando migração..."
 kubectl apply -f healthscheduling-deployment.yaml
-
-# Aguarda o pod do HealthScheduling terminar a migração antes de continuar
-until kubectl logs -n $NAMESPACE -l app=healthscheduling | grep -q "Banco de dados atualizado com sucesso"; do
-  echo "Aguardando migração do HealthScheduling..."
-  sleep 8
-done
-
+echo "Aguardando migração do HealthScheduling..."
+sleep 15
 echo "Migração do HealthScheduling concluída!"
-
-echo "Aguardando 10 segundos antes de iniciar o Identity..."
-sleep 10
 
 echo "Aplicando deployment do Identity e aguardando migração..."
 kubectl apply -f identity-deployment.yaml
-
-# Aguarda o pod do Identity terminar a migração antes de continuar
-until kubectl logs -n $NAMESPACE -l app=identity | grep -q "Banco de dados atualizado com sucesso"; do
-  echo "Aguardando migração do Identity..."
-  sleep 5
-done
-
+echo "Aguardando migração do Identity..."
+sleep 15
 echo "Migração do Identity concluída!"
-
-echo "Aguardando 10 segundos antes de iniciar os demais serviços..."
-sleep 10
 
 echo "Aplicando demais deployments..."
 kubectl apply -f rabbitmq-deployment.yaml
@@ -58,6 +42,5 @@ kubectl apply -f emailworker-deployment.yaml
 
 echo "Reiniciando todos os pods..."
 kubectl rollout restart deployment -n $NAMESPACE
-
 echo "Todos os pods foram iniciados!"
 kubectl get pods -n $NAMESPACE
