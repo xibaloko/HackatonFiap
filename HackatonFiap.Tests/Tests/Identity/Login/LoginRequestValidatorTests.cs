@@ -18,7 +18,7 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
             // Arrange
             var request = new LoginRequest
             {
-                Email = "user@example.com",
+                Username = "user@example.com",
                 Password = "ValidPassword123!"
             };
 
@@ -37,7 +37,7 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
             // Arrange
             var request = new LoginRequest
             {
-                Email = email,
+                Username = email,
                 Password = "ValidPassword123!"
             };
 
@@ -45,7 +45,7 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
             var result = _validator.TestValidate(request);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(r => r.Email)
+            result.ShouldHaveValidationErrorFor(r => r.Username)
                 .WithErrorMessage(expectedErrorMessage);
         }
 
@@ -55,7 +55,7 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
             // Arrange
             var request = new LoginRequest
             {
-                Email = "user@example.com",
+                Username = "user@example.com",
                 Password = ""
             };
 

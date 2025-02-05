@@ -28,7 +28,9 @@ public sealed class LoginRequestHandler : IRequestHandler<LoginRequest, Result<L
 
     public async Task<Result<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email).WaitAsync(cancellationToken);
+        var user = request.Username.Contains("@")
+            ? await _userManager.FindByEmailAsync(request.Username).WaitAsync(cancellationToken)
+            : await _userManager.FindByNameAsync(request.Username).WaitAsync(cancellationToken);
 
         if (user is null)
             return Result.Fail(ErrorHandler.HandleBadRequest(invalidCredentialsMessage));

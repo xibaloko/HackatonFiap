@@ -7,11 +7,9 @@ public sealed class LoginRequestValidator : RequestValidator<LoginRequest>
 {
     protected override void Validate()
     {
-        RuleFor(request => request.Email)
+        RuleFor(request => request.Username)
             .NotEmpty()
-            .WithMessage("E-mail is required.")
-            .EmailAddress()
-            .WithMessage("Inform a valid e-mail.");
+            .WithMessage("Username is required.");
 
         RuleFor(request => request.Password)
             .NotEmpty()

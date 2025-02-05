@@ -24,7 +24,7 @@ public sealed class AddPatientRequestHandler : IRequestHandler<AddPatientRequest
 
     public async Task<Result<AddPatientResponse>> Handle(AddPatientRequest request, CancellationToken cancellationToken)
     {
-        Guid identityId = await _apiIdentityService.CreateIdentity(request.Username, request.Email, request.Password, request.Role);
+        Guid identityId = await _apiIdentityService.CreateIdentity(request.CPF, request.Email, request.Password, request.Role);
 
         if (identityId == Guid.Empty)
             return Result.Fail(ErrorHandler.HandleBadGateway("Unable to create account"));
