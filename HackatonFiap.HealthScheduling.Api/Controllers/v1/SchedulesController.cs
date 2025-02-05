@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddAppointmentSlot;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateTimeSlots;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetScheduleFromDoctor;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +19,20 @@ public class SchedulesController : ControllerBase
 
     public SchedulesController(IMediator mediator) => _mediator = mediator;
 
-    [HttpPost("add-schedule")]
-    public async Task<IActionResult> AddSchedule([FromBody] AddScheduleRequest request, CancellationToken cancellationToken)
+    [HttpPost("generate-time-slots")]
+    public async Task<IActionResult> GenerateTimeSlots([FromBody] GenerateTimeSlotsRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
+    
+    [HttpPost("add-appointment-slot")]
+    public async Task<IActionResult> AddAppointmentSlot([FromBody] AddAppointmentSlotRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
 
     [HttpGet("doctor/{uuid:Guid}")]
     public async Task<IActionResult> GetScheduleFromDoctor([FromRoute] Guid uuid, CancellationToken cancellationToken)

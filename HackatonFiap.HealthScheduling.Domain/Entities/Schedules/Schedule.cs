@@ -7,7 +7,8 @@ public sealed class Schedule : EntityBase
 {
     public int DoctorId { get; private set; }
     public Doctor Doctor { get; private set; }
-    public DateTime DateHour { get; private set; }
+    public DateTime InitialDateHour { get; private set; }
+    public DateTime FinalDateHour { get; private set; }
     public int Duration { get; private set; }
     public bool Avaliable { get; private set; }
     public decimal MedicalAppointmentPrice { get; private set; }
@@ -18,10 +19,11 @@ public sealed class Schedule : EntityBase
     }
     #nullable enable
 
-    public Schedule(DateTime dateHour, int duration, Doctor doctor, decimal medicalAppointmentPrice)
+    public Schedule(DateTime initialDateHour,DateTime finalDateTime, int duration, Doctor doctor, decimal medicalAppointmentPrice)
     {
         Doctor = doctor;
-        DateHour = dateHour;
+        InitialDateHour = initialDateHour;
+        FinalDateHour = finalDateTime;
         Duration = duration;
         Avaliable = true;
         MedicalAppointmentPrice = medicalAppointmentPrice;

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateTimeSlots;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
@@ -11,13 +12,13 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
     public class AddScheduleRequestHandlerTests
     {
         private readonly Mock<IRepositories> _repositoriesMock;
-        private readonly AddScheduleRequestHandler _handler;
+        private readonly GenerateTimeSlotsRequestHandler _handler;
         private readonly ExeptionHandling _exeptionHandling;
 
         public AddScheduleRequestHandlerTests()
         {
             _repositoriesMock = new Mock<IRepositories>();
-            _handler = new AddScheduleRequestHandler(_repositoriesMock.Object);
+            _handler = new GenerateTimeSlotsRequestHandler(_repositoriesMock.Object);
             _exeptionHandling = new ExeptionHandling();
         }
 
@@ -28,7 +29,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
             var doctorUuid = Guid.NewGuid();
             var doctor = new Doctor(doctorUuid, "John", "Doe", "john.doe@example.com", "12345678900", "CRM123456");
 
-            var request = new AddScheduleRequest
+            var request = new GenerateTimeSlotsRequest
             {
                 DoctorUuid = doctorUuid,
                 Date = new DateOnly(2024, 6, 1),
@@ -84,7 +85,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
         public async Task Handle_ShouldReturnError_WhenDoctorNotFound()
         {
             // Arrange
-            var request = new AddScheduleRequest
+            var request = new GenerateTimeSlotsRequest
             {
                 DoctorUuid = Guid.NewGuid(),
                 Date = new DateOnly(2024, 6, 1),
@@ -164,7 +165,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
         public async Task Handle_ShouldReturnFailure_WhenUnexpectedExceptionOccurs()
         {
             // Arrange
-            var request = new AddScheduleRequest
+            var request = new GenerateTimeSlotsRequest
             {
                 DoctorUuid = Guid.NewGuid(),
                 Date = new DateOnly(2024, 6, 1),

@@ -61,7 +61,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         var doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
 
         if (doctor is not null)
-            await _rabbitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.DateHour.ToString("dd/MM/yyyy"), schedule.DateHour.ToString("HH:mm"));
+            await _rabbitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.InitialDateHour.ToString("dd/MM/yyyy"), schedule.InitialDateHour.ToString("HH:mm"));
 
         return Result.Ok();
     }

@@ -1,22 +1,22 @@
 using FluentValidation.TestHelper;
-using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateTimeSlots;
 
 namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
 {
     public class AddScheduleRequestValidatorTests
     {
-        private readonly AddScheduleRequestValidator _validator;
+        private readonly GenerateTimeSlotsRequestValidator _validator;
 
         public AddScheduleRequestValidatorTests()
         {
-            _validator = new AddScheduleRequestValidator();
+            _validator = new GenerateTimeSlotsRequestValidator();
         }
 
         [Fact]
         public void Validate_ShouldPass_WhenAllFieldsAreValid()
         {
             // Arrange
-            var request = new AddScheduleRequest
+            var request = new GenerateTimeSlotsRequest
             {
                 DoctorUuid = Guid.NewGuid(),
                 Date = new DateOnly(2024, 6, 1),
@@ -41,7 +41,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
             string date, string initialHour, int duration, string expectedErrorMessage)
         {
             // Arrange
-            var request = new AddScheduleRequest
+            var request = new GenerateTimeSlotsRequest
             {
                 DoctorUuid = Guid.NewGuid(),
                 Date = string.IsNullOrEmpty(date) ? default : DateOnly.Parse(date),

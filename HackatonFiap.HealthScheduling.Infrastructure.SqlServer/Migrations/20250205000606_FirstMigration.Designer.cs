@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250204013642_FirstMigration")]
+    [Migration("20250205000606_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -287,24 +287,28 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true)
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(97);
 
-                    b.Property<DateTime>("DateHour")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
-
                     b.Property<int>("DoctorId")
                         .HasColumnType("int")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(8);
 
                     b.Property<int>("Duration")
                         .HasColumnType("int")
+                        .HasColumnOrder(5);
+
+                    b.Property<DateTime>("FinalDateHour")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(4);
+
+                    b.Property<DateTime>("InitialDateHour")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -315,7 +319,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     b.Property<decimal>("MedicalAppointmentPrice")
                         .HasPrecision(28, 2)
                         .HasColumnType("decimal(28,2)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")

@@ -35,7 +35,7 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
 
     private static GetScheduleFromDoctorResponse CreateResponse(GetScheduleFromDoctorRequest request, IEnumerable<Schedule> schedules)
     {
-        var schedulesGrouped = schedules.GroupBy(x => x.DateHour.Date).ToList();
+        var schedulesGrouped = schedules.GroupBy(x => x.InitialDateHour.Date).ToList();
 
         GetScheduleFromDoctorResponse getScheduleFromDoctorResponse = new GetScheduleFromDoctorResponse
         {
@@ -55,7 +55,7 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
             {
                 var appointment = new Appointment
                 {
-                    Hour = TimeOnly.Parse(hour.DateHour.TimeOfDay.ToString()),
+                    Hour = TimeOnly.Parse(hour.InitialDateHour.TimeOfDay.ToString()),
                     ScheduleUuid = hour.Uuid
                 };
                 doctorAvailableSchedule.Appointments.Add(appointment);
