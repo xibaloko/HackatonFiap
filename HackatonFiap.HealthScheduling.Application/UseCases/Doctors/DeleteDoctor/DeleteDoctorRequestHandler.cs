@@ -9,16 +9,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.DeleteDocto
 
 public class DeleteDoctorRequestHandler : IRequestHandler<DeleteDoctorRequest, Result>
 {
-    private readonly IRepositories _repositories; 
+    private readonly IUnitOfWork _unitOfWork; 
 
-    public DeleteDoctorRequestHandler(IRepositories repositories)
+    public DeleteDoctorRequestHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result> Handle(DeleteDoctorRequest request, CancellationToken cancellationToken)
     {
-        Doctor? doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(doctor =>
+        Doctor? doctor = await _unitOfWork.DoctorRepository.FirstOrDefaultAsync(doctor =>
             doctor.Uuid == request.Uuid, cancellationToken: cancellationToken);
 
         if (doctor is null)
@@ -26,8 +26,8 @@ public class DeleteDoctorRequestHandler : IRequestHandler<DeleteDoctorRequest, R
 
         doctor.AsSoftDeletable();
 
-        _repositories.DoctorRepository.Update(doctor);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.DoctorRepository.Update(doctor);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }

@@ -9,12 +9,12 @@ namespace HackatonFiap.Tests.Tests.Doctors.DeleteDoctor
 {
     public class DeleteDoctorRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly DeleteDoctorRequestHandler _handler;
 
         public DeleteDoctorRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _handler = new DeleteDoctorRequestHandler(_repositoriesMock.Object);
         }
 

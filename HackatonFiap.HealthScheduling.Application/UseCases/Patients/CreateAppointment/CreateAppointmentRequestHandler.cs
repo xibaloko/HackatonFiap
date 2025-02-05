@@ -13,17 +13,17 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppo
 
 public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppointmentRequest, Result>
 {
-    private readonly IRepositories _repositories;
-    private readonly IRabbitMqPublisher _rabbitRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRabbitMqPublisher _rabbitMqPublisher;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateAppointmentRequestHandler(
-        IRepositories repositories,
+        IUnitOfWork repositories,
         IRabbitMqPublisher rabbitRepository,
         IHttpContextAccessor httpContextAccessor)
     {
-        _repositories = repositories;
-        _rabbitRepository = rabbitRepository;
+        _unitOfWork = repositories;
+        _rabbitMqPublisher = rabbitRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -34,7 +34,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         if (string.IsNullOrWhiteSpace(identityId))
             return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized: User not found!"));
 
-        Patient? patient = await _repositories.PatientRepository.FirstOrDefaultAsync(x => x.Uuid == request.PatientUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
+        Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(x => x.Uuid == request.PatientUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
         
         if (patient is null)
             return Result.Fail(ErrorHandler.HandleNotFound("Patient not found or not avaible!"));
@@ -42,7 +42,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         if (identityId != patient.IdentityId!.Value.ToString())
             return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized to schedule an appointment."));
 
-        Schedule? schedule = await _repositories.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.ScheduleUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
+        Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.ScheduleUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
         
         if (schedule is null)
             return Result.Fail(ErrorHandler.HandleNotFound("Schedule not found!"));
@@ -52,15 +52,15 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 
         Appointment appointment = new Appointment(patient, schedule);
 
-        await _repositories.AppointmentRepository.AddAsync(appointment, cancellationToken);
+        await _unitOfWork.AppointmentRepository.AddAsync(appointment, cancellationToken);
         schedule.SetAppointment();
-        _repositories.ScheduleRepository.Update(schedule);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.ScheduleRepository.Update(schedule);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
-        var doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
+        var doctor = await _unitOfWork.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
 
         if (doctor is not null)
-            await _rabbitRepository.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.InitialDateHour.ToString("dd/MM/yyyy"), schedule.InitialDateHour.ToString("HH:mm"));
+            await _rabbitMqPublisher.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.InitialDateHour.ToString("dd/MM/yyyy"), schedule.InitialDateHour.ToString("HH:mm"));
 
         return Result.Ok();
     }

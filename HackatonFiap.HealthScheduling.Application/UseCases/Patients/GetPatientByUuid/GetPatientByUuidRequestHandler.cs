@@ -10,18 +10,18 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatient
 
 public sealed class GetPatientByUuidRequestHandler : IRequestHandler<GetPatientByUuidRequest, Result<GetPatientByUuidResponse>> 
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetPatientByUuidRequestHandler(IRepositories repositories, IMapper mapper)
+    public GetPatientByUuidRequestHandler(IUnitOfWork repositories, IMapper mapper)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
     public async Task<Result<GetPatientByUuidResponse>> Handle(GetPatientByUuidRequest request, CancellationToken cancellationToken)
     {
-        Patient? patient = await _repositories.PatientRepository.FirstOrDefaultAsync(patient =>
+        Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(patient =>
             patient.Uuid == request.Uuid && patient.IsDeleted == false, cancellationToken: cancellationToken);
 
         if (patient is null)

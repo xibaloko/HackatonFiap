@@ -9,18 +9,18 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetDoctorBy
 
 public sealed class GetDoctorByUuidRequestHandler : IRequestHandler<GetDoctorByUuidRequest, Result<GetDoctorByUuidResponse>>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetDoctorByUuidRequestHandler(IRepositories repositories, IMapper mapper)
+    public GetDoctorByUuidRequestHandler(IUnitOfWork repositories, IMapper mapper)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
     public async Task<Result<GetDoctorByUuidResponse>> Handle(GetDoctorByUuidRequest request, CancellationToken cancellationToken)
     {
-        Doctor? doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(doctor => doctor.Uuid == request.Uuid, cancellationToken: cancellationToken);
+        Doctor? doctor = await _unitOfWork.DoctorRepository.FirstOrDefaultAsync(doctor => doctor.Uuid == request.Uuid, cancellationToken: cancellationToken);
 
         if (doctor is null)
             return Result.Fail(ErrorHandler.HandleBadRequest("Doctor not found."));

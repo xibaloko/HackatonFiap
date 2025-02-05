@@ -8,16 +8,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.UpdatePati
 
 public class UpdatePatientRequestHandler : IRequestHandler<UpdatePatientRequest, Result>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdatePatientRequestHandler(IRepositories repositories)
+    public UpdatePatientRequestHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result> Handle(UpdatePatientRequest request, CancellationToken cancellationToken)
     {
-        Patient? patient = await _repositories.PatientRepository.FirstOrDefaultAsync(patient =>
+        Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(patient =>
             patient.Uuid == request.Uuid, cancellationToken: cancellationToken);
 
         if (patient is null)
@@ -25,8 +25,8 @@ public class UpdatePatientRequestHandler : IRequestHandler<UpdatePatientRequest,
 
         patient.UpdateBasicInformations(request.Name, request.LastName, request.Email, request.CPF, request.RG);
 
-        _repositories.PatientRepository.Update(patient);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.PatientRepository.Update(patient);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }

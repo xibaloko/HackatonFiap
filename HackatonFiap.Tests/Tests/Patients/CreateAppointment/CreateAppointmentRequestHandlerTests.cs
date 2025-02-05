@@ -16,14 +16,14 @@ namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
 {
     public class CreateAppointmentRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IRabbitMqPublisher> _rabbitMqPublisherMock;
         private readonly CreateAppointmentRequestHandler _handler;
         private readonly Fixture _fixture;
 
         public CreateAppointmentRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _rabbitMqPublisherMock = new Mock<IRabbitMqPublisher>();
             _fixture = new Fixture();
 

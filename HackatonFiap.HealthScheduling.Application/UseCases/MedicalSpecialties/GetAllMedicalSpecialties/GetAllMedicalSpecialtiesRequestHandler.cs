@@ -7,18 +7,18 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.MedicalSpecialties.
 
 public class GetAllMedicalSpecialtiesRequestHandler : IRequestHandler<GetAllMedicalSpecialtiesRequest, Result<GetAllMedicalSpecialtiesResponse>>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetAllMedicalSpecialtiesRequestHandler(IRepositories repositories, IMapper mapper)
+    public GetAllMedicalSpecialtiesRequestHandler(IUnitOfWork repositories, IMapper mapper)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
     public async Task<Result<GetAllMedicalSpecialtiesResponse>> Handle(GetAllMedicalSpecialtiesRequest request, CancellationToken cancellationToken)
     {
-        var medicalSpecialties = await _repositories.MedicalSpecialtyRepository.GetAllAsync(cancellationToken: cancellationToken);
+        var medicalSpecialties = await _unitOfWork.MedicalSpecialtyRepository.GetAllAsync(cancellationToken: cancellationToken);
 
         var response = _mapper.Map<GetAllMedicalSpecialtiesResponse>(medicalSpecialties);
 

@@ -7,18 +7,18 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDocto
 
 public class GetAllDoctorsRequestHandler : IRequestHandler<GetAllDoctorsRequest, Result<GetAllDoctorsResponse>>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetAllDoctorsRequestHandler(IRepositories repositories, IMapper mapper)
+    public GetAllDoctorsRequestHandler(IUnitOfWork repositories, IMapper mapper)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
     public async Task<Result<GetAllDoctorsResponse>> Handle(GetAllDoctorsRequest request, CancellationToken cancellationToken)
     {
-        var doctors = await _repositories.DoctorRepository.GetAllAsync(cancellationToken: cancellationToken);
+        var doctors = await _unitOfWork.DoctorRepository.GetAllAsync(cancellationToken: cancellationToken);
 
         var response = _mapper.Map<GetAllDoctorsResponse>(doctors);
 

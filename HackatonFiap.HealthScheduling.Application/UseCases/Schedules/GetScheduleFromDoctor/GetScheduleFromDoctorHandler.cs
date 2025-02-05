@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentResults;
-using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using MediatR;
@@ -9,20 +8,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetSchedu
 
 public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDoctorRequest, Result<GetScheduleFromDoctorResponse>>
 {
-    private readonly IRepositories _repositories;
-    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetScheduleFromDoctorHandler(
-        IRepositories repositories
-        , IMapper mapper)
+    public GetScheduleFromDoctorHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
-        _mapper = mapper;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result<GetScheduleFromDoctorResponse>> Handle(GetScheduleFromDoctorRequest request, CancellationToken cancellationToken)
     {
-        IEnumerable<Schedule> schedules = await _repositories.ScheduleRepository.GetAllAsync(x =>
+        IEnumerable<Schedule> schedules = await _unitOfWork.ScheduleRepository.GetAllAsync(x =>
                                                             x.Avaliable == true
                                                             && x.IsDeleted == false
                                                             && x.Doctor.Uuid == request.DoctorUuId

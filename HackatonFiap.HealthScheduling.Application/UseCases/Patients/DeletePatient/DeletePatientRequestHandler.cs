@@ -8,16 +8,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePati
 
 public class DeletePatientRequestHandler : IRequestHandler<DeletePatientRequest, Result>
 {
-    private readonly IRepositories _repositories; 
+    private readonly IUnitOfWork _unitOfWork; 
 
-    public DeletePatientRequestHandler(IRepositories repositories)
+    public DeletePatientRequestHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result> Handle(DeletePatientRequest request, CancellationToken cancellationToken)
     {
-        Patient? patient = await _repositories.PatientRepository.FirstOrDefaultAsync(patient =>
+        Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(patient =>
             patient.Uuid == request.Uuid, cancellationToken: cancellationToken);
 
         if (patient is null)
@@ -25,8 +25,8 @@ public class DeletePatientRequestHandler : IRequestHandler<DeletePatientRequest,
 
         patient.AsSoftDeletable();
 
-        _repositories.PatientRepository.Update(patient);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.PatientRepository.Update(patient);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }
