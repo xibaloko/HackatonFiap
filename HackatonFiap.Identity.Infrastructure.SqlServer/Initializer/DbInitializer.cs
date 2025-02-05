@@ -26,21 +26,30 @@ public sealed class DbInitializer : IDbInitializer
         var migrations = _db.Database.GetPendingMigrations();
 
         if (migrations.Any())
-            _db.Database.Migrate();
-
-        bool isRoleAdminExists = _roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult();
-
-        if (!isRoleAdminExists)
         {
+            Console.WriteLine("Aplicando migrations pendentes...");
+            _db.Database.Migrate();
+            Console.WriteLine("Migrations aplicadas com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("Nenhuma migration pendente.");
+        }
+        
+        if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
+        {
+            Console.WriteLine("Criando roles...");
             _roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole("Doctor")).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole("Patient")).GetAwaiter().GetResult();
+            Console.WriteLine("Roles criadas com sucesso!");
         }
-
-        ApplicationUser? user = _db.UserAccounts.FirstOrDefaultAsync(user => user.Email == "admin@admin.com").GetAwaiter().GetResult();
+        
+        ApplicationUser? user = _db.UserAccounts.FirstOrDefaultAsync(u => u.Email == "admin@admin.com").GetAwaiter().GetResult();
 
         if (user is null)
         {
+            Console.WriteLine("Criando usuário Admin...");
             var result = _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "admin",
@@ -51,10 +60,16 @@ public sealed class DbInitializer : IDbInitializer
 
             if (result.Succeeded)
             {
-                user = _db.UserAccounts.Single(user => user.Email == "admin@admin.com");
-                _userManager.AddToRoleAsync(user, "Admin");
+                user = _db.UserAccounts.Single(u => u.Email == "admin@admin.com");
+                _userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
+                Console.WriteLine("Usuário Admin criado com sucesso!");
             }
         }
+        else
+        {
+            Console.WriteLine("Usuário Admin já existe.");
+        }
     }
+
 }
 
