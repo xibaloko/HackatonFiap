@@ -23,7 +23,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
                 InitialHour = new TimeOnly(8, 0),
                 FinalHour = new TimeOnly(10, 0),
                 Duration = 30,
-                Avaliable = true
+                //Avaliable = true
             };
 
             // Act
@@ -48,7 +48,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
                 InitialHour = string.IsNullOrEmpty(initialHour) ? default : TimeOnly.Parse(initialHour),
                 FinalHour = new TimeOnly(10, 0),
                 Duration = duration,
-                Avaliable = true
+                //Avaliable = true
             };
 
             // Act

@@ -20,7 +20,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
         {
             _repositoriesMock = new Mock<IRepositories>();
             _mapperMock = new Mock<IMapper>();
-            _handler = new GetAllPatientsRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
+            //_handler = new GetAllPatientsRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
         }
 
         [Fact]

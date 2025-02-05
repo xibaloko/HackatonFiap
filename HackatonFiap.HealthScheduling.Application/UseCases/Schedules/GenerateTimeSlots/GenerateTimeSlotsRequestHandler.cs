@@ -48,7 +48,7 @@ public sealed class GenerateTimeSlotsRequestHandler : IRequestHandler<GenerateTi
         var scheduleEntitys = new List<Schedule>();
         for (int i = 1; i <= quantitySchedules; i++)
         {
-            scheduleEntitys.Add(new Schedule(initialDateHour, initialDateHour.AddMinutes(request.Duration), request.Duration, doctor, request.Price));
+            scheduleEntitys.Add(new Schedule(initialDateHour, initialDateHour.AddMinutes(request.Duration), doctor, request.Price));
             initialDateHour = initialDateHour.AddMinutes(request.Duration);
         }
 

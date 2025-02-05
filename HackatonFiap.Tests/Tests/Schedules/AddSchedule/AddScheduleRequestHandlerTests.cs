@@ -36,7 +36,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
                 InitialHour = new TimeOnly(8, 0),
                 FinalHour = new TimeOnly(10, 0),
                 Duration = 30,
-                Avaliable = true
+                //Avaliable = true
             };
 
             _repositoriesMock
@@ -92,7 +92,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
                 InitialHour = new TimeOnly(8, 0),
                 FinalHour = new TimeOnly(10, 0),
                 Duration = 30,
-                Avaliable = true
+                //Avaliable = true
             };
 
             _repositoriesMock
@@ -172,7 +172,7 @@ namespace HackatonFiap.Tests.Tests.Schedules.AddSchedule
                 InitialHour = new TimeOnly(8, 0),
                 FinalHour = new TimeOnly(10, 0),
                 Duration = 30,
-                Avaliable = true
+                //Avaliable = true
             };
 
             _repositoriesMock

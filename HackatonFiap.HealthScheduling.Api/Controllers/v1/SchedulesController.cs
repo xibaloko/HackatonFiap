@@ -4,6 +4,7 @@ using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddAppointmen
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateTimeSlots;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetScheduleFromDoctor;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.UpdateSchedule;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,34 +21,37 @@ public class SchedulesController : ControllerBase
     public SchedulesController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost("generate-time-slots")]
-    public async Task<IActionResult> GenerateTimeSlots([FromBody] GenerateTimeSlotsRequest request, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(request, cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-    
-    [HttpPost("add-appointment-slot")]
-    public async Task<IActionResult> AddAppointmentSlot([FromBody] AddAppointmentSlotRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GenerateTimeSlotsAsync([FromBody] GenerateTimeSlotsRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 
+    [HttpPost("add-appointment-slot")]
+    public async Task<IActionResult> AddAppointmentSlotAsync([FromBody] AddAppointmentSlotRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
 
     [HttpGet("doctor/{uuid:Guid}")]
-    public async Task<IActionResult> GetScheduleFromDoctor([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetScheduleFromDoctorAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetScheduleFromDoctorRequest(uuid), cancellationToken: cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 
     [HttpDelete("{uuid:Guid}")]
-    public async Task<IActionResult> DeleteSchedule([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteScheduleAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteScheduleRequest(uuid), cancellationToken: cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 
-
-
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateScheduleAsync([FromBody] UpdateScheduleRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(request, cancellationToken: cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
 }
