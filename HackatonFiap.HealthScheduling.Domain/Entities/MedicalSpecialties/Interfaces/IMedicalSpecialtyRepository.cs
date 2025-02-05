@@ -1,8 +1,9 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Bases.Repositories;
+using HackatonFiap.HealthScheduling.Domain.Entities.MedicalSpecialties;
 
-namespace HackatonFiap.HealthScheduling.Domain.Entities.Patients.Interfaces;
+namespace HackatonFiap.HealthScheduling.Domain.Entities.MedicalSpecialties.Interfaces;
 
-public interface IPatientRepository : IBaseRepository<Patient>
+public interface IMedicalSpecialtyRepository : IBaseRepository<MedicalSpecialty>
 {
 
 }
