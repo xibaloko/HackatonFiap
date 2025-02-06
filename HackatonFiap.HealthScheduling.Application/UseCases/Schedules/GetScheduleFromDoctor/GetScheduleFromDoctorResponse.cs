@@ -16,5 +16,6 @@ public class AppointmentResponse
 {
     public TimeOnly Hour { get; set; }
     public Guid ScheduleUuid { get; set; }
+    public decimal Price { get; set; }
 
 }
