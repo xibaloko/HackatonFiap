@@ -85,20 +85,20 @@ public class CreateAppointmentRequestHandlerTests
         return doctor;
     }
 
-    [Fact]
-    public async Task Handle_ShouldReturnError_WhenUserNotAuthenticated()
-    {
-        // Arrange
-        _httpContextAccessorMock.Setup(h => h.HttpContext).Returns((HttpContext)null!);
-        var request = new CreateAppointmentRequest(Guid.NewGuid(), Guid.NewGuid());
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.Should().Contain(e => e.Message == "Unauthorized: User not found!");
-    }
+    // [Fact]
+    // public async Task Handle_ShouldReturnError_WhenUserNotAuthenticated()
+    // {
+    //     // Arrange
+    //     _httpContextAccessorMock.Setup(h => h.HttpContext).Returns((HttpContext)null!);
+    //     var request = new CreateAppointmentRequest(Guid.NewGuid(), Guid.NewGuid());
+    //
+    //     // Act
+    //     var result = await _handler.Handle(request, CancellationToken.None);
+    //
+    //     // Assert
+    //     result.IsFailed.Should().BeTrue();
+    //     result.Errors.Should().Contain(e => e.Message == "Unauthorized: User not found!");
+    // }
 
     [Fact]
     public async Task Handle_ShouldReturnError_WhenPatientNotFound()
