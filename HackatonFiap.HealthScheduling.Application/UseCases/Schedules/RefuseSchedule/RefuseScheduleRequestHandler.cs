@@ -4,13 +4,13 @@ using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.RefuseSchedule;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.RefuseSchedule;
 
-public class RefuseAppointmentRequestHandler : IRequestHandler<RefuseScheduleRequest, Result>
+public class RefuseScheduleRequestHandler : IRequestHandler<RefuseScheduleRequest, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public RefuseAppointmentRequestHandler(IUnitOfWork unitOfWork)
+    public RefuseScheduleRequestHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
@@ -18,7 +18,7 @@ public class RefuseAppointmentRequestHandler : IRequestHandler<RefuseScheduleReq
     public async Task<Result> Handle(RefuseScheduleRequest request, CancellationToken cancellationToken)
     {
         Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(schedule =>
-            schedule.Uuid == request.ScheduleUuid && schedule.IsDeleted==false, includeProperties: "Appointments", cancellationToken: cancellationToken);
+            schedule.Uuid == request.ScheduleUuid && schedule.IsDeleted == false, includeProperties: "Appointments", cancellationToken: cancellationToken);
 
         if (schedule is null)
             return Result.Fail(ErrorHandler.HandleBadRequest("Schedule not found."));

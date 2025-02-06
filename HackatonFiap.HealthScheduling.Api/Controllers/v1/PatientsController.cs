@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.RefuseAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.DeletePatient;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetPatientByUuid;
@@ -42,22 +40,6 @@ public class PatientsController : ControllerBase
     public async Task<IActionResult> AddPatientAsync([FromBody] AddPatientRequest request, CancellationToken cancellationToken)
     {
         Result<AddPatientResponse> response = await _mediator.Send(request, cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
-    [HttpPost("appointment")]
-    [Authorize(Roles = "Patient")]
-    public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(request, cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
-    [HttpPost("refuse-appointment")]
-    [Authorize(Roles = "Patient")]
-    public async Task<IActionResult> RefuseAppointmentAsync([FromBody] RefuseAppointmentRequest request, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(request, cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 

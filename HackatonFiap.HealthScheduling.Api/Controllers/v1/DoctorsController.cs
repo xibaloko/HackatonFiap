@@ -8,7 +8,7 @@ using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.DeleteDoctor;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.RefuseSchedule;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.RefuseSchedule;
 
 
 namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
@@ -60,13 +60,4 @@ public class DoctorsController : ControllerBase
         Result response = await _mediator.Send(new DeleteDoctorRequest(uuid), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
-
-    [HttpPatch("refuse-schedule")]
-    [Authorize(Roles = "Doctor")]
-    public async Task<IActionResult> RefuseScheduleAsync([FromBody] RefuseScheduleRequest request, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(request, cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
 }

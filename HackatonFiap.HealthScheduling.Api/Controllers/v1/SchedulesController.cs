@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddAppointmentSlot;
-using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateTimeSlots;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetScheduleFromDoctor;
+using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.RefuseSchedule;
 using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.UpdateSchedule;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +27,7 @@ public class SchedulesController : ControllerBase
         return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpPost("add-appointment-slot")]
+    [HttpPost]
     [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> AddAppointmentSlotAsync([FromBody] AddAppointmentSlotRequest request, CancellationToken cancellationToken)
     {
@@ -43,19 +43,19 @@ public class SchedulesController : ControllerBase
         return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpDelete("{uuid:Guid}")]
-    [Authorize(Roles = "Doctor")]
-    public async Task<IActionResult> DeleteScheduleAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
-    {
-        var response = await _mediator.Send(new DeleteScheduleRequest(uuid), cancellationToken: cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
-    [HttpPut("update")]
+    [HttpPut]
     [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> UpdateScheduleAsync([FromBody] UpdateScheduleRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken: cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
+    [HttpPatch("refuse")]
+    [Authorize(Roles = "Doctor")]
+    public async Task<IActionResult> RefuseScheduleAsync([FromBody] RefuseScheduleRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 }
