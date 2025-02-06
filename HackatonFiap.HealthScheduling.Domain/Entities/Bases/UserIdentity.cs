@@ -23,4 +23,6 @@ public abstract class UserIdentity : EntityBase
         Email = email;
         CPF = cPF;
     }
+
+    public void SetIdentityId(Guid identityId) => IdentityId = identityId;
 }

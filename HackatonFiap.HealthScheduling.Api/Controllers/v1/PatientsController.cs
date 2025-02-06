@@ -15,8 +15,6 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize]
-
 public class PatientsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -24,6 +22,7 @@ public class PatientsController : ControllerBase
     public PatientsController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllPatientsAsync(CancellationToken cancellationToken)
     {
         Result<GetAllPatientsResponse> response = await _mediator.Send(new GetAllPatientsRequest(), cancellationToken);
@@ -31,6 +30,7 @@ public class PatientsController : ControllerBase
     }
 
     [HttpGet("{uuid:Guid}")]
+    [Authorize(Roles = "Patient")]
     public async Task<IActionResult> GetPatientByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         Result<GetPatientByUuidResponse> response = await _mediator.Send(new GetPatientByUuidRequest(uuid), cancellationToken);
@@ -45,21 +45,8 @@ public class PatientsController : ControllerBase
         return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdatePatientAsync([FromBody] UpdatePatientRequest request, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(request, cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
-    [HttpDelete("{uuid:Guid}")]
-    public async Task<IActionResult> DeletePatientAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
-    {
-        Result response = await _mediator.Send(new DeletePatientRequest(uuid), cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
     [HttpPost("appointment")]
+    [Authorize(Roles = "Patient")]
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
@@ -67,9 +54,26 @@ public class PatientsController : ControllerBase
     }
 
     [HttpPost("refuse-appointment")]
+    [Authorize(Roles = "Patient")]
     public async Task<IActionResult> RefuseAppointmentAsync([FromBody] RefuseAppointmentRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
+    [HttpPut]
+    [Authorize(Roles = "Patient")]
+    public async Task<IActionResult> UpdatePatientAsync([FromBody] UpdatePatientRequest request, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+
+    [HttpDelete("{uuid:Guid}")]
+    [Authorize(Roles = "Patient")]
+    public async Task<IActionResult> DeletePatientAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    {
+        Result response = await _mediator.Send(new DeletePatientRequest(uuid), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 }

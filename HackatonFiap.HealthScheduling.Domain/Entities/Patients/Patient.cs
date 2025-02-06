@@ -26,6 +26,4 @@ public sealed class Patient : UserIdentity
         CPF = cpf;
         RG = rg;
     }
-
-    public void SetIdentityId(Guid identityId) => IdentityId = identityId;
 }

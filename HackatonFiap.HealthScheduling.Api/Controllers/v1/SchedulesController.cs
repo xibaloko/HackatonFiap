@@ -13,7 +13,6 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-//[Authorize]
 public class SchedulesController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -21,6 +20,7 @@ public class SchedulesController : ControllerBase
     public SchedulesController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost("generate-time-slots")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> GenerateTimeSlotsAsync([FromBody] GenerateTimeSlotsRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
@@ -28,6 +28,7 @@ public class SchedulesController : ControllerBase
     }
 
     [HttpPost("add-appointment-slot")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> AddAppointmentSlotAsync([FromBody] AddAppointmentSlotRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
@@ -35,6 +36,7 @@ public class SchedulesController : ControllerBase
     }
 
     [HttpGet("doctor/{uuid:Guid}")]
+    [Authorize(Roles = "Doctor,Patient")]
     public async Task<IActionResult> GetScheduleFromDoctorAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetScheduleFromDoctorRequest(uuid), cancellationToken: cancellationToken);
@@ -42,6 +44,7 @@ public class SchedulesController : ControllerBase
     }
 
     [HttpDelete("{uuid:Guid}")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> DeleteScheduleAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new DeleteScheduleRequest(uuid), cancellationToken: cancellationToken);
@@ -49,6 +52,7 @@ public class SchedulesController : ControllerBase
     }
 
     [HttpPut("update")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> UpdateScheduleAsync([FromBody] UpdateScheduleRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken: cancellationToken);

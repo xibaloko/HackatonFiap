@@ -10,7 +10,6 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-//[Authorize]
 public class MedicalSpecialtiesController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,6 +17,7 @@ public class MedicalSpecialtiesController : ControllerBase
     public MedicalSpecialtiesController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAllMedicalSpecialtiesAsync(CancellationToken cancellationToken)
     {
         Result<GetAllMedicalSpecialtiesResponse> response = await _mediator.Send(new GetAllMedicalSpecialtiesRequest(), cancellationToken);

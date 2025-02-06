@@ -15,27 +15,27 @@ namespace HackatonFiap.HealthScheduling.Api.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-//[Authorize(Roles = "Admin,Doctor")]
 public class DoctorsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
     public DoctorsController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet("{uuid:Guid}")]
-    public async Task<IActionResult> GetDoctorByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
-    {
-        Result<GetDoctorByUuidResponse> response = await _mediator.Send(new GetDoctorByUuidRequest(uuid), cancellationToken);
-        return this.ProcessResponse(response, cancellationToken);
-    }
-
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllDoctorsAsync([FromQuery] string? specialty, CancellationToken cancellationToken)
     {
         Result<GetAllDoctorsResponse> response = await _mediator.Send(new GetAllDoctorsRequest(specialty), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 
+    [HttpGet("{uuid:Guid}")]
+    [Authorize(Roles = "Doctor")]
+    public async Task<IActionResult> GetDoctorByUuidAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    {
+        Result<GetDoctorByUuidResponse> response = await _mediator.Send(new GetDoctorByUuidRequest(uuid), cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
 
     [HttpPost]
     [AllowAnonymous]
@@ -46,6 +46,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> UpdateDoctorAsync([FromBody] UpdateDoctorRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
@@ -53,6 +54,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpDelete("{uuid:Guid}")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> DeleteDoctorAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(new DeleteDoctorRequest(uuid), cancellationToken);
@@ -60,6 +62,7 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpPatch("refuse-schedule")]
+    [Authorize(Roles = "Doctor")]
     public async Task<IActionResult> RefuseScheduleAsync([FromBody] RefuseScheduleRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
