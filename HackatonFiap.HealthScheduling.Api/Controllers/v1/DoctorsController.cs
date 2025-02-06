@@ -30,11 +30,12 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllDoctorsAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllDoctorsAsync([FromQuery] string? specialty, CancellationToken cancellationToken)
     {
-        Result<GetAllDoctorsResponse> response = await _mediator.Send(new GetAllDoctorsRequest(), cancellationToken);
+        Result<GetAllDoctorsResponse> response = await _mediator.Send(new GetAllDoctorsRequest(specialty), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
+
 
     [HttpPost]
     [AllowAnonymous]

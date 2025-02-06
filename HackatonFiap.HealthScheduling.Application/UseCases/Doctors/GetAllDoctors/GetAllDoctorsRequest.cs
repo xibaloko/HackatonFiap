@@ -5,4 +5,10 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDocto
 
 public sealed record GetAllDoctorsRequest : IRequest<Result<GetAllDoctorsResponse>>
 {
+    public string? Specialty { get; }
+
+    public GetAllDoctorsRequest(string? specialty = null)
+    {
+        Specialty = specialty;
+    }
 }
