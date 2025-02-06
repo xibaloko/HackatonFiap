@@ -13,4 +13,11 @@ public class DoctorResponse
     public required string Email { get; init; }
     public required string CPF { get; init; }
     public required string CRM { get; init; }
+    public required MedicalSpecialtyDto  MedicalSpecialty { get; init; }
+}
+
+public class MedicalSpecialtyDto
+{
+    public Guid Uuid { get; set; }
+    public string Description { get; set; }
 }

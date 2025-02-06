@@ -1,0 +1,11 @@
+resources:
+  - emailworker-deployment.yaml
+  - emailworker-service.yaml
+  - healthscheduling-deployment.yaml
+  - healthscheduling-service.yaml
+  - identity-deployment.yaml
+  - identity-service.yaml
+  - rabbitmq-deployment.yaml
+  - rabbitmq-service.yaml
+  - sqlserver-deployment.yaml
+  - sqlserver-service.yaml

@@ -36,7 +36,7 @@ public sealed class AddDoctorRequestValidator : RequestValidator<AddDoctorReques
             .NotEmpty()
             .WithMessage("CRM is required.")
             .Must(IsValidCrm)
-            .WithMessage("Invalid CPF.");
+            .WithMessage("Invalid CRM.");
 
         RuleFor(request => request.MedicalSpecialtyUuid)
             .NotEmpty()

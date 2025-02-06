@@ -17,69 +17,42 @@ public sealed class DbInitializer : IDbInitializer
 
     public void Initialize()
     {
-        _db.Database.EnsureCreated();
+        var migrations = _db.Database.GetPendingMigrations();
+        if (migrations.Any())
+        {
+            Console.WriteLine("Aplicando migrations pendentes...");
+            _db.Database.Migrate();
+            Console.WriteLine("Migrations aplicadas com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("Nenhuma migration pendente.");
+        }
 
+        // 🔹 Evita duplicação de registros
         if (!_db.MedicalSpecialties.Any())
         {
-            var specialties = new List<MedicalSpecialty>
-            {
-                new("Alergologia"),
-                new("Anestesiologia"),
-                new("Angiologia"),
-                new("Cardiologia"),
-                new("Cirurgia Cardiovascular"),
-                new("Cirurgia da Mão"),
-                new("Cirurgia de Cabeça e Pescoço"),
-                new("Cirurgia do Aparelho Digestivo"),
-                new("Cirurgia Geral"),
-                new("Cirurgia Oncológica"),
-                new("Cirurgia Pediátrica"),
-                new("Cirurgia Plástica"),
-                new("Cirurgia Torácica"),
-                new("Cirurgia Vascular"),
-                new("Clínica Médica"),
-                new("Coloproctologia"),
-                new("Dermatologia"),
-                new("Endocrinologia e Metabologia"),
-                new("Endoscopia"),
-                new("Gastroenterologia"),
-                new("Genética Médica"),
-                new("Geriatria"),
-                new("Ginecologia e Obstetrícia"),
-                new("Hematologia e Hemoterapia"),
-                new("Homeopatia"),
-                new("Infectologia"),
-                new("Mastologia"),
-                new("Medicina de Emergência"),
-                new("Medicina de Família e Comunidade"),
-                new("Medicina do Trabalho"),
-                new("Medicina Esportiva"),
-                new("Medicina Física e Reabilitação"),
-                new("Medicina Intensiva"),
-                new("Medicina Legal e Perícia Médica"),
-                new("Medicina Nuclear"),
-                new("Medicina Preventiva e Social"),
-                new("Nefrologia"),
-                new("Neurocirurgia"),
-                new("Neurologia"),
-                new("Nutrologia"),
-                new("Oftalmologia"),
-                new("Oncologia Clínica"),
-                new("Ortopedia e Traumatologia"),
-                new("Otorrinolaringologia"),
-                new("Patologia"),
-                new("Patologia Clínica/Medicina Laboratorial"),
-                new("Pediatria"),
-                new("Pneumologia"),
-                new("Psiquiatria"),
-                new("Radiologia e Diagnóstico por Imagem"),
-                new("Radioterapia"),
-                new("Reumatologia"),
-                new("Urologia")
-            };
+            Console.WriteLine("Populando tabela MedicalSpecialties...");
 
-            _db.MedicalSpecialties.AddRange(specialties);
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Alergologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Anestesiologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Angiologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Cardiologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Cirurgia Cardiovascular"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Cirurgia da Mão"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Cirurgia de Cabeça e Pescoço"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Cirurgia Geral"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Gastroenterologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Neurologia"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Psiquiatria"));
+            _db.MedicalSpecialties.Add(new MedicalSpecialty("Urologia"));
+
             _db.SaveChanges();
+            Console.WriteLine("Tabela MedicalSpecialties populada!");
+        }
+        else
+        {
+            Console.WriteLine("A tabela MedicalSpecialties já possui dados.");
         }
 
     }
