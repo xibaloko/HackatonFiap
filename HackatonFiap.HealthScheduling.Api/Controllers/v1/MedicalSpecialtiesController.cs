@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
-using HackatonFiap.HealthScheduling.Application.UseCases.Doctors.GetAllDoctors;
 using HackatonFiap.HealthScheduling.Application.UseCases.MedicalSpecialties.GetAllMedicalSpecialties;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,5 +22,4 @@ public class MedicalSpecialtiesController : ControllerBase
         Result<GetAllMedicalSpecialtiesResponse> response = await _mediator.Send(new GetAllMedicalSpecialtiesRequest(), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
-
 }

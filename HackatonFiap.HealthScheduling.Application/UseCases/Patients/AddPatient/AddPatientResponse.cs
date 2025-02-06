@@ -8,5 +8,4 @@ public sealed class AddPatientResponse
     public required string Email { get; init; }
     public required string CPF { get; init; }
     public required string RG { get; init; }
-
 }

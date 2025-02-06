@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.RefuseSchedule;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.RefuseSchedule;
 
 public sealed record RefuseScheduleRequest(
     Guid ScheduleUuid

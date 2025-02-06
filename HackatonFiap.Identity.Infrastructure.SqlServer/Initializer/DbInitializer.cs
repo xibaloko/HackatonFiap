@@ -55,7 +55,6 @@ public sealed class DbInitializer : IDbInitializer
                 UserName = "admin",
                 Email = "admin@admin.com",
                 EmailConfirmed = true,
-                PhoneNumber = string.Empty,
             }, "Admin01++").GetAwaiter().GetResult();
 
             if (result.Succeeded)

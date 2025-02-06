@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentValidation;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Doctors.RefuseSchedule;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.RefuseSchedule;
 
 public class RefuseScheduleValidator : RequestValidator<RefuseScheduleRequest>
 {
