@@ -30,5 +30,6 @@ public class Appointment : EntityBase
     {
         IsCanceledByPatient = true;
         CancellationReason = reason;
+        Schedule.MakeAppointmentAvailable();
     }
 }

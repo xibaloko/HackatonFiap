@@ -4,7 +4,7 @@ using MediatR;
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.RefuseAppointment;
 
 public sealed record RefuseAppointmentRequest(
-    Guid Uuid,
+    Guid AppointmentUuid,
     string CancellationReason
     ) : IRequest<Result>
 {

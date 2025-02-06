@@ -28,8 +28,7 @@ public sealed class AddAppointmentSlotRequestHandler : IRequestHandler<AddAppoin
 
         var initialHour = request.InitialHour;
         var finalHour = request.InitialHour.AddMinutes(request.Duration);
-        var period = (finalHour - initialHour).TotalMinutes;
-        
+
         var initialDateHour = new DateTime(request.Date.Year, request.Date.Month, request.Date.Day, initialHour.Hour, initialHour.Minute, 0);
         var finalDateHour = new DateTime(request.Date.Year, request.Date.Month, request.Date.Day, finalHour.Hour, finalHour.Minute, 0);
 
@@ -44,10 +43,7 @@ public sealed class AddAppointmentSlotRequestHandler : IRequestHandler<AddAppoin
             return Result.Fail(ErrorHandler.HandleConflict($"Exists Schedules conflicted between {initialDateHour} and {finalDateHour}!"));
         }
 
-        
-        var schedule = new Schedule(initialDateHour, initialDateHour.AddMinutes(request.Duration), request.Duration, doctor, request.Price);
-       
-
+        var schedule = new Schedule(initialDateHour, initialDateHour.AddMinutes(request.Duration), doctor, request.Price);
         await _unitOfWork.ScheduleRepository.AddAsync(schedule, cancellationToken);
         await _unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();
