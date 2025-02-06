@@ -208,6 +208,68 @@ public class CreateAppointmentRequestHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
     }
+    
+    [Fact]
+    public async Task Handle_ShouldAllowFirstRequest_AndRejectSecond_WhenBothTryBookingSameSchedule()
+    {
+        // Arrange
+        var patient1 = CreateValidPatient();
+        var patient2 = CreateValidPatient();
+        var schedule = CreateValidSchedule();
+        var doctor = CreateValidDoctor(schedule.DoctorId);
+
+        var request1 = new CreateAppointmentRequest(patient1.Uuid, schedule.Uuid);
+        var request2 = new CreateAppointmentRequest(patient2.Uuid, schedule.Uuid);
+
+        _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Patient, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Expression<Func<Patient, bool>> predicate, string? _, bool _, CancellationToken _) =>
+                predicate.Compile().Invoke(patient1) ? patient1 : patient2);
+
+        _repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Schedule, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(schedule);
+
+        _repositoriesMock.Setup(repo => repo.DoctorRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Doctor, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(doctor);
+
+        _repositoriesMock.Setup(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        _repositoriesMock.Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        async Task<Result> TryBookAppointment(CreateAppointmentRequest request, Patient patient)
+        {
+            _httpContextAccessorMock.SetupUserIdentity(patient.IdentityId!.Value.ToString());
+            return await _handler.Handle(request, CancellationToken.None);
+        }
+
+        // Act
+        var results = await Task.WhenAll(
+            TryBookAppointment(request1, patient1),
+            TryBookAppointment(request2, patient2)
+        );
+
+        var result1 = results[0];
+        var result2 = results[1];
+
+        // Assert
+        result1.IsSuccess.Should().BeTrue();
+        result2.IsFailed.Should().BeTrue();
+        result2.Errors.Should().Contain(e => e.Message == "Schedule not avaliable!");
+    }
+
 }
 
 public static class HttpContextAccessorExtensions
