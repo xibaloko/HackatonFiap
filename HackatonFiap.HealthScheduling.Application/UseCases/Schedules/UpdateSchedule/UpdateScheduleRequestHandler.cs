@@ -10,16 +10,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.UpdateSch
 
 public sealed class UpdateScheduleRequestHandler : IRequestHandler<UpdateScheduleRequest, Result>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateScheduleRequestHandler(IRepositories repositories)
+    public UpdateScheduleRequestHandler(IUnitOfWork unitOfWork)
     {
-        _repositories = repositories;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(UpdateScheduleRequest request, CancellationToken cancellationToken)
     {
-        Schedule? schedule = await _repositories.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.Uuid, "Doctor", cancellationToken: cancellationToken);
+        Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.Uuid, "Doctor", cancellationToken: cancellationToken);
         if (schedule is null)
         {
             return Result.Fail(ErrorHandler.HandleBadRequest("Schedule not found!"));
@@ -30,7 +30,7 @@ public sealed class UpdateScheduleRequestHandler : IRequestHandler<UpdateSchedul
         var initialDateHour = new DateTime(schedule.InitialDateHour.Year, schedule.InitialDateHour.Month, schedule.InitialDateHour.Day, initialHour.Hour, initialHour.Minute, 0);
         var finalDateHour = new DateTime(schedule.FinalDateHour.Year, schedule.FinalDateHour.Month, schedule.FinalDateHour.Day, finalHour.Hour, finalHour.Minute, 0);
 
-        var duplicateds = await _repositories.ScheduleRepository.GetAllAsync(x =>
+        var duplicateds = await _unitOfWork.ScheduleRepository.GetAllAsync(x =>
                                                                 x.InitialDateHour < finalDateHour
                                                                 && x.FinalDateHour > initialDateHour
                                                                 && x.Doctor.Uuid == schedule.Doctor.Uuid
@@ -42,8 +42,8 @@ public sealed class UpdateScheduleRequestHandler : IRequestHandler<UpdateSchedul
             return Result.Fail(ErrorHandler.HandleConflict($"Exists Schedules conflicted between {initialDateHour} and {finalDateHour}!"));
         }
         schedule.RescheduleAppointment(initialDateHour, finalDateHour, request.Price);
-        _repositories.ScheduleRepository.Update(schedule);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.ScheduleRepository.Update(schedule);
+        await _unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();
     }
 }
