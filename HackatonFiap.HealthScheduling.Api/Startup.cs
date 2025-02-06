@@ -67,6 +67,7 @@ public class Startup
         app.UseAuthorization();
         app.MapControllers();
         app.UseExceptionHandler();
+
         using (var scope = app.Services.CreateScope())
         {
             var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
