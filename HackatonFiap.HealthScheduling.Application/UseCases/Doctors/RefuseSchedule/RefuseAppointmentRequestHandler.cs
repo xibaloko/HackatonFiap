@@ -18,14 +18,12 @@ public class RefuseAppointmentRequestHandler : IRequestHandler<RefuseScheduleReq
     public async Task<Result> Handle(RefuseScheduleRequest request, CancellationToken cancellationToken)
     {
         Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(schedule =>
-            schedule.Uuid == request.ScheduleUuid, includeProperties: "Appointment", cancellationToken: cancellationToken);
+            schedule.Uuid == request.ScheduleUuid && schedule.IsDeleted==false, includeProperties: "Appointments", cancellationToken: cancellationToken);
 
         if (schedule is null)
             return Result.Fail(ErrorHandler.HandleBadRequest("Schedule not found."));
 
         schedule.AsSoftDeletable();
-        schedule.Appointment?.AsSoftDeletable();
-
         _unitOfWork.ScheduleRepository.Update(schedule);
         await _unitOfWork.SaveAsync(cancellationToken);
 

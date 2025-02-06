@@ -87,7 +87,6 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InitialDateHour = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FinalDateHour = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
                     MedicalAppointmentPrice = table.Column<decimal>(type: "decimal(28,2)", precision: 28, scale: 2, nullable: false),
                     Avaliable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     DoctorId = table.Column<int>(type: "int", nullable: false),

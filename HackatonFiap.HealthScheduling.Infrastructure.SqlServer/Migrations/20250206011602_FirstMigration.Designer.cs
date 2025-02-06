@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250205000606_FirstMigration")]
+    [Migration("20250206011602_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -298,10 +298,6 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .HasColumnType("int")
                         .HasColumnOrder(8);
 
-                    b.Property<int>("Duration")
-                        .HasColumnType("int")
-                        .HasColumnOrder(5);
-
                     b.Property<DateTime>("FinalDateHour")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4);
@@ -349,7 +345,7 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .IsRequired();
 
                     b.HasOne("HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Schedule", "Schedule")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -377,6 +373,11 @@ namespace HackatonFiap.HealthScheduling.Infrastructure.SqlServer.Migrations
                         .IsRequired();
 
                     b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("HackatonFiap.HealthScheduling.Domain.Entities.Schedules.Schedule", b =>
+                {
+                    b.Navigation("Appointments");
                 });
 #pragma warning restore 612, 618
         }
