@@ -9,13 +9,13 @@ namespace HackatonFiap.Tests.Tests.Patients.UpdatePatient
 {
     public class UpdatePatientRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly UpdatePatientRequestHandler _handler;
         private readonly ExeptionHandling _exeptionHandling;
 
         public UpdatePatientRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _handler = new UpdatePatientRequestHandler(_repositoriesMock.Object);
             _exeptionHandling = new ExeptionHandling();
         }

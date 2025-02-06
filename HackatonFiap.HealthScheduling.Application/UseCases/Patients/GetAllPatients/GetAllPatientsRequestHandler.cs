@@ -11,13 +11,13 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPati
 public class GetAllPatientsRequestHandler : IRequestHandler<GetAllPatientsRequest, Result<GetAllPatientsResponse>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetAllPatientsRequestHandler(IHttpContextAccessor httpContextAccessor, IRepositories repositories, IMapper mapper)
+    public GetAllPatientsRequestHandler(IHttpContextAccessor httpContextAccessor, IUnitOfWork repositories, IMapper mapper)
     {
         _httpContextAccessor = httpContextAccessor;
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
@@ -28,7 +28,7 @@ public class GetAllPatientsRequestHandler : IRequestHandler<GetAllPatientsReques
         if (string.IsNullOrWhiteSpace(identityId))
             return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized: User not found!"));
 
-        var patients = await _repositories.PatientRepository.GetAllAsync(patient =>
+        var patients = await _unitOfWork.PatientRepository.GetAllAsync(patient =>
             patient.IsDeleted == false, cancellationToken: cancellationToken);
 
         var response = _mapper.Map<GetAllPatientsResponse>(patients);

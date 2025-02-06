@@ -41,10 +41,10 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
         {
             // Arrange
             var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), UserName = "testuser", Email = "test@example.com" };
-            var request = new LoginRequest { Email = user.Email, Password = "ValidPassword123!" };
+            var request = new LoginRequest { Username = user.Email, Password = "ValidPassword123!" };
 
             _userManagerMock
-                .Setup(m => m.FindByEmailAsync(request.Email))
+                .Setup(m => m.FindByEmailAsync(request.Username))
                 .ReturnsAsync(user);
 
             _signInManagerMock
@@ -83,10 +83,10 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
         public async Task Handle_ShouldReturnError_WhenEmailNotFound()
         {
             // Arrange
-            var request = new LoginRequest { Email = "nonexistent@example.com", Password = "InvalidPassword!" };
+            var request = new LoginRequest { Username = "nonexistent@example.com", Password = "InvalidPassword!" };
 
             _userManagerMock
-                .Setup(m => m.FindByEmailAsync(request.Email))
+                .Setup(m => m.FindByEmailAsync(request.Username))
                 .ReturnsAsync((ApplicationUser)null!);
 
             // Act
@@ -103,10 +103,10 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
         {
             // Arrange
             var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), UserName = "testuser", Email = "test@example.com" };
-            var request = new LoginRequest { Email = user.Email, Password = "WrongPassword!" };
+            var request = new LoginRequest { Username = user.Email, Password = "WrongPassword!" };
 
             _userManagerMock
-                .Setup(m => m.FindByEmailAsync(request.Email))
+                .Setup(m => m.FindByEmailAsync(request.Username))
                 .ReturnsAsync(user);
 
             _signInManagerMock
@@ -126,10 +126,10 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
         public async Task Handle_ShouldReturnFailure_WhenUnexpectedExceptionOccurs()
         {
             // Arrange
-            var request = new LoginRequest { Email = "test@example.com", Password = "ValidPassword123!" };
+            var request = new LoginRequest { Username = "test@example.com", Password = "ValidPassword123!" };
 
             _userManagerMock
-                .Setup(m => m.FindByEmailAsync(request.Email))
+                .Setup(m => m.FindByEmailAsync(request.Username))
                 .ThrowsAsync(new Exception("Unexpected error"));
 
             // Act

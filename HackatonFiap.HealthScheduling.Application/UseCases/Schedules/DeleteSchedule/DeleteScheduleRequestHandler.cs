@@ -10,23 +10,23 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedu
 
 public sealed class DeleteScheduleRequestHandler : IRequestHandler<DeleteScheduleRequest, Result>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteScheduleRequestHandler(IRepositories repositories)
+    public DeleteScheduleRequestHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result> Handle(DeleteScheduleRequest request, CancellationToken cancellationToken)
     {
-        var schedule = await _repositories.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.Uuid && x.IsDeleted==false
+        var schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.Uuid && x.IsDeleted==false
                                                                                     , cancellationToken: cancellationToken);
         if (schedule == null)
             return Result.Fail(ErrorHandler.HandleBadRequest("Schedule not found!"));
 
         schedule.AsSoftDeletable();
-        _repositories.ScheduleRepository.Update(schedule);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.ScheduleRepository.Update(schedule);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }

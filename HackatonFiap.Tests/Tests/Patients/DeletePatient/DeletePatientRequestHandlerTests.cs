@@ -9,13 +9,13 @@ namespace HackatonFiap.Tests.Tests.Patients.DeletePatient
 {
     public class DeletePatientRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly DeletePatientRequestHandler _handler;
         private readonly ExeptionHandling _exeptionHandling;
 
         public DeletePatientRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _handler = new DeletePatientRequestHandler(_repositoriesMock.Object);
             _exeptionHandling = new ExeptionHandling();
         }

@@ -10,16 +10,16 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GenerateT
 
 public sealed class GenerateTimeSlotsRequestHandler : IRequestHandler<GenerateTimeSlotsRequest, Result>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GenerateTimeSlotsRequestHandler(IRepositories repositories)
+    public GenerateTimeSlotsRequestHandler(IUnitOfWork repositories)
     {
-        _repositories = repositories;
+        _unitOfWork = repositories;
     }
 
     public async Task<Result> Handle(GenerateTimeSlotsRequest request, CancellationToken cancellationToken)
     {
-        Doctor? doctor = await _repositories.DoctorRepository.FirstOrDefaultAsync(x => x.Uuid == request.DoctorUuid, cancellationToken: cancellationToken);
+        Doctor? doctor = await _unitOfWork.DoctorRepository.FirstOrDefaultAsync(x => x.Uuid == request.DoctorUuid, cancellationToken: cancellationToken);
         if (doctor is null)
         {
             return Result.Fail(ErrorHandler.HandleBadRequest("Doctor not found!"));
@@ -34,7 +34,7 @@ public sealed class GenerateTimeSlotsRequestHandler : IRequestHandler<GenerateTi
         var initialDateHour = new DateTime(request.Date.Year, request.Date.Month, request.Date.Day, initHour.Hour, initHour.Minute, 0);
         var finalDateHour = new DateTime(request.Date.Year, request.Date.Month, request.Date.Day, finalHour.Hour, finalHour.Minute, 0);
 
-        var duplicateds = await _repositories.ScheduleRepository.GetAllAsync(x =>
+        var duplicateds = await _unitOfWork.ScheduleRepository.GetAllAsync(x =>
                                                                 x.InitialDateHour < finalDateHour
                                                                 && x.FinalDateHour > initialDateHour
                                                                 && x.Doctor.Uuid == request.DoctorUuid
@@ -52,8 +52,8 @@ public sealed class GenerateTimeSlotsRequestHandler : IRequestHandler<GenerateTi
             initialDateHour = initialDateHour.AddMinutes(request.Duration);
         }
 
-        await _repositories.ScheduleRepository.AddBulkAsync(scheduleEntitys, cancellationToken);
-        await _repositories.SaveAsync(cancellationToken);
+        await _unitOfWork.ScheduleRepository.AddBulkAsync(scheduleEntitys, cancellationToken);
+        await _unitOfWork.SaveAsync(cancellationToken);
         return Result.Ok();
     }
 }

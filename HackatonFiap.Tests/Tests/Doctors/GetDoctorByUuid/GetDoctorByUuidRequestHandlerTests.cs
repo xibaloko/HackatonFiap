@@ -9,13 +9,13 @@ namespace HackatonFiap.Tests.Tests.Doctors.GetDoctorByUuid
 {
     public class GetDoctorByUuidRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetDoctorByUuidRequestHandler _handler;
 
         public GetDoctorByUuidRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
             _handler = new GetDoctorByUuidRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
         }

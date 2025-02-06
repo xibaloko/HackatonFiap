@@ -12,19 +12,19 @@ public sealed class AddPatientRequestHandler : IRequestHandler<AddPatientRequest
 {
     
     private readonly IApiIdentityService _apiIdentityService;
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public AddPatientRequestHandler(IApiIdentityService apiIdentityService, IRepositories repositories, IMapper mapper)
+    public AddPatientRequestHandler(IApiIdentityService apiIdentityService, IUnitOfWork repositories, IMapper mapper)
     {
         _apiIdentityService = apiIdentityService;
-        _repositories = repositories;
+        _unitOfWork = repositories;
         _mapper = mapper;
     }
 
     public async Task<Result<AddPatientResponse>> Handle(AddPatientRequest request, CancellationToken cancellationToken)
     {
-        Guid identityId = await _apiIdentityService.CreateIdentity(request.Username, request.Email, request.Password, request.Role);
+        Guid identityId = await _apiIdentityService.CreateIdentity(request.CPF, request.Email, request.Password, request.Role);
 
         if (identityId == Guid.Empty)
             return Result.Fail(ErrorHandler.HandleBadGateway("Unable to create account"));
@@ -33,8 +33,8 @@ public sealed class AddPatientRequestHandler : IRequestHandler<AddPatientRequest
 
         patient.SetIdentityId(identityId);
 
-        await _repositories.PatientRepository.AddAsync(patient, cancellationToken);
-        await _repositories.SaveAsync(cancellationToken);
+        await _unitOfWork.PatientRepository.AddAsync(patient, cancellationToken);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         AddPatientResponse response = _mapper.Map<AddPatientResponse>(patient);
 

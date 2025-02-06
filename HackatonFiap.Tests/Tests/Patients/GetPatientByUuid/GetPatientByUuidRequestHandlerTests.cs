@@ -10,13 +10,13 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
 {
     public class GetPatientByUuidRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetPatientByUuidRequestHandler _handler;
 
         public GetPatientByUuidRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
             _handler = new GetPatientByUuidRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
         }

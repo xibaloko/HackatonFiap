@@ -11,13 +11,13 @@ namespace HackatonFiap.Tests.Tests.Doctors.GetAllDoctors
 {
     public class GetAllDoctorsRequestHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetAllDoctorsRequestHandler _handler;
 
         public GetAllDoctorsRequestHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
             _handler = new GetAllDoctorsRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
         }

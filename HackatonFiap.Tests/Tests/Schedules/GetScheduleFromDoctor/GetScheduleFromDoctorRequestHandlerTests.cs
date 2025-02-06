@@ -11,16 +11,16 @@ namespace HackatonFiap.Tests.Tests.Schedules.GetScheduleFromDoctor
 {
     public class GetScheduleFromDoctorHandlerTests
     {
-        private readonly Mock<IRepositories> _repositoriesMock;
+        private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetScheduleFromDoctorHandler _handler;
         private readonly ExeptionHandling _exeptionHandling;
 
         public GetScheduleFromDoctorHandlerTests()
         {
-            _repositoriesMock = new Mock<IRepositories>();
+            _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
-            _handler = new GetScheduleFromDoctorHandler(_repositoriesMock.Object, _mapperMock.Object);
+            //_handler = new GetScheduleFromDoctorHandler(_repositoriesMock.Object, _mapperMock.Object);
             _exeptionHandling = new ExeptionHandling();
         }
 
