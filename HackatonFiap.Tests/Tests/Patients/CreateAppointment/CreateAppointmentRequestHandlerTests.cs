@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Security.Claims;
 using AutoFixture;
 using FluentAssertions;
 using FluentResults;
@@ -9,248 +10,217 @@ using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
+using HackatonFiap.Tests.Helpers;
+using System.Reflection;
+using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
 
-namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
+namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment;
+
+public class CreateAppointmentRequestHandlerTests
 {
-    public class CreateAppointmentRequestHandlerTests
+    private readonly Mock<IUnitOfWork> _repositoriesMock;
+    private readonly Mock<IRabbitMqPublisher> _rabbitMqPublisherMock;
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly CreateAppointmentRequestHandler _handler;
+    private readonly Fixture _fixture;
+
+    public CreateAppointmentRequestHandlerTests()
     {
-        private readonly Mock<IUnitOfWork> _repositoriesMock;
-        private readonly Mock<IRabbitMqPublisher> _rabbitMqPublisherMock;
-        private readonly CreateAppointmentRequestHandler _handler;
-        private readonly Fixture _fixture;
+        _repositoriesMock = new Mock<IUnitOfWork>();
+        _rabbitMqPublisherMock = new Mock<IRabbitMqPublisher>();
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _fixture = new Fixture();
 
-        public CreateAppointmentRequestHandlerTests()
-        {
-            _repositoriesMock = new Mock<IUnitOfWork>();
-            _rabbitMqPublisherMock = new Mock<IRabbitMqPublisher>();
-            _fixture = new Fixture();
+        _handler = new CreateAppointmentRequestHandler(
+            _repositoriesMock.Object,
+            _rabbitMqPublisherMock.Object,
+            _httpContextAccessorMock.Object
+        );
+    }
 
-            //_handler = new CreateAppointmentRequestHandler(
-            //    _repositoriesMock.Object,
-            //    Mock.Of<AutoMapper.IMapper>(),
-            //    _rabbitMqPublisherMock.Object
-            //);
-        }
+    private Patient CreateValidPatient()
+    {
+        var identityId = Guid.NewGuid();
+        var patient = (Patient)Activator.CreateInstance(typeof(Patient), true)!;
 
-        [Fact]
-        public async Task Handle_ShouldCreateAppointment_AndPublishMessage_WhenPatientAndScheduleExist()
-        {
-            // Arrange
-            //var patientUuid = Guid.NewGuid();
-            //var scheduleUuid = Guid.NewGuid();
-            //var doctor = new Doctor(Guid.NewGuid(), "Dr. Smith", "Doe", "dr.smith@example.com", "09876543211", "CRM654321");
-            //var patient = new Patient(patientUuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
-            //var schedule = new Schedule(DateTime.UtcNow, 30, doctor);
+        typeof(EntityBase).GetField("<Uuid>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(patient, Guid.NewGuid());
 
-            //var request = new CreateAppointmentRequest(patientUuid, scheduleUuid);
+        typeof(UserIdentity).GetField("<IdentityId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(patient, identityId);
 
-            //_repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
-            //    It.IsAny<Expression<Func<Patient, bool>>>(), 
-            //    It.IsAny<string>(), 
-            //    It.IsAny<bool>(), 
-            //    It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(patient);
+        typeof(UserIdentity).GetField("<Name>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(patient, "John Doe");
 
-            //_repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
-            //    It.IsAny<Expression<Func<Schedule, bool>>>(), 
-            //    It.IsAny<string>(), 
-            //    It.IsAny<bool>(), 
-            //    It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(schedule);
+        typeof(UserIdentity).GetField("<Email>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(patient, "johndoe@example.com");
 
-            //_repositoriesMock.Setup(repo => repo.DoctorRepository.FirstOrDefaultAsync(
-            //    It.IsAny<Expression<Func<Doctor, bool>>>(), 
-            //    It.IsAny<string>(), 
-            //    It.IsAny<bool>(), 
-            //    It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(doctor);
+        return patient;
+    }
 
-            //_repositoriesMock.Setup(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
-            //    .Returns(Task.CompletedTask);
+    private Schedule CreateValidSchedule()
+    {
+        var schedule = (Schedule)Activator.CreateInstance(typeof(Schedule), true)!;
 
-            //_repositoriesMock.Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
-            //    .Returns(Task.CompletedTask);
+        typeof(EntityBase).GetField("<Uuid>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(schedule, Guid.NewGuid());
 
-            //_rabbitMqPublisherMock.Setup(rabbit => rabbit.EnviarMensagem(
-            //    doctor.Name, doctor.Email, patient.Name, It.IsAny<string>(), It.IsAny<string>()))
-            //    .Returns(Task.CompletedTask);
+        typeof(Schedule).GetField("<Avaliable>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(schedule, true);
 
-            //// Act
-            //var result = await _handler.Handle(request, CancellationToken.None);
+        return schedule;
+    }
 
-            //// Assert
-            //result.IsSuccess.Should().BeTrue();
-            //_repositoriesMock.Verify(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()), Times.Once);
-            //_repositoriesMock.Verify(repo => repo.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);
-            //_rabbitMqPublisherMock.Verify(rabbit =>
-            //    rabbit.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        }
 
-        [Fact]
-        public async Task Handle_ShouldReturnError_WhenPatientNotFound()
-        {
-            // Arrange
-            var request = new CreateAppointmentRequest(Guid.NewGuid(), Guid.NewGuid());
+    private Doctor CreateValidDoctor(int id)
+    {
+        var doctor = (Doctor)Activator.CreateInstance(typeof(Doctor), true)!;
 
-            _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Patient, bool>>>(), 
-                It.IsAny<string>(), 
-                It.IsAny<bool>(), 
-                It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Patient)null!);
+        typeof(EntityBase).GetField("<Id>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(doctor, id);
 
-            // Act
-            var result = await _handler.Handle(request, CancellationToken.None);
+        return doctor;
+    }
 
-            // Assert
-            result.IsFailed.Should().BeTrue();
-            result.Errors.Should().Contain(e => e.Message == "Patient not found or not avaible!");
-        }
+    [Fact]
+    public async Task Handle_ShouldReturnError_WhenUserNotAuthenticated()
+    {
+        // Arrange
+        _httpContextAccessorMock.Setup(h => h.HttpContext).Returns((HttpContext)null!);
+        var request = new CreateAppointmentRequest(Guid.NewGuid(), Guid.NewGuid());
 
-        [Fact]
-        public async Task Handle_ShouldReturnError_WhenScheduleNotFound()
-        {
-            // Arrange
-            var patientUuid = Guid.NewGuid();
-            var patient = new Patient(patientUuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
 
-            var request = new CreateAppointmentRequest(patientUuid, Guid.NewGuid());
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors.Should().Contain(e => e.Message == "Unauthorized: User not found!");
+    }
 
-            _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Patient, bool>>>(), 
-                It.IsAny<string>(), 
-                It.IsAny<bool>(), 
-                It.IsAny<CancellationToken>()))
-                .ReturnsAsync(patient);
+    [Fact]
+    public async Task Handle_ShouldReturnError_WhenPatientNotFound()
+    {
+        // Arrange
+        var identityId = Guid.NewGuid().ToString();
+        _httpContextAccessorMock.SetupUserIdentity(identityId);
 
-            _repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Schedule, bool>>>(), 
-                It.IsAny<string>(), 
-                It.IsAny<bool>(), 
-                It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Schedule)null!);
+        var request = new CreateAppointmentRequest(Guid.NewGuid(), Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(request, CancellationToken.None);
+        _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Patient, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Patient)null!);
 
-            // Assert
-            result.IsFailed.Should().BeTrue();
-            result.Errors.Should().Contain(e => e.Message == "Schedule not found!");
-        }
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
 
-        [Fact]
-        public async Task Handle_ShouldReturnError_WhenScheduleNotAvailable()
-        {
-            // Arrange
-            //var patientUuid = Guid.NewGuid();
-            //var scheduleUuid = Guid.NewGuid();
-            //var doctor = new Doctor(Guid.NewGuid(), "Dr. Smith", "Doe", "dr.smith@example.com", "09876543211", "CRM654321");
-            //var patient = new Patient(patientUuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
-            //var schedule = new Schedule(DateTime.UtcNow, 30, doctor);
-            //schedule.SetAppointment(); // Marca o agendamento como indisponível
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors.Should().Contain(e => e.Message == "Patient not found or not avaible!");
+    }
 
-            //var request = new CreateAppointmentRequest(patientUuid, scheduleUuid);
+    [Fact]
+    public async Task Handle_ShouldReturnError_WhenScheduleNotFound()
+    {
+        // Arrange
+        var patient = CreateValidPatient();
+        _httpContextAccessorMock.SetupUserIdentity(patient.IdentityId.ToString());
 
-            //_repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
-            //    It.IsAny<Expression<Func<Patient, bool>>>(), 
-            //    It.IsAny<string>(), 
-            //    It.IsAny<bool>(), 
-            //    It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(patient);
+        var request = new CreateAppointmentRequest(patient.Uuid, Guid.NewGuid());
 
-            //_repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
-            //    It.IsAny<Expression<Func<Schedule, bool>>>(), 
-            //    It.IsAny<string>(), 
-            //    It.IsAny<bool>(), 
-            //    It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(schedule);
+        _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Patient, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(patient);
 
-            //// Act
-            //var result = await _handler.Handle(request, CancellationToken.None);
+        _repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Schedule, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Schedule)null!);
 
-            //// Assert
-            //result.IsFailed.Should().BeTrue();
-            //result.Errors.Should().Contain(e => e.Message == "Schedule not avaliable!");
-        }
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors.Should().Contain(e => e.Message == "Schedule not found!");
+    }
+
+    [Fact]
+    public async Task Handle_ShouldCreateAppointment_WhenPatientAndScheduleExist()
+    {
+        // Arrange
+        var patient = CreateValidPatient();
+        var schedule = CreateValidSchedule();
+        var doctor = CreateValidDoctor(schedule.DoctorId);
+
+        _httpContextAccessorMock.SetupUserIdentity(patient.IdentityId!.Value.ToString());
+
+        var request = new CreateAppointmentRequest(patient.Uuid, schedule.Uuid);
+
+        _repositoriesMock.Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Patient, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(patient);
+
+        _repositoriesMock.Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Schedule, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(schedule);
+
+        _repositoriesMock.Setup(repo => repo.DoctorRepository.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Doctor, bool>>>(),
+            It.IsAny<string>(),
+            It.IsAny<bool>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(doctor);
+
+        _repositoriesMock.Setup(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        _repositoriesMock.Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        _rabbitMqPublisherMock.Setup(rabbit => rabbit.EnviarMensagem(
+            doctor.Name, doctor.Email, patient.Name, It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(Task.CompletedTask);
         
-        [Fact]
-        public async Task Handle_ShouldAllowFirstRequest_AndRejectSecond_WhenBothTryBookingSameSchedule()
-        {
-            // Arrange
-            //var patient1Uuid = Guid.NewGuid();
-            //var patient2Uuid = Guid.NewGuid();
-            //var scheduleUuid = Guid.NewGuid();
+        Assert.NotNull(_httpContextAccessorMock.Object.HttpContext);
+        Assert.NotNull(_httpContextAccessorMock.Object.HttpContext!.User);
+        Assert.True(_httpContextAccessorMock.Object.HttpContext!.User.Identity!.IsAuthenticated);
 
-            //var doctor = new Doctor(Guid.NewGuid(), "Dr. Smith", "Doe", "dr.smith@example.com", "09876543211", "CRM654321");
-            //var patient1 = new Patient(patient1Uuid, "John", "Doe", "john.doe@example.com", "12345678900", "RG123456");
-            //var patient2 = new Patient(patient2Uuid, "Jane", "Doe", "jane.doe@example.com", "09876543211", "RG654321");
-            //var schedule = new Schedule(new DateTime(2024, 6, 1, 8, 0, 0), 30, doctor);
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
 
-            //var request1 = new CreateAppointmentRequest(patient1Uuid, scheduleUuid);
-            //var request2 = new CreateAppointmentRequest(patient2Uuid, scheduleUuid);
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+    }
+}
 
-            //_repositoriesMock
-            //    .Setup(repo => repo.PatientRepository.FirstOrDefaultAsync(
-            //        It.IsAny<Expression<Func<Patient, bool>>>(),
-            //        It.IsAny<string?>(),
-            //        It.IsAny<bool>(),
-            //        It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync((Expression<Func<Patient, bool>> predicate, string? _, bool _, CancellationToken _) =>
-            //    {
-            //        return predicate.Compile().Invoke(patient1) ? patient1 : patient2;
-            //    });
+public static class HttpContextAccessorExtensions
+{
+    public static void SetupUserIdentity(this Mock<IHttpContextAccessor> httpContextAccessorMock, string userId)
+    {
+        var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, userId) };
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var user = new ClaimsPrincipal(identity);
 
+        var mockHttpContext = new Mock<HttpContext>();
+        mockHttpContext.Setup(c => c.User).Returns(user);
 
-            //_repositoriesMock
-            //    .Setup(repo => repo.ScheduleRepository.FirstOrDefaultAsync(
-            //        It.IsAny<Expression<Func<Schedule, bool>>>(),
-            //        It.IsAny<string>(),
-            //        It.IsAny<bool>(),
-            //        It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(schedule);
-
-            //_repositoriesMock
-            //    .Setup(repo => repo.AppointmentRepository.AddAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
-            //    .Returns(Task.CompletedTask);
-
-            //_repositoriesMock
-            //    .Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
-            //    .Returns(Task.CompletedTask);
-            
-            //_repositoriesMock
-            //    .Setup(repo => repo.DoctorRepository.FirstOrDefaultAsync(
-            //        It.IsAny<Expression<Func<Doctor, bool>>>(),
-            //        It.IsAny<string>(),
-            //        It.IsAny<bool>(),
-            //        It.IsAny<CancellationToken>()))
-            //    .ReturnsAsync(doctor);
-
-            //_rabbitMqPublisherMock
-            //    .Setup(rabbit => rabbit.EnviarMensagem(
-            //        It.IsAny<string>(),
-            //        It.IsAny<string>(),
-            //        It.IsAny<string>(),
-            //        It.IsAny<string>(),
-            //        It.IsAny<string>()))
-            //    .Returns(Task.CompletedTask);
-
-
-            //async Task<Result> TryBookAppointment(CreateAppointmentRequest request)
-            //{
-            //    return await _handler.Handle(request, CancellationToken.None);
-            //}
-
-            //// Act
-            //var results = await Task.WhenAll(TryBookAppointment(request1), TryBookAppointment(request2));
-            //var result1 = results[0];
-            //var result2 = results[1];
-
-            //// Assert
-            //Assert.True(result1.IsSuccess);
-            //Assert.True(result2.IsFailed);
-            //Assert.Contains("Schedule not avaliable!", result2.Errors.Select(e => e.Message));
-        }
+        httpContextAccessorMock.Setup(h => h.HttpContext).Returns(mockHttpContext.Object);
     }
 }
