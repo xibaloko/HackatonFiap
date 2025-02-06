@@ -1,7 +1,7 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
-
+using System.Linq;
 namespace HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 
 public sealed class Schedule : EntityBase
@@ -12,7 +12,7 @@ public sealed class Schedule : EntityBase
     public DateTime FinalDateHour { get; private set; }
     public bool Avaliable { get; private set; }
     public decimal MedicalAppointmentPrice { get; private set; }
-    public Appointment? Appointment { get; private set; }
+    public ICollection<Appointment> Appointments { get; private set; } = [];
 
 #nullable disable
     public Schedule()
@@ -44,6 +44,15 @@ public sealed class Schedule : EntityBase
     public void MakeAppointmentAvailable()
     {
         Avaliable = true;
+    }
+
+    public override void AsSoftDeletable()
+    {
+        base.AsSoftDeletable();
+        if (Appointments.Count > 0)
+        {
+            Appointments.ToList().ForEach(appointment => appointment.AsSoftDeletable());            
+        }
     }
 
 }

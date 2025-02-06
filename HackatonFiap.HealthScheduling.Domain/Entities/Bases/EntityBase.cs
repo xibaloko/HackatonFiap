@@ -16,5 +16,5 @@ public abstract class EntityBase
 
     protected void CreatedNow() => CreatedAt = DateTime.UtcNow;
     public void UpdatedNow() => UpdatedAt = DateTime.UtcNow;
-    public void AsSoftDeletable() => IsDeleted = true;
+    public virtual void AsSoftDeletable() => IsDeleted = true;
 }

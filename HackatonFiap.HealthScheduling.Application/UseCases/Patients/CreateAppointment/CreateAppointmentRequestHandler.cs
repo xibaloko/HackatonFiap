@@ -29,18 +29,18 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 
     public async Task<Result> Handle(CreateAppointmentRequest request, CancellationToken cancellationToken)
     {
-        var identityId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //var identityId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (string.IsNullOrWhiteSpace(identityId))
-            return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized: User not found!"));
+        //if (string.IsNullOrWhiteSpace(identityId))
+        //    return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized: User not found!"));
 
         Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(x => x.Uuid == request.PatientUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
         
         if (patient is null)
             return Result.Fail(ErrorHandler.HandleNotFound("Patient not found or not avaible!"));
 
-        if (identityId != patient.IdentityId!.Value.ToString())
-            return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized to schedule an appointment."));
+        //if (identityId != patient.IdentityId!.Value.ToString())
+        //    return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized to schedule an appointment."));
 
         Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.ScheduleUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
         
