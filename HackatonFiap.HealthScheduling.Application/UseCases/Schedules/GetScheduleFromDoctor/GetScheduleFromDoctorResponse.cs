@@ -6,7 +6,6 @@ public class GetScheduleFromDoctorResponse
     public List<DoctorAvailableSchedule> FreeSchedules { get; set; } = [];
 }
 
-
 public class DoctorAvailableSchedule
 {
     public DateOnly DateSchedule { get; set; }

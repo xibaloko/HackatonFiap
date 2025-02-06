@@ -12,15 +12,12 @@ public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
 
         builder.Property(schedule => schedule.InitialDateHour)
             .HasColumnOrder(3);
-        
+
         builder.Property(schedule => schedule.FinalDateHour)
             .HasColumnOrder(4);
 
-        builder.Property(schedule => schedule.Duration)
-            .HasColumnOrder(5);
-
         builder.Property(schedule => schedule.MedicalAppointmentPrice)
-            .HasPrecision(28,2)
+            .HasPrecision(28, 2)
             .HasColumnOrder(6);
 
         builder.Property(schedule => schedule.Avaliable)
@@ -28,6 +25,6 @@ public class ScheduleConfiguration : BaseEntityTypeConfiguration<Schedule>
             .HasColumnOrder(7);
 
         builder.Property(schedule => schedule.DoctorId)
-            .HasColumnOrder(8);       
+            .HasColumnOrder(8);
     }
 }
