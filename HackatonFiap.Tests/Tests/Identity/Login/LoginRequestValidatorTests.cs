@@ -30,14 +30,14 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
         }
 
         [Theory]
-        [InlineData("", "E-mail is required.")]
-        [InlineData("invalid-email", "Inform a valid e-mail.")]
-        public void Validate_ShouldFail_WhenEmailIsInvalid(string email, string expectedErrorMessage)
+        [InlineData("", "Username is required.")]
+        [InlineData(null, "Username is required.")]
+        public void Validate_ShouldFail_WhenUsernameIsInvalid(string username, string expectedErrorMessage)
         {
             // Arrange
             var request = new LoginRequest
             {
-                Username = email,
+                Username = username,
                 Password = "ValidPassword123!"
             };
 
@@ -49,14 +49,16 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
                 .WithErrorMessage(expectedErrorMessage);
         }
 
-        [Fact]
-        public void Validate_ShouldFail_WhenPasswordIsEmpty()
+        [Theory]
+        [InlineData("", "Password is required.")]
+        [InlineData(null, "Password is required.")]
+        public void Validate_ShouldFail_WhenPasswordIsInvalid(string password, string expectedErrorMessage)
         {
             // Arrange
             var request = new LoginRequest
             {
                 Username = "user@example.com",
-                Password = ""
+                Password = password
             };
 
             // Act
@@ -64,7 +66,7 @@ namespace HackatonFiap.Tests.Tests.Identity.Login
 
             // Assert
             result.ShouldHaveValidationErrorFor(r => r.Password)
-                .WithErrorMessage("Password is required.");
+                .WithErrorMessage(expectedErrorMessage);
         }
     }
 }

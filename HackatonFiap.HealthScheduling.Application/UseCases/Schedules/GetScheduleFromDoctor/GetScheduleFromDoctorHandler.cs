@@ -51,7 +51,9 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
                 var appointment = new AppointmentResponse
                 {
                     Hour = TimeOnly.Parse(hour.InitialDateHour.TimeOfDay.ToString()),
-                    ScheduleUuid = hour.Uuid
+                    ScheduleUuid = hour.Uuid,
+                    Price = hour.MedicalAppointmentPrice
+
                 };
                 doctorAvailableSchedule.Appointments.Add(appointment);
             }

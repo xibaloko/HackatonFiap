@@ -1,26 +1,39 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAllPatients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
-using Moq;
-using System.Linq.Expressions;
 using HackatonFiap.Tests.Helpers;
+using Microsoft.AspNetCore.Http;
+using Moq;
+using System.Security.Claims;
 using Xunit;
 
 namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
 {
     public class GetAllPatientsRequestHandlerTests
     {
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetAllPatientsRequestHandler _handler;
 
         public GetAllPatientsRequestHandlerTests()
         {
+            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
-            //_handler = new GetAllPatientsRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
+
+            // Simulando um usuário autenticado no contexto HTTP
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()) };
+            var identity = new ClaimsIdentity(claims, "TestAuth");
+            var principal = new ClaimsPrincipal(identity);
+            var httpContext = new DefaultHttpContext { User = principal };
+
+            _httpContextAccessorMock.Setup(a => a.HttpContext).Returns(httpContext);
+
+            _handler = new GetAllPatientsRequestHandler(_httpContextAccessorMock.Object, _repositoriesMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -115,7 +128,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
         [Fact]
         public async Task Handle_ShouldReturnFailure_WhenRepositoryThrowsException()
         {
-            var exeptionHandling = new ExeptionHandling();
+            var exceptionHandling = new ExeptionHandling();
                 
             // Arrange
             _repositoriesMock
@@ -128,12 +141,29 @@ namespace HackatonFiap.Tests.Tests.Patients.GetAllPatients
                 .ThrowsAsync(new Exception("Erro ao acessar o banco de dados"));
 
             // Act
-            var result = await exeptionHandling.ExecuteWithExceptionHandling(() => _handler.Handle(new GetAllPatientsRequest(), CancellationToken.None));
+            var result = await exceptionHandling.ExecuteWithExceptionHandling(() => _handler.Handle(new GetAllPatientsRequest(), CancellationToken.None));
 
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsFailed);
             Assert.Contains("Erro ao acessar o banco de dados", result.Errors.Select(e => e.Message));
+        }
+
+        [Fact]
+        public async Task Handle_ShouldReturnUnauthorized_WhenUserIsNotAuthenticated()
+        {
+            // Arrange
+            _httpContextAccessorMock.Setup(a => a.HttpContext).Returns((HttpContext)null!);
+
+            var handler = new GetAllPatientsRequestHandler(_httpContextAccessorMock.Object, _repositoriesMock.Object, _mapperMock.Object);
+
+            // Act
+            var result = await handler.Handle(new GetAllPatientsRequest(), CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+            Assert.Contains("Unauthorized: User not found!", result.Errors.Select(e => e.Message));
         }
     }
 }

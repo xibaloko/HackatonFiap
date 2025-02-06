@@ -46,9 +46,9 @@ namespace HackatonFiap.Tests.Tests.Identity.RenewAccess
                 .Setup(m => m.GetAccessTokenExpiration())
                 .Returns(DateTime.UtcNow.AddMinutes(30));
 
-            //_authenticationTokenServiceMock
-            //    .Setup(m => m.GenerateRefreshToken(user.UserName!))
-            //    .Returns("new_refresh_token");
+            _authenticationTokenServiceMock
+                .Setup(m => m.GenerateRefreshToken(user.Id, It.IsAny<IEnumerable<string>>()))
+                .Returns("new_refresh_token");
 
             _authenticationTokenServiceMock
                 .Setup(m => m.GetRefreshTokenExpiration())
