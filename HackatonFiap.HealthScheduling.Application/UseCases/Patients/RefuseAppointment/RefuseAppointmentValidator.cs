@@ -7,13 +7,12 @@ public class RefuseAppointmentValidator : RequestValidator<RefuseAppointmentRequ
 {
     protected override void Validate()
     {
-        RuleFor(request => request.Uuid)
+        RuleFor(request => request.AppointmentUuid)
             .NotEmpty()
-            .WithMessage("Uuid is required.");
+            .WithMessage("Appointment Uuid is required.");
 
         RuleFor(request => request.CancellationReason)
             .NotEmpty()
             .WithMessage("Cancellation reason is required.");
-
     }
 }

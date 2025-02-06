@@ -44,11 +44,11 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
             {
                 DateSchedule = DateOnly.Parse(schedule.Key.Date.ToShortDateString())
             };
-            doctorAvailableSchedule.Appointments = new List<Appointment>();
+            doctorAvailableSchedule.Appointments = new List<AppointmentResponse>();
 
             foreach (var hour in schedule)
             {
-                var appointment = new Appointment
+                var appointment = new AppointmentResponse
                 {
                     Hour = TimeOnly.Parse(hour.InitialDateHour.TimeOfDay.ToString()),
                     ScheduleUuid = hour.Uuid
@@ -57,8 +57,8 @@ public class GetScheduleFromDoctorHandler : IRequestHandler<GetScheduleFromDocto
             }
             doctorAvailableSchedules.Add(doctorAvailableSchedule);
         }
+
         getScheduleFromDoctorResponse.FreeSchedules = doctorAvailableSchedules;
         return getScheduleFromDoctorResponse;
-
     }
 }

@@ -65,7 +65,7 @@ public class PatientsController : ControllerBase
         return this.ProcessResponse(response, cancellationToken);
     }
 
-    [HttpPost("RefuseAppointment")]
+    [HttpPost("refuse-appointment")]
     public async Task<IActionResult> RefuseAppointmentAsync([FromBody] RefuseAppointmentRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);

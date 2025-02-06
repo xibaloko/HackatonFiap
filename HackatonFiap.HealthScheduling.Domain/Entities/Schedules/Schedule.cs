@@ -1,4 +1,5 @@
-﻿using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
+﻿using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
+using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 
 namespace HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
@@ -12,6 +13,7 @@ public sealed class Schedule : EntityBase
     public int Duration { get; private set; }
     public bool Avaliable { get; private set; }
     public decimal MedicalAppointmentPrice { get; private set; }
+    public Appointment? Appointment { get; private set; }
 
     #nullable disable
     public Schedule()
@@ -32,6 +34,11 @@ public sealed class Schedule : EntityBase
     public void SetAppointment()
     {
         Avaliable = false;
+    }
+
+    public void MakeAppointmentAvailable()
+    {
+        Avaliable = true;
     }
 
 }

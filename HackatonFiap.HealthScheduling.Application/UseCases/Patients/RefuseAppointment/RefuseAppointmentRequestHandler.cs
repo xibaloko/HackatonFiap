@@ -1,34 +1,32 @@
 ﻿using FluentResults;
-using HackatonFiap.HealthScheduling.Domain.Entities.Repositories;
 using MediatR;
-using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentResults;
-using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.GetScheduleFromDoctor;
+using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
+using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 
 namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.RefuseAppointment;
 
 public class RefuseAppointmentRequestHandler : IRequestHandler<RefuseAppointmentRequest, Result>
 {
-    private readonly IRepositories _repositories;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RefuseAppointmentRequestHandler(IRepositories repositories)
+    public RefuseAppointmentRequestHandler(IUnitOfWork unitOfWork)
     {
-        _repositories = repositories;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(RefuseAppointmentRequest request, CancellationToken cancellationToken)
     {
-        Appointment? appointment = await _repositories.AppointmentRepository.FirstOrDefaultAsync(appointment =>
-            appointment.Uuid == request.Uuid &&
-            appointment.CancellationReason == request.CancellationReason, cancellationToken: cancellationToken);
+        Appointment? appointment = await _unitOfWork.AppointmentRepository.FirstOrDefaultAsync(appointment =>
+            appointment.Uuid == request.AppointmentUuid, includeProperties: "Schedule", cancellationToken: cancellationToken);
 
         if (appointment is null)
             return Result.Fail(ErrorHandler.HandleBadRequest("appointment not found."));
 
         appointment.SetCancellation(request.CancellationReason);
 
-        _repositories.DoctorRepository.Update(appointment);
-        await _repositories.SaveAsync(cancellationToken);
+        _unitOfWork.AppointmentRepository.Update(appointment);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Ok();
     }
