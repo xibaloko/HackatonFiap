@@ -36,7 +36,7 @@ public class SchedulesController : ControllerBase
     }
 
     [HttpGet("doctor/{uuid:Guid}")]
-    [Authorize(Roles = "Doctor,Patient")]
+    [Authorize]
     public async Task<IActionResult> GetScheduleFromDoctorAsync([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetScheduleFromDoctorRequest(uuid), cancellationToken: cancellationToken);
