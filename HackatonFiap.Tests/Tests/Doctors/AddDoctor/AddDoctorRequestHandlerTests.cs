@@ -48,7 +48,6 @@ namespace HackatonFiap.Tests.Tests.Doctors.AddDoctor
 
             var response = new AddDoctorResponse
             {
-                Id = 1,
                 Uuid = Guid.NewGuid(),
                 Name = request.Name,
                 LastName = request.LastName,
