@@ -8,11 +8,8 @@ using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using Xunit;
-using HackatonFiap.Tests.Helpers;
 using System.Reflection;
 using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
 using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
@@ -22,7 +19,6 @@ namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment;
 public class CreateAppointmentRequestHandlerTests
 {
     private readonly Mock<IUnitOfWork> _repositoriesMock;
-    private readonly Mock<IRabbitMqPublisher> _rabbitMqPublisherMock;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
     private readonly CreateAppointmentRequestHandler _handler;
     private readonly Fixture _fixture;
@@ -30,13 +26,11 @@ public class CreateAppointmentRequestHandlerTests
     public CreateAppointmentRequestHandlerTests()
     {
         _repositoriesMock = new Mock<IUnitOfWork>();
-        _rabbitMqPublisherMock = new Mock<IRabbitMqPublisher>();
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         _fixture = new Fixture();
 
         _handler = new CreateAppointmentRequestHandler(
             _repositoriesMock.Object,
-            _rabbitMqPublisherMock.Object,
             _httpContextAccessorMock.Object
         );
     }
@@ -194,10 +188,6 @@ public class CreateAppointmentRequestHandlerTests
         _repositoriesMock.Setup(repo => repo.SaveAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _rabbitMqPublisherMock.Setup(rabbit => rabbit.EnviarMensagem(
-            doctor.Name, doctor.Email, patient.Name, It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(Task.CompletedTask);
-        
         Assert.NotNull(_httpContextAccessorMock.Object.HttpContext);
         Assert.NotNull(_httpContextAccessorMock.Object.HttpContext!.User);
         Assert.True(_httpContextAccessorMock.Object.HttpContext!.User.Identity!.IsAuthenticated);

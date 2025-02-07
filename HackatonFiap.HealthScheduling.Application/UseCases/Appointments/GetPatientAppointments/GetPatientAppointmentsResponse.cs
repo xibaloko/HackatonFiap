@@ -1,9 +1,9 @@
 using FluentResults;
 using MediatR;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAppointmentByUuid;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Appointments.GetPatientAppointments;
 
-public class GetAppointmentsByUuidResponse()
+public class GetPatientAppointmentsResponse()
 {
     public IEnumerable<AppointmentResponse> Appointments { get; init; } = [];
 }

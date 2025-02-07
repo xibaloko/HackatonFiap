@@ -4,11 +4,9 @@ using HackatonFiap.HealthScheduling.Application.Configurations.MediatR;
 using HackatonFiap.HealthScheduling.Domain;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer;
 using HackatonFiap.HealthScheduling.Infrastructure.SqlServer.IoC;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -17,7 +15,6 @@ using HackatonFiap.HealthScheduling.Application.IdentityService;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
 using Asp.Versioning.Conventions;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
 
 namespace HackatonFiap.HealthScheduling.Application;
 
@@ -31,8 +28,7 @@ public static class ApplicationModule
     [
         ApplicationAssemblyReference.Assembly,
         DomainAssemblyReference.Assembly,
-        SqlServerAdapterAssemblyReference.Assembly,
-        RabbitMqAdapterAssemblyReference.Assembly
+        SqlServerAdapterAssemblyReference.Assembly
     ];
 
     public static IServiceCollection AddApplicationModule(this IServiceCollection services, IConfiguration configuration)
@@ -54,6 +50,10 @@ public static class ApplicationModule
         services.AddFluentValidationValidators();
         services.AddAutoMapperServices(SolutionAssemblies);
         services.AddApiVersioning();
+        services.AddSwagger();
+
+        
+
         return services;
     }
 
@@ -86,7 +86,6 @@ public static class ApplicationModule
 
     private static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitAdapter(configuration);
         services.AddSqlServerAdapter(configuration);
 
         return services;
@@ -112,6 +111,39 @@ public static class ApplicationModule
         {
             configuration.GroupNameFormat = ApiVersionGroupNameFormat;
             configuration.SubstituteApiVersionInUrl = true;
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
+        {
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Description = "Inform the JWT Token"
+            });
+
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
 
         return services;

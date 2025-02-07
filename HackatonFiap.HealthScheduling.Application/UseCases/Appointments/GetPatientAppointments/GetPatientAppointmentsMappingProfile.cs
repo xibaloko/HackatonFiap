@@ -1,11 +1,11 @@
 using AutoMapper;
 using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAppointmentByUuid;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Appointments.GetPatientAppointments;
 
-public class GetAppointmentByUuidMappingProfile : Profile
+public class GetPatientAppointmentsMappingProfile : Profile
 {
-    public GetAppointmentByUuidMappingProfile()
+    public GetPatientAppointmentsMappingProfile()
     {
         CreateMap<Appointment, AppointmentResponse>()
             .ForPath(dest => dest.InitialDateHour, opt => opt.MapFrom(src => src.Schedule.InitialDateHour))
@@ -15,7 +15,7 @@ public class GetAppointmentByUuidMappingProfile : Profile
             .ForPath(dest => dest.IsCanceledByPatient, opt => opt.MapFrom(src => src.IsCanceledByPatient))
             .ForPath(dest => dest.CancellationReason, opt => opt.MapFrom(src => src.CancellationReason));
 
-        CreateMap<IEnumerable<Appointment>, GetAppointmentsByUuidResponse>()
+        CreateMap<IEnumerable<Appointment>, GetPatientAppointmentsResponse>()
             .ForPath(dest => dest.Appointments, opt => opt.MapFrom(src => src));
     }
 }

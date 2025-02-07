@@ -4,7 +4,6 @@ using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;
-using HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.Interface;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Data;
@@ -15,16 +14,13 @@ namespace HackatonFiap.HealthScheduling.Application.UseCases.Appointments.Create
 public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppointmentRequest, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IRabbitMqPublisher _rabbitMqPublisher;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateAppointmentRequestHandler(
         IUnitOfWork repositories,
-        IRabbitMqPublisher rabbitRepository,
         IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = repositories;
-        _rabbitMqPublisher = rabbitRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -61,11 +57,6 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
 
         await _unitOfWork.SaveAsync(cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-
-        var doctor = await _unitOfWork.DoctorRepository.FirstOrDefaultAsync(x => x.Id == schedule.DoctorId, cancellationToken: cancellationToken);
-
-        if (doctor is not null)
-            await _rabbitMqPublisher.EnviarMensagem(doctor.Name, doctor.Email, patient.Name, schedule.InitialDateHour.ToString("dd/MM/yyyy"), schedule.InitialDateHour.ToString("HH:mm"));
 
         return Result.Ok();
     }
