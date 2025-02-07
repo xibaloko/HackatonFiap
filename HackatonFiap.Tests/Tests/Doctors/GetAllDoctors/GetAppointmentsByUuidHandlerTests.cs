@@ -9,13 +9,13 @@ using Moq;
 
 namespace HackatonFiap.Tests.Tests.Doctors.GetAllDoctors
 {
-    public class GetAllDoctorsRequestHandlerTests
+    public class GetAppointmentsByUuidHandlerTests
     {
         private readonly Mock<IUnitOfWork> _repositoriesMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly GetAllDoctorsRequestHandler _handler;
 
-        public GetAllDoctorsRequestHandlerTests()
+        public GetAppointmentsByUuidHandlerTests()
         {
             _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();

@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.GetAppointmentByUuid;
 using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
 using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.RefuseAppointment;
 using MediatR;
@@ -21,6 +22,14 @@ public class AppointmentsController : ControllerBase
     public async Task<IActionResult> CreateAppointmentAsync([FromBody] CreateAppointmentRequest request, CancellationToken cancellationToken)
     {
         Result response = await _mediator.Send(request, cancellationToken);
+        return this.ProcessResponse(response, cancellationToken);
+    }
+    
+    [HttpGet("appointments/{uuid:Guid}")]
+    [Authorize(Roles = "Patient")]
+    public async Task<IActionResult> GetAppointments([FromRoute] Guid uuid, CancellationToken cancellationToken)
+    {
+        Result<GetAppointmentsByUuidResponse> response = await _mediator.Send(new GetAppointmentsByUuidRequest(uuid), cancellationToken);
         return this.ProcessResponse(response, cancellationToken);
     }
 
