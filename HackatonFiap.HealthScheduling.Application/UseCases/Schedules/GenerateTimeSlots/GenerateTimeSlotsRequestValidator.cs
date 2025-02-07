@@ -13,23 +13,22 @@ public sealed class GenerateTimeSlotsRequestValidator : RequestValidator<Generat
 
         RuleFor(request => request.InitialHour)
            .NotEmpty()
-           .WithMessage("Initial hours is required.");
+           .WithMessage("Initial hour is required.");
 
         RuleFor(request => request.FinalHour)
           .NotEmpty()
-          .WithMessage("Final hours is required.");
+          .WithMessage("Final hour is required.");
         
         RuleFor(request => request)
             .Must(request => request.InitialHour < request.FinalHour)
-            .WithMessage("The initial hour can not be higher than the final hour.");
+            .WithMessage("The initial hour cannot be later than the final hour.");
 
         RuleFor(request => request.Duration)
-           .NotEmpty()
-           .WithMessage("Duration is required.");
+           .GreaterThan(0)
+           .WithMessage("Duration must be greater than zero.");
 
         RuleFor(request => request.Price)
-           .NotEmpty()
-           .WithMessage("Price is required.");
-
+           .GreaterThan(0)
+           .WithMessage("Price must be greater than zero.");
     }
 }

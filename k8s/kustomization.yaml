@@ -5,7 +5,5 @@ resources:
   - healthscheduling-service.yaml
   - identity-deployment.yaml
   - identity-service.yaml
-  - rabbitmq-deployment.yaml
-  - rabbitmq-service.yaml
   - sqlserver-deployment.yaml
   - sqlserver-service.yaml

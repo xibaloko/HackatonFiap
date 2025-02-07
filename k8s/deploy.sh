@@ -5,13 +5,8 @@ NAMESPACE="fiaptechchallenge"
 echo "🚀 Criando namespace '$NAMESPACE' (se ainda não existir)..."
 kubectl get namespace $NAMESPACE >/dev/null 2>&1 || kubectl create namespace $NAMESPACE
 
-echo "📦 Aplicando Persistent Volumes e Persistent Volume Claims..."
-kubectl apply -f pvc-rabbitmq-sql.yaml
-
 echo "📡 Aplicando Services..."
 kubectl apply -f sqlserver-service.yaml
-kubectl apply -f rabbitmq-service.yaml
-kubectl apply -f emailworker-service.yaml
 kubectl apply -f healthscheduling-service.yaml
 kubectl apply -f identity-service.yaml
 
@@ -36,9 +31,6 @@ echo "Aguardando migração do Identity..."
 sleep 15
 echo "Migração do Identity concluída!"
 
-echo "Aplicando demais deployments..."
-kubectl apply -f rabbitmq-deployment.yaml
-kubectl apply -f emailworker-deployment.yaml
 
 echo "Reiniciando todos os pods..."
 kubectl rollout restart deployment -n $NAMESPACE

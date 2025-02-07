@@ -2,7 +2,7 @@ name: Build, Test, and Push Docker Images
 
 on:
   push:
-    branches: [ "infra" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -21,10 +21,10 @@ jobs:
       - name: Restaurar dependências
         run: dotnet restore
 
-#      - name: Construir e testar projetos
-#        run: |
-#          dotnet build --configuration Release
-#          dotnet test --configuration Release --no-build --verbosity normal
+      - name: Construir e testar projetos
+        run: |
+          dotnet build --configuration Release
+          dotnet test --configuration Release --no-build --verbosity normal
 
       - name: Login no Docker Hub
         run: |
@@ -32,9 +32,6 @@ jobs:
 
       - name: Construir e publicar imagens Docker
         run: |
-          docker build -t fiaphackaton52/emailworker:latest -f HackatonFiap.EmailProvider.Worker/Dockerfile .
-          docker push fiaphackaton52/emailworker:latest
-
           docker build -t fiaphackaton52/healthscheduling:latest -f HackatonFiap.HealthScheduling.Api/Dockerfile .
           docker push fiaphackaton52/healthscheduling:latest
 

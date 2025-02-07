@@ -1,16 +1,15 @@
 using FluentValidation.TestHelper;
 using HackatonFiap.Identity.Application.UseCases.CreateAccount;
-using HackatonFiap.Identity.Application.UseCases.DeleteAccount;
 
 namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
 {
     public class CreateAccountRequestValidatorTests
     {
-        private readonly DeleteAccountRequestValidator _validator;
+        private readonly CreateAccountRequestValidator _validator;
 
         public CreateAccountRequestValidatorTests()
         {
-            _validator = new DeleteAccountRequestValidator();
+            _validator = new CreateAccountRequestValidator();
         }
 
         [Fact]
@@ -26,10 +25,10 @@ namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
             };
 
             // Act
-            //var result = _validator.TestValidate(request);
+            var result = _validator.TestValidate(request);
 
             // Assert
-            //result.ShouldNotHaveAnyValidationErrors();
+            result.ShouldNotHaveAnyValidationErrors();
         }
 
         [Fact]
@@ -45,11 +44,11 @@ namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
             };
 
             // Act
-            //var result = _validator.TestValidate(request);
+            var result = _validator.TestValidate(request);
 
             // Assert
-            //result.ShouldHaveValidationErrorFor(r => r.Username)
-            //    .WithErrorMessage("Username is required.");
+            result.ShouldHaveValidationErrorFor(r => r.Username)
+                .WithErrorMessage("Username is required.");
         }
 
         [Theory]
@@ -67,11 +66,11 @@ namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
             };
 
             // Act
-            //var result = _validator.TestValidate(request);
+            var result = _validator.TestValidate(request);
 
             // Assert
-            //result.ShouldHaveValidationErrorFor(r => r.Email)
-            //    .WithErrorMessage(expectedErrorMessage);
+            result.ShouldHaveValidationErrorFor(r => r.Email)
+                .WithErrorMessage(expectedErrorMessage);
         }
 
         [Fact]
@@ -87,11 +86,11 @@ namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
             };
 
             // Act
-            //var result = _validator.TestValidate(request);
+            var result = _validator.TestValidate(request);
 
             // Assert
-            //result.ShouldHaveValidationErrorFor(r => r.Password)
-            //    .WithErrorMessage("Password is required.");
+            result.ShouldHaveValidationErrorFor(r => r.Password)
+                .WithErrorMessage("Password is required.");
         }
 
         [Theory]
@@ -109,11 +108,11 @@ namespace HackatonFiap.Tests.Tests.Identity.CreateAccount
             };
 
             // Act
-            //var result = _validator.TestValidate(request);
+            var result = _validator.TestValidate(request);
 
-            //// Assert
-            //result.ShouldHaveValidationErrorFor(r => r.Role)
-            //    .WithErrorMessage(expectedErrorMessage);
+            // Assert
+            result.ShouldHaveValidationErrorFor(r => r.Role)
+                .WithErrorMessage(expectedErrorMessage);
         }
     }
 }

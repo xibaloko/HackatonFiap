@@ -1,64 +1,85 @@
-//using FluentValidation.TestHelper;
-//using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
+using FluentValidation.TestHelper;
+using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
 
-//namespace HackatonFiap.Tests.Tests.Patients.AddPatient;
+namespace HackatonFiap.Tests.Tests.Patients.AddPatient;
 
-//public class AddPatientRequestValidatorTests
-//{
-//    private readonly AddPatientRequestValidator _validator = new();
+public class AddPatientRequestValidatorTests
+{
+    private readonly AddPatientRequestValidator _validator = new();
 
-//    [Fact]
-//    public void Validate_ShouldPass_WhenAllFieldsAreValid()
-//    {
-//        // Arrange
-//        var request = new AddPatientRequest
-//        {
-//            Username = "john_doe",
-//            Password = "SecurePassword123",
-//            Role = "Patient",
-//            Name = "John",
-//            LastName = "Doe",
-//            Email = "john.doe@example.com",
-//            CPF = "12345678900",
-//            RG = "RG123456"
-//        };
+    [Fact]
+    public void Validate_ShouldPass_WhenAllFieldsAreValid()
+    {
+        // Arrange
+        var request = new AddPatientRequest
+        {
+            Password = "SecurePassword123",
+            Role = "Patient",
+            Name = "John",
+            LastName = "Doe",
+            Email = "john.doe@example.com",
+            CPF = "12345678909",
+            RG = "RG123456"
+        };
 
-//        // Act
-//        var result = _validator.TestValidate(request);
+        // Act
+        var result = _validator.TestValidate(request);
 
-//        // Assert
-//        result.ShouldNotHaveAnyValidationErrors();
-//    }
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
-//    [Theory]
-//    [InlineData(null, "Doe", "john.doe@example.com", "12345678900", "RG123456", "Username", "Username is required.")]
-//    [InlineData("john_doe", null, "john.doe@example.com", "12345678900", "RG123456", "LastName", "Last name is required.")]
-//    [InlineData("john_doe", "Doe", null, "12345678900", "RG123456", "Email", "E-mail is required.")]
-//    [InlineData("john_doe", "Doe", "invalid_email", "12345678900", "RG123456", "Email", "Inform a valid e-mail address")]
-//    [InlineData("john_doe", "Doe", "john.doe@example.com", null, "RG123456", "CPF", "CPF is required.")]
-//    [InlineData("john_doe", "Doe", "john.doe@example.com", "12345678900", null, "RG", "RG is required.")]
-//    [InlineData("john_doe", "Doe", "john.doe@example.com", "12345678900", "RG123456", null, "Role is required.")]
-//    [InlineData("john_doe", "Doe", "john.doe@example.com", "12345678900", "RG123456", "InvalidRole", "Role is invalid. Allowed roles are Admin, Doctor, or Patient.")]
-//    public void Validate_ShouldFail_WhenARequiredFieldIsMissing(
-//        string username, string lastName, string email, string cpf, string rg, string role, string expectedErrorMessage)
-//    {
-//        // Arrange
-//        var request = new AddPatientRequest
-//        {
-//            Username = username,
-//            Password = "SecurePassword123",
-//            Role = role,
-//            Name = "John",
-//            LastName = lastName,
-//            Email = email,
-//            CPF = cpf,
-//            RG = rg
-//        };
+    [Theory]
+    [InlineData("", "Doe", "john.doe@example.com", "12345678909", "RG123456", "Patient", "Name is required.")]
+    [InlineData("John", "", "john.doe@example.com", "12345678909", "RG123456", "Patient", "Last name is required.")]
+    [InlineData("John", "Doe", "", "12345678909", "RG123456", "Patient", "E-mail is required.")]
+    [InlineData("John", "Doe", "invalid_email", "12345678909", "RG123456", "Patient", "Inform a valid e-mail address.")]
+    [InlineData("John", "Doe", "john.doe@example.com", "", "RG123456", "Patient", "CPF is required.")]
+    [InlineData("John", "Doe", "john.doe@example.com", "12345678909", "", "Patient", "RG is required.")]
+    [InlineData("John", "Doe", "john.doe@example.com", "12345678909", "RG123456", "", "Role is required.")]
+    [InlineData("John", "Doe", "john.doe@example.com", "12345678909", "RG123456", "InvalidRole", "Role is invalid. Allowed roles are Doctor or Patient.")]
+    public void Validate_ShouldFail_WhenARequiredFieldIsMissing(
+        string name, string lastName, string email, string cpf, string rg, string role, string expectedErrorMessage)
+    {
+        // Arrange
+        var request = new AddPatientRequest
+        {
+            Password = "SecurePassword123",
+            Role = role,
+            Name = name,
+            LastName = lastName,
+            Email = email,
+            CPF = cpf,
+            RG = rg
+        };
 
-//        // Act
-//        var result = _validator.TestValidate(request);
+        // Act
+        var result = _validator.TestValidate(request);
 
-//        // Assert
-//        Assert.Contains(expectedErrorMessage, result.Errors.Select(e => e.ErrorMessage));
-//    }
-//}
+        // Assert
+        Assert.Contains(expectedErrorMessage, result.Errors.Select(e => e.ErrorMessage));
+    }
+
+    [Fact]
+    public void Validate_ShouldFail_WhenCpfIsInvalid()
+    {
+        // Arrange
+        var request = new AddPatientRequest
+        {
+            Name = "John",
+            LastName = "Doe",
+            Email = "john.doe@example.com",
+            CPF = "12345678900", // CPF inválido
+            RG = "RG123456",
+            Role = "Patient",
+            Password = "SecurePassword123"
+        };
+
+        // Act
+        var result = _validator.TestValidate(request);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(r => r.CPF)
+              .WithErrorMessage("Invalid CPF.");
+    }
+}
