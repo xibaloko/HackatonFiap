@@ -15,7 +15,9 @@ public sealed class GetDoctorByUuidRequestHandler : IRequestHandler<GetDoctorByU
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetDoctorByUuidRequestHandler(IUnitOfWork repositories, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public GetDoctorByUuidRequestHandler(IUnitOfWork repositories
+        , IMapper mapper
+        , IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
         _unitOfWork = repositories;
