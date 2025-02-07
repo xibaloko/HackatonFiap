@@ -20,7 +20,7 @@ public class DoctorsController : ControllerBase
     private readonly IMediator _mediator;
 
     public DoctorsController(IMediator mediator) => _mediator = mediator;
-
+        
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllDoctorsAsync([FromQuery] string? specialty, CancellationToken cancellationToken)

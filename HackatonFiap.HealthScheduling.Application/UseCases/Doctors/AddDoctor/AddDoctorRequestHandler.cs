@@ -28,21 +28,29 @@ public sealed class AddDoctorRequestHandler : IRequestHandler<AddDoctorRequest, 
         if (identityId == Guid.Empty)
             return Result.Fail(ErrorHandler.HandleBadGateway("Unable to create account"));
 
-        var specialty = await _unitOfWork.MedicalSpecialtyRepository.FirstOrDefaultAsync(x => x.Uuid == request.MedicalSpecialtyUuid, cancellationToken: cancellationToken);
+        try
+        {
+            var specialty = await _unitOfWork.MedicalSpecialtyRepository.FirstOrDefaultAsync(x => x.Uuid == request.MedicalSpecialtyUuid, cancellationToken: cancellationToken);
 
-        if (specialty is null)
-            return Result.Fail(ErrorHandler.HandleBadRequest("Medical Specialty not found!"));
+            if (specialty is null)
+                throw new Exception("Medical Specialty not found!");               
 
-        Doctor doctor = _mapper.Map<Doctor>(request);
+            Doctor doctor = _mapper.Map<Doctor>(request);
 
-        doctor.SetIdentityId(identityId);
-        doctor.SetMedicalSpecialty(specialty);
+            doctor.SetIdentityId(identityId);
+            doctor.SetMedicalSpecialty(specialty);
 
-        await _unitOfWork.DoctorRepository.AddAsync(doctor, cancellationToken);
-        await _unitOfWork.SaveAsync(cancellationToken);
+            await _unitOfWork.DoctorRepository.AddAsync(doctor, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
 
-        AddDoctorResponse response = _mapper.Map<AddDoctorResponse>(doctor);
+            AddDoctorResponse response = _mapper.Map<AddDoctorResponse>(doctor);
 
-        return Result.Ok(response);
+            return Result.Ok(response);
+        }
+        catch (Exception ex)
+        {
+            await _apiIdentityService.DeleteIdentity(identityId);
+            return Result.Fail(ErrorHandler.HandleBadGateway(ex.Message));
+        }
     }
 }

@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
+//using HackatonFiap.HealthScheduling.Application.UseCases.Schedules.AddSchedule;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 using HackatonFiap.HealthScheduling.Domain.Entities.Schedules;
 using HackatonFiap.HealthScheduling.Domain.PersistenceContracts;

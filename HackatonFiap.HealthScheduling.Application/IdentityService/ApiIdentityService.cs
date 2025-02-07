@@ -1,5 +1,6 @@
 ﻿using HackatonFiap.HealthScheduling.Domain.IdentityService;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Text;
 using System.Text.Json;
 
@@ -46,6 +47,38 @@ public sealed class ApiIdentityService : IApiIdentityService
      
         return identityId;
     }
+
+    public async Task<bool> DeleteIdentity(Guid identityId)
+    {
+        var client = _httpClientFactory.CreateClient();
+
+        client.BaseAddress = new Uri(_configuration[identityApiBaseUrl]!);
+
+        var request = new DeleteRequest
+        {
+            IdentityId = identityId
+        };
+
+
+        var json = JsonSerializer.Serialize(request);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        client.DefaultRequestHeaders.Add("accept", "*/*");
+        content.Headers.Add("x-api-version", "1");
+
+        var response = await client.PostAsync("api/v1/Accounts/delete", content);
+
+        if (!response.IsSuccessStatusCode)
+            return false;
+
+        return true;
+
+    }
+}
+
+public class DeleteRequest
+{
+    public required Guid IdentityId { get; init; }
 }
 
 public class AccountRequest

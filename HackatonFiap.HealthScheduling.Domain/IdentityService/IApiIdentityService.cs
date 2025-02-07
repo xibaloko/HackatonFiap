@@ -1,6 +1,7 @@
 ﻿namespace HackatonFiap.HealthScheduling.Domain.IdentityService;
 
-public interface IApiIdentityService
+public interface IApiIdentityService 
 {
     Task<Guid> CreateIdentity(string username, string email, string password, string role);
+    Task<bool> DeleteIdentity(Guid identityId);
 }

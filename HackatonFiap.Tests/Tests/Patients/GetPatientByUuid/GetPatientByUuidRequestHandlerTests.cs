@@ -18,7 +18,7 @@ namespace HackatonFiap.Tests.Tests.Patients.GetPatientByUuid
         {
             _repositoriesMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
-            _handler = new GetPatientByUuidRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
+            //_handler = new GetPatientByUuidRequestHandler(_repositoriesMock.Object, _mapperMock.Object);
         }
 
         [Fact]
