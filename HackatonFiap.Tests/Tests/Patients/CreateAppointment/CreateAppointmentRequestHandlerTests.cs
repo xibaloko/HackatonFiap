@@ -3,7 +3,6 @@ using System.Security.Claims;
 using AutoFixture;
 using FluentAssertions;
 using FluentResults;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 using HackatonFiap.HealthScheduling.Domain.Entities.Appointments;
 using HackatonFiap.HealthScheduling.Domain.Entities.Doctors;
 using HackatonFiap.HealthScheduling.Domain.Entities.Patients;
@@ -16,6 +15,7 @@ using Xunit;
 using HackatonFiap.Tests.Helpers;
 using System.Reflection;
 using HackatonFiap.HealthScheduling.Domain.Entities.Bases;
+using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
 
 namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment;
 

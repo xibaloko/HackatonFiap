@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
+using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
+
 
 namespace HackatonFiap.Tests.Tests.Patients.CreateAppointment
 {

@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using HackatonFiap.HealthScheduling.Application.Configurations.ApiExtensions;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.RefuseAppointment;
+using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
+using HackatonFiap.HealthScheduling.Application.UseCases.Appointments.RefuseAppointment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using HackatonFiap.HealthScheduling.Application.Configurations.FluentValidation;
-using HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.AddPatient;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
 
 public sealed class CreateAppointmentValidator : RequestValidator<CreateAppointmentRequest>
 {

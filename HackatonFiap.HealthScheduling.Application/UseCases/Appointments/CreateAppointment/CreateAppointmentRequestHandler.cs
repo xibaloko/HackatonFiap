@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Security.Claims;
 
-namespace HackatonFiap.HealthScheduling.Application.UseCases.Patients.CreateAppointment;
+namespace HackatonFiap.HealthScheduling.Application.UseCases.Appointments.CreateAppointment;
 
 public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppointmentRequest, Result>
 {
@@ -38,7 +38,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         await _unitOfWork.BeginTransactionAsync(isolationLevel: IsolationLevel.Serializable, cancellationToken);
 
         Patient? patient = await _unitOfWork.PatientRepository.FirstOrDefaultAsync(x => x.Uuid == request.PatientUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
-        
+
         if (patient is null)
             return Result.Fail(ErrorHandler.HandleNotFound("Patient not found or not avaible!"));
 
@@ -46,7 +46,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
             return Result.Fail(ErrorHandler.HandleUnauthorized("Unauthorized to schedule an appointment."));
 
         Schedule? schedule = await _unitOfWork.ScheduleRepository.FirstOrDefaultAsync(x => x.Uuid == request.ScheduleUuid && x.IsDeleted == false, cancellationToken: cancellationToken);
-        
+
         if (schedule is null)
             return Result.Fail(ErrorHandler.HandleNotFound("Schedule not found!"));
 
@@ -58,7 +58,7 @@ public sealed class CreateAppointmentRequestHandler : IRequestHandler<CreateAppo
         await _unitOfWork.AppointmentRepository.AddAsync(appointment, cancellationToken);
         schedule.SetAppointment();
         _unitOfWork.ScheduleRepository.Update(schedule);
-        
+
         await _unitOfWork.SaveAsync(cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
