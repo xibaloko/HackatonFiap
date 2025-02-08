@@ -22,7 +22,7 @@ public class DoctorsController : ControllerBase
     public DoctorsController(IMediator mediator) => _mediator = mediator;
         
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Patient")]
     public async Task<IActionResult> GetAllDoctorsAsync([FromQuery] string? specialty, CancellationToken cancellationToken)
     {
         Result<GetAllDoctorsResponse> response = await _mediator.Send(new GetAllDoctorsRequest(specialty), cancellationToken);
