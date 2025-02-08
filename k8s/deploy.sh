@@ -6,6 +6,7 @@ echo "🚀 Criando namespace '$NAMESPACE' (se ainda não existir)..."
 kubectl get namespace $NAMESPACE >/dev/null 2>&1 || kubectl create namespace $NAMESPACE
 
 echo "📡 Aplicando Services..."
+kubectl apply -f pvc-sql.yaml
 kubectl apply -f sqlserver-service.yaml
 kubectl apply -f healthscheduling-service.yaml
 kubectl apply -f identity-service.yaml
@@ -30,9 +31,3 @@ kubectl apply -f identity-deployment.yaml
 echo "Aguardando migração do Identity..."
 sleep 15
 echo "Migração do Identity concluída!"
-
-
-echo "Reiniciando todos os pods..."
-kubectl rollout restart deployment -n $NAMESPACE
-echo "Todos os pods foram iniciados!"
-kubectl get pods -n $NAMESPACE

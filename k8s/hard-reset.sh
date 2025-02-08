@@ -22,3 +22,9 @@ kubectl delete pv --all --ignore-not-found
 # 5️⃣ Remover o namespace
 echo "🗑️ Removendo namespace '$NAMESPACE'..."
 kubectl delete namespace $NAMESPACE --ignore-not-found
+kubectl wait --for=delete namespace/$NAMESPACE --timeout=30s 2>/dev/null
+
+# 6️⃣ Remover manualmente os dados armazenados nos volumes do host (se estiver rodando localmente)
+echo "🧹 Limpando diretórios de volumes no host..."
+sudo rm -rf /mnt/data/sqlserver
+sudo rm -rf /mnt/data/rabbitmq
