@@ -10,7 +10,6 @@ COPY ["HackatonFiap.HealthScheduling.Api/HackatonFiap.HealthScheduling.Api.cspro
 COPY ["HackatonFiap.HealthScheduling.Application/HackatonFiap.HealthScheduling.Application.csproj", "HackatonFiap.HealthScheduling.Application/"]
 COPY ["HackatonFiap.HealthScheduling.Domain/HackatonFiap.HealthScheduling.Domain.csproj", "HackatonFiap.HealthScheduling.Domain/"]
 COPY ["HackatonFiap.HealthScheduling.Infrastructure.SqlServer/HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj", "HackatonFiap.HealthScheduling.Infrastructure.SqlServer/"]
-COPY ["HackatonFiap.HealthScheduling.Infrastructure.RabbitMq/HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.csproj", "HackatonFiap.HealthScheduling.Infrastructure.RabbitMq/"]
 COPY ["HackatonFiap.Identity.Application/HackatonFiap.Identity.Application.csproj", "HackatonFiap.Identity.Application/"]
 COPY ["HackatonFiap.Identity.Domain/HackatonFiap.Identity.Domain.csproj", "HackatonFiap.Identity.Domain/"]
 COPY ["HackatonFiap.Identity.Infrastructure.SqlServer/HackatonFiap.Identity.Infrastructure.SqlServer.csproj", "HackatonFiap.Identity.Infrastructure.SqlServer/"]

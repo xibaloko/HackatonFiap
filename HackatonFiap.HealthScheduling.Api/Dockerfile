@@ -11,7 +11,6 @@ COPY ["HackatonFiap.HealthScheduling.Api/HackatonFiap.HealthScheduling.Api.cspro
 COPY ["HackatonFiap.HealthScheduling.Application/HackatonFiap.HealthScheduling.Application.csproj", "HackatonFiap.HealthScheduling.Application/"]
 COPY ["HackatonFiap.HealthScheduling.Domain/HackatonFiap.HealthScheduling.Domain.csproj", "HackatonFiap.HealthScheduling.Domain/"]
 COPY ["HackatonFiap.HealthScheduling.Infrastructure.SqlServer/HackatonFiap.HealthScheduling.Infrastructure.SqlServer.csproj", "HackatonFiap.HealthScheduling.Infrastructure.SqlServer/"]
-COPY ["HackatonFiap.HealthScheduling.Infrastructure.RabbitMq/HackatonFiap.HealthScheduling.Infrastructure.RabbitMq.csproj", "HackatonFiap.HealthScheduling.Infrastructure.RabbitMq/"]
 RUN dotnet restore "HackatonFiap.HealthScheduling.Api/HackatonFiap.HealthScheduling.Api.csproj"
 COPY . .
 WORKDIR "/src/HackatonFiap.HealthScheduling.Api"
